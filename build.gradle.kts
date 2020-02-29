@@ -10,35 +10,43 @@ plugins {
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
     apply(plugin = "idea")
 
-    if (name == "kolibri-commandline-utility" || name == "kolibri-telegram-bot") {
+    if (isApplicationModule(name)) {
+        apply(plugin = "io.spring.dependency-management")
         apply(plugin = "org.springframework.boot")
         apply(plugin = "application")
     } else {
         apply(plugin = "java-library")
     }
 
-    version = "1.0"
-
-    val kotlinVersion = "1.3.61"
-    val springBootVersion = "2.0.5.RELEASE"
-
     repositories {
         jcenter()
     }
 
+    version = "1.0"
+
+    val kotlinVersion = "1.3.61"
+    val springBootVersion = "2.0.5.RELEASE"
+    val log4jVersion = "1.2.17"
+
     dependencies {
         "implementation"("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
         "implementation"("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-        "implementation"("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
-        "implementation"("org.springframework.boot:spring-boot-starter-web")
+        "implementation"("log4j:log4j:$log4jVersion")
 
         "testImplementation"("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
         "testImplementation"("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
-        "testImplementation"("org.springframework.boot:spring-boot-starter-test")
+    }
+
+    if (isApplicationModule(name)) {
+        dependencies {
+            "implementation"("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+            "implementation"("org.springframework.boot:spring-boot-starter-web")
+
+            "testImplementation"("org.springframework.boot:spring-boot-starter-test")
+        }
     }
 
     extensions.configure<AllOpenExtension>("allOpen") {
@@ -46,3 +54,6 @@ subprojects {
         annotation("org.springframework.stereotype.Component")
     }
 }
+
+fun isApplicationModule(moduleName: String): Boolean =
+    setOf("kolibri-commandline-utility", "kolibri-telegram-bot").contains(moduleName)
