@@ -2,7 +2,7 @@ package com.ran.kolibri.telegram.bot.rest
 
 import com.ran.kolibri.common.util.logInfo
 import com.ran.kolibri.telegram.bot.dto.updates.UpdatesRequest
-import com.ran.kolibri.telegram.bot.service.UpdatesService
+import com.ran.kolibri.telegram.bot.service.TelegramService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 class UpdatesController {
 
     @Autowired
-    private lateinit var updatesService: UpdatesService
+    private lateinit var telegramService: TelegramService
 
     @RequestMapping(method = [POST], path = ["/{token}"])
     fun postUpdates(
@@ -25,7 +25,7 @@ class UpdatesController {
             @PathVariable("token") token: String
     ): ResponseEntity<Any> {
         logInfo { "Processing updates request $request for token $token" }
-        updatesService.processUpdates(request)
+        telegramService.processUpdates(request)
         return ResponseEntity(HttpStatus.OK)
     }
 }
