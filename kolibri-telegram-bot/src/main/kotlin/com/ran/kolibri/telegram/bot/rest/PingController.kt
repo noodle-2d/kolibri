@@ -1,8 +1,7 @@
 package com.ran.kolibri.telegram.bot.rest
 
 import com.ran.kolibri.common.util.logInfo
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import com.ran.kolibri.telegram.bot.dto.ok.OkResponse
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMethod.*
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod.*
 class PingController {
 
     @RequestMapping(method = [GET])
-    fun ping(): ResponseEntity<Any> {
+    fun ping(): OkResponse {
         logInfo { "Ping invoked" }
-        return ResponseEntity(HttpStatus.OK)
+        return OkResponse.VALUE
     }
 }
