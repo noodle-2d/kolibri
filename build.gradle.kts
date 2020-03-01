@@ -8,7 +8,17 @@ plugins {
     id("io.spring.dependency-management") version "1.0.7.RELEASE" apply false
 }
 
+val kotlinVersion = "1.3.61"
+val springBootVersion = "2.0.5.RELEASE"
+val log4jVersion = "1.2.17"
+
 subprojects {
+    version = "1.0"
+
+    repositories {
+        jcenter()
+    }
+
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
     apply(plugin = "idea")
@@ -17,19 +27,13 @@ subprojects {
         apply(plugin = "io.spring.dependency-management")
         apply(plugin = "org.springframework.boot")
         apply(plugin = "application")
+
+        dependencies {
+            "implementation"("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+        }
     } else {
         apply(plugin = "java-library")
     }
-
-    repositories {
-        jcenter()
-    }
-
-    version = "1.0"
-
-    val kotlinVersion = "1.3.61"
-    val springBootVersion = "2.0.5.RELEASE"
-    val log4jVersion = "1.2.17"
 
     dependencies {
         "implementation"("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
@@ -38,15 +42,6 @@ subprojects {
 
         "testImplementation"("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
         "testImplementation"("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
-    }
-
-    if (isApplicationModule(name)) {
-        dependencies {
-            "implementation"("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
-            "implementation"("org.springframework.boot:spring-boot-starter-web")
-
-            "testImplementation"("org.springframework.boot:spring-boot-starter-test")
-        }
     }
 
     extensions.configure<AllOpenExtension>("allOpen") {
