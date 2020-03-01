@@ -1,65 +1,68 @@
 package com.ran.kolibri.common.http
 
-import com.ran.kolibri.common.util.logDebug
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ran.kolibri.common.util.logError
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.*
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.stereotype.Component
 import org.springframework.web.client.ResponseErrorHandler
 import org.springframework.web.client.RestTemplate
-import java.lang.RuntimeException
+import java.io.InputStream
 import java.lang.StringBuilder
 import java.util.*
-
 
 @Component
 class HttpClient {
 
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
+
     private val rest: RestTemplate = buildRestTemplate()
+    private val headers: HttpHeaders = buildHttpHeaders()
 
     fun <RQ, RS> post(url: String, body: RQ, responseClass: Class<RS>): RS {
-        logDebug { "Send message url: $url" }
-        val requestEntity = HttpEntity(body)
-        logDebug { "Request entity: $requestEntity" }
-        try {
-            val responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, responseClass)
-            logDebug { "Response entity: $responseEntity" }
-            return retrieveResponse(responseEntity)
-        } catch (e: Throwable) {
-            logError(e) { "Error sending message" }
-            throw RuntimeException("Something went wrong")
-        }
+        val requestJson = objectMapper.writeValueAsString(body)
+        val requestEntity = HttpEntity(requestJson, headers)
+        val responseEntity = rest.exchange(url, HttpMethod.POST, requestEntity, String::class.java)
+        val responseJson = responseEntity.body ?: throw HttpClientException("Empty response body")
+        return objectMapper.readValue(responseJson, responseClass)
     }
-
-    private fun <RS> retrieveResponse(responseEntity: ResponseEntity<RS>): RS =
-        responseEntity
-                .apply {
-                    statusCodeValue.takeIf { it == 200 }
-                            ?: throw HttpClientException("Unexpected status code $statusCodeValue")
-                }
-                .body ?: throw HttpClientException("Empty response body")
 
     private fun buildRestTemplate(): RestTemplate {
         val template = RestTemplate()
-        template.errorHandler = object : ResponseErrorHandler {
-            override fun hasError(response: ClientHttpResponse): Boolean =
-                response.statusCode == HttpStatus.BAD_REQUEST
-
-            override fun handleError(response: ClientHttpResponse) {
-                logDebug { "Response status: ${response.rawStatusCode}, ${response.statusCode}, ${response.statusText}" }
-                logDebug { "Headers: ${response.headers}" }
-                val sc = Scanner(response.body)
-                val sb = StringBuilder()
-                while (sc.hasNext()) {
-                    sb.append(sc.nextLine())
-                }
-                logDebug { "Body: $sb" }
-            }
-        }
+        template.errorHandler = buildErrorHandler()
         return template
+    }
+
+    private fun buildHttpHeaders(): HttpHeaders {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        return headers
+    }
+
+    private fun buildErrorHandler(): ResponseErrorHandler =
+            object : ResponseErrorHandler {
+                override fun hasError(response: ClientHttpResponse): Boolean =
+                        !response.statusCode.is2xxSuccessful
+
+                override fun handleError(response: ClientHttpResponse) {
+                    logError {
+                        "Error while sending request to telegram api. " +
+                                "Response status: ${response.rawStatusCode}, ${response.statusCode}. " +
+                                "Body: ${readInputStreamAsString(response.body)}"
+                    }
+                    throw HttpClientException("Error while sending request to telegram api: ${response.statusCode}")
+                }
+            }
+
+    private fun readInputStreamAsString(inputStream: InputStream): String {
+        val scanner = Scanner(inputStream)
+        val builder = StringBuilder()
+        while (scanner.hasNext()) {
+            builder.append(scanner.nextLine())
+        }
+        return builder.toString()
     }
 }
 
