@@ -25,13 +25,18 @@ class TelegramService {
 
     fun setWebhook() {
         val webhookUrl = "$botUrl/updates/${telegramClientConfig.telegramBotToken}"
+        logInfo { "Setting webhook. Url: $webhookUrl" }
+
         val setWebhookRequest = SetWebhookRequest(webhookUrl, listOf("message"))
-        telegramClient.setWebhook(setWebhookRequest)
-        logInfo { "Webhook was successfully set" }
+        val telegramResponse = telegramClient.setWebhook(setWebhookRequest)
+        logInfo { "Webhook was successfully set. Response: $telegramResponse" }
     }
 
     fun processUpdates(request: UpdatesRequest) {
         val sendMessageRequest = SendMessageRequest(request.message!!.chat!!.id, request.message!!.text)
-        telegramClient.sendMessage(sendMessageRequest)
+        logInfo { "Sending message. Request: $sendMessageRequest" }
+
+        val telegramResponse = telegramClient.sendMessage(sendMessageRequest)
+        logInfo { "Message was successfully sent. Response: $telegramResponse" }
     }
 }
