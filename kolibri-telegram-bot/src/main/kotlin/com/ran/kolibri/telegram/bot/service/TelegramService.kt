@@ -36,7 +36,7 @@ class TelegramService {
         val sendMessageRequest = SendMessageRequest(request.message!!.chat!!.id, request.message!!.text)
         logInfo { "Sending message. Request: $sendMessageRequest" }
 
-        val telegramResponse = telegramClient.sendMessage(sendMessageRequest)
-        logInfo { "Message was successfully sent. Response: $telegramResponse" }
+//        val telegramResponse = telegramClient.sendMessage(sendMessageRequest)
+//        logInfo { "Message was successfully sent. Response: $telegramResponse" }
     }
 }
