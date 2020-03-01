@@ -3,6 +3,7 @@ package com.ran.kolibri.telegram.bot.service
 import com.ran.kolibri.common.telegram.client.TelegramClient
 import com.ran.kolibri.common.telegram.dto.SendMessageRequest
 import com.ran.kolibri.common.telegram.dto.SetWebhookRequest
+import com.ran.kolibri.common.util.logInfo
 import com.ran.kolibri.telegram.bot.dto.updates.UpdatesRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -22,6 +23,7 @@ class TelegramService {
     fun setWebhook() {
         val setWebhookRequest = SetWebhookRequest(webhookUrl, listOf("message"))
         telegramClient.setWebhook(setWebhookRequest)
+        logInfo { "Webhook was successfully set" }
     }
 
     fun processUpdates(request: UpdatesRequest) {
