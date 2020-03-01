@@ -37,7 +37,7 @@ class HttpClient {
 
     private fun buildHttpHeaders(): HttpHeaders {
         val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
+        headers.contentType = MediaType.APPLICATION_JSON_UTF8
         return headers
     }
 
