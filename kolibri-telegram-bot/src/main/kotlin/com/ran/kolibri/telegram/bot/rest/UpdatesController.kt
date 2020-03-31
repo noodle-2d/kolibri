@@ -1,30 +1,28 @@
 package com.ran.kolibri.telegram.bot.rest
 
-import com.ran.kolibri.common.util.logInfo
-import com.ran.kolibri.telegram.bot.dto.ok.OkResponse
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.instance
+import com.ran.kolibri.common.dto.config.TelegramClientConfig
+import com.ran.kolibri.common.dto.ok.OkResponse
+import com.ran.kolibri.common.rest.RestController
 import com.ran.kolibri.telegram.bot.dto.updates.UpdatesRequest
 import com.ran.kolibri.telegram.bot.service.TelegramService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod.*
-import org.springframework.web.bind.annotation.RestController
+import io.ktor.application.call
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Route
+import io.ktor.routing.post
 
-@RestController
-@RequestMapping("/updates")
-class UpdatesController {
+class UpdatesController(kodein: Kodein) : RestController {
 
-    @Autowired
-    private lateinit var telegramService: TelegramService
+    private val telegramService: TelegramService = kodein.instance()
+    private val telegramClientConfig: TelegramClientConfig = kodein.instance()
 
-    @RequestMapping(method = [POST], path = ["/{token}"])
-    fun postUpdates(
-            @RequestBody request: UpdatesRequest,
-            @PathVariable("token") token: String
-    ): OkResponse {
-        logInfo { "Processing updates request $request for token $token" }
-        telegramService.processUpdates(request)
-        return OkResponse.VALUE
+    override fun configure(route: Route): Route = route.apply {
+        post("/updates/${telegramClientConfig.apiToken}") {
+            val request: UpdatesRequest = call.receive()
+            telegramService.processUpdates(request)
+            call.respond(OkResponse.VALUE)
+        }
     }
 }
