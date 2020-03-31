@@ -4,8 +4,6 @@ plugins {
     kotlin("jvm") version "1.3.61" apply false
 }
 
-apply(plugin = "java-base")
-
 val kotlinVersion = "1.3.61"
 val ktorVersion = "1.3.2"
 val typesafeVersion = "1.4.0"
@@ -56,10 +54,6 @@ subprojects {
     tasks.withType<KotlinCompile>().all {
         kotlinOptions.jvmTarget = "1.8"
     }
-}
-
-tasks.register("stage") {
-    dependsOn("build")
 }
 
 fun isApplicationModule(moduleName: String): Boolean =
