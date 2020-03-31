@@ -4,6 +4,8 @@ plugins {
     kotlin("jvm") version "1.3.61" apply false
 }
 
+apply(plugin = "java-base")
+
 val kotlinVersion = "1.3.61"
 val ktorVersion = "1.3.2"
 val typesafeVersion = "1.4.0"
@@ -56,7 +58,9 @@ subprojects {
     }
 }
 
-tasks.register("stage")
+tasks.register("stage") {
+    dependsOn("build")
+}
 
 fun isApplicationModule(moduleName: String): Boolean =
     setOf("kolibri-commandline-utility", "kolibri-telegram-bot").contains(moduleName)
