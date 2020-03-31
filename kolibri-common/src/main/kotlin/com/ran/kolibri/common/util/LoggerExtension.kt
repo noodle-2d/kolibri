@@ -1,57 +1,57 @@
 package com.ran.kolibri.common.util
 
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 val Any.logger: Logger
-    inline get() = Logger.getLogger(javaClass)
+    inline get() = LoggerFactory.getLogger(javaClass)
 
-inline fun Logger.logInfo(fn: () -> String) {
-    if (isInfoEnabled) {
-        info(fn.invoke())
-    }
+inline fun Any.logTrace(message: String) {
+    val log = logger
+    if (log.isTraceEnabled) log.trace(message)
 }
 
-inline fun Logger.logDebug(fn: () -> String) {
-    if (isDebugEnabled) {
-        debug(fn.invoke())
-    }
+inline fun Any.logTrace(message: String, throwable: Throwable) {
+    val log = logger
+    if (log.isTraceEnabled) log.trace(message, throwable)
 }
 
-inline fun Logger.logTrace(fn: () -> String) {
-    if (isTraceEnabled) {
-        trace(fn.invoke())
-    }
+inline fun Any.logDebug(message: String) {
+    val log = logger
+    if (log.isDebugEnabled) log.debug(message)
 }
 
-inline fun Logger.logWarn(fn: () -> String) {
-    if (isEnabledFor(Level.WARN)) {
-        warn(fn.invoke())
-    }
+inline fun Any.logDebug(message: String, throwable: Throwable) {
+    val log = logger
+    if (log.isDebugEnabled) log.debug(message, throwable)
 }
 
-inline fun Logger.logWarn(throwable: Throwable, fn: () -> String) {
-    if (isEnabledFor(Level.WARN)) {
-        warn(fn.invoke(), throwable)
-    }
+inline fun Any.logInfo(message: String) {
+    val log = logger
+    if (log.isInfoEnabled) log.info(message)
 }
 
-inline fun Logger.logError(fn: () -> String) {
-    if (isEnabledFor(Level.ERROR)) {
-        error(fn.invoke())
-    }
+inline fun Any.logInfo(message: String, throwable: Throwable) {
+    val log = logger
+    if (log.isInfoEnabled) log.info(message, throwable)
 }
 
-inline fun Logger.logError(throwable: Throwable, fn: () -> String) {
-    if (isEnabledFor(Level.ERROR)) {
-        error(fn.invoke(), throwable)
-    }
+inline fun Any.logWarn(message: String) {
+    val log = logger
+    if (log.isWarnEnabled) log.warn(message)
 }
 
-inline fun Any.logInfo(fn: () -> String) = logger.logInfo(fn)
-inline fun Any.logDebug(fn: () -> String) = logger.logDebug(fn)
-inline fun Any.logTrace(fn: () -> String) = logger.logTrace(fn)
-inline fun Any.logWarn(fn: () -> String) = logger.logWarn(fn)
-inline fun Any.logWarn(throwable: Throwable, fn: () -> String) = logger.logWarn(throwable, fn)
-inline fun Any.logError(fn: () -> String) = logger.logError(fn)
-inline fun Any.logError(throwable: Throwable, fn: () -> String) = logger.logError(throwable, fn)
+inline fun Any.logWarn(message: String, throwable: Throwable) {
+    val log = logger
+    if (log.isWarnEnabled) log.warn(message, throwable)
+}
+
+inline fun Any.logError(message: String) {
+    val log = logger
+    if (log.isErrorEnabled) log.error(message)
+}
+
+inline fun Any.logError(message: String, throwable: Throwable) {
+    val log = logger
+    if (log.isErrorEnabled) log.error(message, throwable)
+}
