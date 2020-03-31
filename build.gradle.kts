@@ -56,5 +56,7 @@ subprojects {
     }
 }
 
+tasks.register("stage")
+
 fun isApplicationModule(moduleName: String): Boolean =
     setOf("kolibri-commandline-utility", "kolibri-telegram-bot").contains(moduleName)
