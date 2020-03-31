@@ -1,16 +1,15 @@
-import org.jetbrains.kotlin.allopen.gradle.AllOpenExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.3.61" apply false
-    kotlin("plugin.allopen") version "1.3.61" apply false
-
-    id("org.springframework.boot") version "2.0.5.RELEASE" apply false
-    id("io.spring.dependency-management") version "1.0.7.RELEASE" apply false
 }
 
 val kotlinVersion = "1.3.61"
-val springBootVersion = "2.0.5.RELEASE"
-val log4jVersion = "1.2.17"
+val ktorVersion = "1.3.2"
+val typesafeVersion = "1.4.0"
+val kodeinVersion = "4.1.0"
+val slf4jVersion = "1.7.30"
+val logbackVersion = "1.2.3"
 
 subprojects {
     version = "1.0"
@@ -20,17 +19,10 @@ subprojects {
     }
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
     apply(plugin = "idea")
 
     if (isApplicationModule(name)) {
-        apply(plugin = "io.spring.dependency-management")
-        apply(plugin = "org.springframework.boot")
         apply(plugin = "application")
-
-        dependencies {
-            "implementation"("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
-        }
     } else {
         apply(plugin = "java-library")
     }
@@ -38,15 +30,29 @@ subprojects {
     dependencies {
         "implementation"("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
         "implementation"("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-        "implementation"("log4j:log4j:$log4jVersion")
+
+        "implementation"("io.ktor:ktor-server-core:$ktorVersion")
+        "implementation"("io.ktor:ktor-server-netty:$ktorVersion")
+        "implementation"("io.ktor:ktor-client-cio:$ktorVersion")
+        "implementation"("io.ktor:ktor-client-json:$ktorVersion")
+        "implementation"("io.ktor:ktor-client-jackson:$ktorVersion")
+        "implementation"("io.ktor:ktor-jackson:$ktorVersion")
+
+        "implementation"("com.typesafe:config:$typesafeVersion")
+
+        "implementation"("com.github.salomonbrys.kodein:kodein:$kodeinVersion")
+        "implementation"("com.github.salomonbrys.kodein:kodein-conf:$kodeinVersion")
+
+        "implementation"("org.slf4j:slf4j-api:$slf4jVersion")
+        "implementation"("ch.qos.logback:logback-classic:$logbackVersion")
+        "implementation"("ch.qos.logback:logback-core:$logbackVersion")
 
         "testImplementation"("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
         "testImplementation"("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     }
 
-    extensions.configure<AllOpenExtension>("allOpen") {
-        annotation("org.springframework.context.annotation.Configuration")
-        annotation("org.springframework.stereotype.Component")
+    tasks.withType<KotlinCompile>().all {
+        kotlinOptions.jvmTarget = "1.8"
     }
 }
 
