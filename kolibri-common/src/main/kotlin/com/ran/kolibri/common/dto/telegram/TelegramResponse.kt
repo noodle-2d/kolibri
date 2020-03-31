@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.telegram.dto
+package com.ran.kolibri.common.dto.telegram
 
 data class TelegramResponse(
         var ok: Boolean? = null,
