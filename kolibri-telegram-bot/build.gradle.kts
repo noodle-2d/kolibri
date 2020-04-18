@@ -1,15 +1,9 @@
+extra["main-class-name"] = "com.ran.kolibri.telegram.bot.MainKt"
+
 dependencies {
     implementation(project(":kolibri-common"))
 }
 
-val mainClass = "com.ran.kolibri.telegram.bot.MainKt"
-
 application {
-    mainClassName = mainClass
-}
-
-tasks.withType<Jar>().all {
-    manifest {
-        attributes["Main-Class"] = mainClass
-    }
+    mainClassName = extra["main-class-name"] as String
 }

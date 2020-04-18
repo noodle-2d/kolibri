@@ -1,7 +1,9 @@
+extra["main-class-name"] = "com.ran.kolibri.commandline.utility.MainKt"
+
 dependencies {
     implementation(project(":kolibri-common"))
 }
 
 application {
-    mainClassName = "com.ran.kolibri.commandline.utility.MainKt"
+    mainClassName = extra["main-class-name"] as String
 }

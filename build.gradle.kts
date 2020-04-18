@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("jvm") version "1.3.61" apply false
+    id("com.github.johnrengelman.shadow") version "4.0.4" apply false
 }
 
 val kotlinVersion = "1.3.61"
@@ -21,9 +23,12 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "idea")
 
-    if (isApplicationModule(name)) {
+    forApplications {
         apply(plugin = "application")
-    } else {
+        apply(plugin = "com.github.johnrengelman.shadow")
+    }
+
+    forLibraries {
         apply(plugin = "java-library")
     }
 
@@ -54,7 +59,33 @@ subprojects {
     tasks.withType<KotlinCompile>().all {
         kotlinOptions.jvmTarget = "1.8"
     }
+
+    forApplications {
+        afterEvaluate {
+            val mainClassName = extra["main-class-name"]
+
+            tasks.named<DefaultTask>("build") {
+                dependsOn(tasks.named("shadowJar"))
+            }
+
+            tasks.withType<ShadowJar>().all {
+                archiveBaseName.set("${project.name}-shadow")
+                mergeServiceFiles()
+                manifest {
+                    attributes["Main-Class"] = mainClassName
+                }
+            }
+        }
+    }
 }
 
-fun isApplicationModule(moduleName: String): Boolean =
-    setOf("kolibri-commandline-utility", "kolibri-telegram-bot").contains(moduleName)
+fun Project.forApplications(action: Project.() -> Unit) {
+    if (isApplicationModule()) action(this)
+}
+
+fun Project.forLibraries(action: Project.() -> Unit) {
+    if (!isApplicationModule()) action(this)
+}
+
+fun Project.isApplicationModule(): Boolean =
+    setOf("kolibri-commandline-utility", "kolibri-telegram-bot").contains(name)
