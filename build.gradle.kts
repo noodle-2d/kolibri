@@ -10,6 +10,8 @@ val kotlinVersion = "1.3.61"
 val ktorVersion = "1.3.2"
 val typesafeVersion = "1.4.0"
 val kodeinVersion = "4.1.0"
+val googleApiVersion = "1.30.4"
+val googleSheetsApiVersion = "v4-rev581-1.25.0"
 val slf4jVersion = "1.7.30"
 val logbackVersion = "1.2.3"
 
@@ -47,6 +49,10 @@ subprojects {
 
         "implementation"("com.github.salomonbrys.kodein:kodein:$kodeinVersion")
         "implementation"("com.github.salomonbrys.kodein:kodein-conf:$kodeinVersion")
+
+        "implementation"("com.google.api-client:google-api-client:$googleApiVersion")
+        "implementation"("com.google.oauth-client:google-oauth-client-jetty:$googleApiVersion")
+        "implementation"("com.google.apis:google-api-services-sheets:$googleSheetsApiVersion")
 
         "implementation"("org.slf4j:slf4j-api:$slf4jVersion")
         "implementation"("ch.qos.logback:logback-classic:$logbackVersion")
