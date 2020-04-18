@@ -1,5 +1,6 @@
 package com.ran.kolibri.common.starter
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.github.salomonbrys.kodein.Kodein
@@ -35,6 +36,7 @@ interface RestApiStarter {
             install(ContentNegotiation) {
                 jackson {
                     propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     enable(SerializationFeature.INDENT_OUTPUT)
                 }
             }
