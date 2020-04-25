@@ -101,4 +101,4 @@ fun Project.forLibraries(action: Project.() -> Unit) {
 }
 
 fun Project.isApplicationModule(): Boolean =
-        setOf("kolibri-commandline-utility", "kolibri-telegram-bot", "kolibri-sheets-converter").contains(name)
+        setOf("kolibri-commandline-utility", "kolibri-telegram-bot").contains(name)

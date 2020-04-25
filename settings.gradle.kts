@@ -3,6 +3,5 @@ rootProject.name = "kolibri"
 include(
     "kolibri-common",
     "kolibri-telegram-bot",
-    "kolibri-commandline-utility",
-    "kolibri-sheets-converter"
+    "kolibri-commandline-utility"
 )
