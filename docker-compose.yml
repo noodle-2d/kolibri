@@ -1,0 +1,32 @@
+version: '3.6'
+
+x-kolibri-service: &kolibri-service
+  build:
+    context: .
+    dockerfile: .dockerfile
+
+services:
+
+  kolibri-telegram-bot:
+    << : *kolibri-service
+    container_name: kolibri-telegram-bot
+    image: kolibri-telegram-bot
+    ports:
+      - ${TELEGRAM_BOT_API_PORT}:${INTERNAL_API_PORT}
+    env_file:
+      - ./kolibri-telegram-bot/.env
+    environment:
+      - PORT=${INTERNAL_API_PORT}
+    command: ./start.sh telegram-bot
+
+  kolibri-commandline-utility:
+    << : *kolibri-service
+    container_name: kolibri-commandline-utility
+    image: kolibri-commandline-utility
+    env_file:
+      - ./kolibri-commandline-utility/.env
+    command: ./start.sh commandline-utility
+
+networks:
+  default:
+    name: kolibri-network

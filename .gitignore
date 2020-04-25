@@ -11,3 +11,9 @@ out
 # Ignore IDEA files
 .idea
 .iml
+
+# Ignore environment variables files
+.env
+
+# Ignore google api tokens
+tokens
