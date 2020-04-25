@@ -19,22 +19,22 @@ import com.ran.kolibri.telegram.bot.rest.UpdatesController
 class TelegramBotStarter : BaseStarter(), ListenerStarter, RestApiStarter {
 
     override fun getKodeinModules(): List<Kodein.Module> =
-            listOf(
-                    httpClientModule,
-                    telegramClientModule,
-                    telegramBotConfigModule,
-                    telegramBotRestModule,
-                    telegramBotListenerModule,
-                    telegramBotServiceModule
-            )
+        listOf(
+            httpClientModule,
+            telegramClientModule,
+            telegramBotConfigModule,
+            telegramBotRestModule,
+            telegramBotListenerModule,
+            telegramBotServiceModule
+        )
 
     override fun getStartupListeners(kodein: Kodein): List<StartupListener> =
-            listOf(
-                    kodein.instance<SetWebhookListener>()
-            )
+        listOf(
+            kodein.instance<SetWebhookListener>()
+        )
 
     override fun getRestControllers(kodein: Kodein): List<RestController> =
-            listOf(
-                    kodein.instance<UpdatesController>()
-            )
+        listOf(
+            kodein.instance<UpdatesController>()
+        )
 }

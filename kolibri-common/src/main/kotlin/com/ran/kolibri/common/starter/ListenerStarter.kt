@@ -8,5 +8,5 @@ interface ListenerStarter {
     fun getStartupListeners(kodein: Kodein): List<StartupListener>
 
     suspend fun startListeners(kodein: Kodein) =
-            getStartupListeners(kodein).forEach { it.processStartup() }
+        getStartupListeners(kodein).forEach { it.processStartup() }
 }

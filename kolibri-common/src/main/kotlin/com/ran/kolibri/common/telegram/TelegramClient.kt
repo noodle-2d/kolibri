@@ -16,17 +16,17 @@ class TelegramClient(kodein: Kodein) {
     private val config: TelegramClientConfig = kodein.instance()
 
     suspend fun setWebhook(request: SetWebhookRequest): TelegramResponse =
-            httpClient.post {
-                url(buildUrl("/setWebhook"))
-                body = request
-            }
+        httpClient.post {
+            url(buildUrl("/setWebhook"))
+            body = request
+        }
 
     suspend fun sendMessage(request: SendMessageRequest): TelegramResponse =
-            httpClient.post {
-                url(buildUrl("/sendMessage"))
-                body = request
-            }
+        httpClient.post {
+            url(buildUrl("/sendMessage"))
+            body = request
+        }
 
     private fun buildUrl(route: String): String =
-            "${config.apiUrl}/bot${config.apiToken}${route}"
+        "${config.apiUrl}/bot${config.apiToken}$route"
 }

@@ -3,9 +3,9 @@ package com.ran.kolibri.telegram.bot.service
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dto.config.TelegramClientConfig
-import com.ran.kolibri.common.telegram.TelegramClient
 import com.ran.kolibri.common.dto.telegram.SendMessageRequest
 import com.ran.kolibri.common.dto.telegram.SetWebhookRequest
+import com.ran.kolibri.common.telegram.TelegramClient
 import com.ran.kolibri.common.util.logInfo
 import com.ran.kolibri.telegram.bot.dto.config.TelegramBotConfig
 import com.ran.kolibri.telegram.bot.dto.updates.UpdatesRequest
