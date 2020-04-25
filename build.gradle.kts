@@ -4,6 +4,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     kotlin("jvm") version "1.3.61" apply false
     id("com.github.johnrengelman.shadow") version "4.0.4" apply false
+    id("org.jlleitschuh.gradle.ktlint") version "9.2.1" apply false
+    id("org.jlleitschuh.gradle.ktlint-idea") version "9.2.1" apply false
 }
 
 val kotlinVersion = "1.3.61"
@@ -15,15 +17,20 @@ val googleSheetsApiVersion = "v4-rev581-1.25.0"
 val slf4jVersion = "1.7.30"
 val logbackVersion = "1.2.3"
 
-subprojects {
+allprojects {
     version = "1.0"
 
     repositories {
         jcenter()
     }
 
-    apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "idea")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint-idea")
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 
     forApplications {
         apply(plugin = "application")
