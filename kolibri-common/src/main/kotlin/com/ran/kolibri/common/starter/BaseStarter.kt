@@ -2,15 +2,15 @@ package com.ran.kolibri.common.starter
 
 import com.github.salomonbrys.kodein.Kodein
 import com.ran.kolibri.common.kodein.buildConfigModule
-import com.typesafe.config.ConfigFactory
+import com.ran.kolibri.common.util.buildConfig
 import kotlinx.coroutines.runBlocking
 
 abstract class BaseStarter {
 
     abstract fun getKodeinModules(): List<Kodein.Module>
 
-    fun startApplication() = runBlocking {
-        val config = ConfigFactory.load()
+    fun startApplication(args: Array<String>) = runBlocking {
+        val config = buildConfig(args)
         val configModule = buildConfigModule(config)
 
         val kodein = Kodein {
