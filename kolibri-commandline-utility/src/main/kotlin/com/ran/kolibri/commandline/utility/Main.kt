@@ -1,5 +1,5 @@
 package com.ran.kolibri.commandline.utility
 
-fun main() {
-    println("Kolibri command utility started")
-}
+import com.ran.kolibri.commandline.utility.starter.CommandLineUtilityStarter
+
+fun main(args: Array<String>) = CommandLineUtilityStarter().startApplication(args)
