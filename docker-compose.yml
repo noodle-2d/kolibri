@@ -1,29 +1,28 @@
 version: '3.6'
 
-x-kolibri-service: &kolibri-service
-  build:
-    context: .
-    dockerfile: .dockerfile
-
 services:
 
   kolibri-telegram-bot:
-    << : *kolibri-service
+    build:
+      context: .
+      dockerfile: kolibri-telegram-bot/.dockerfile
     container_name: kolibri-telegram-bot
     image: kolibri-telegram-bot
     ports:
       - 8080:8080
     env_file:
       - ./kolibri-telegram-bot/.env
-    command: ./start.sh telegram-bot
+    command: java -jar app.jar
 
   kolibri-commandline-utility:
-    << : *kolibri-service
+    build:
+      context: .
+      dockerfile: kolibri-commandline-utility/.dockerfile
     container_name: kolibri-commandline-utility
     image: kolibri-commandline-utility
     env_file:
       - ./kolibri-commandline-utility/.env
-    command: ./start.sh commandline-utility
+    command: java -jar app.jar
 
   proxy:
     image: nginx:1.17.10
