@@ -25,6 +25,17 @@ services:
       - ./kolibri-commandline-utility/.env
     command: ./start.sh commandline-utility
 
+  proxy:
+    image: nginx:1.17.10
+    container_name: proxy
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+    command: nginx -g 'daemon off;'
+
 networks:
   default:
     name: kolibri-network
