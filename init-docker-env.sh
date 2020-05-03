@@ -1,13 +1,11 @@
 #!/bin/bash
 
-common="common"
 telegram_bot="telegram-bot"
 commandline_utility="commandline-utility"
 all="all"
-possible_envs=(${common} ${telegram_bot} ${commandline_utility} ${all})
+possible_envs=(${telegram_bot} ${commandline_utility} ${all})
 
 env_file_name=".env"
-common_env_file=${env_file_name}
 telegram_bot_env_file="kolibri-telegram-bot/${env_file_name}"
 commandline_utility_env_file="kolibri-commandline-utility/${env_file_name}"
 
@@ -26,15 +24,9 @@ recreate_file() {
   touch ${filename}
 }
 
-init_common_env() {
-  recreate_file ${common_env_file}
-  echo "INTERNAL_API_PORT=8080" >> ${common_env_file}
-  echo "TELEGRAM_BOT_API_PORT=8080" >> ${common_env_file}
-  echo "Initialized common environment: ${common_env_file}"
-}
-
 init_telegram_bot_env() {
   recreate_file ${telegram_bot_env_file}
+  echo "PORT=8080" >> ${telegram_bot_env_file}
   echo "TELEGRAM_API_URL=https://api.telegram.org" >> ${telegram_bot_env_file}
   echo "TELEGRAM_API_TOKEN=" >> ${telegram_bot_env_file}
   echo "TELEGRAM_BOT_URL=" >> ${telegram_bot_env_file}
@@ -76,8 +68,6 @@ done
 
 for env_to_init in ${envs_to_init[@]}; do
   case ${env_to_init} in
-    ${common})
-      init_common_env ;;
     ${telegram_bot})
       init_telegram_bot_env ;;
     ${commandline_utility})

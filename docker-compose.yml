@@ -12,11 +12,9 @@ services:
     container_name: kolibri-telegram-bot
     image: kolibri-telegram-bot
     ports:
-      - ${TELEGRAM_BOT_API_PORT}:${INTERNAL_API_PORT}
+      - 8080:8080
     env_file:
       - ./kolibri-telegram-bot/.env
-    environment:
-      - PORT=${INTERNAL_API_PORT}
     command: ./start.sh telegram-bot
 
   kolibri-commandline-utility:
