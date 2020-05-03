@@ -17,3 +17,8 @@ out
 
 # Ignore google api tokens
 tokens
+
+# Ignore certificates files
+certificates
+proxy/ssl.crt
+proxy/ssl.key
