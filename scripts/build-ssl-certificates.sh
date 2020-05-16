@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# todo: this script should be removed from the project
+
 mkdir certificates
 
 openssl genrsa -out certificates/rootCA.key 2048
