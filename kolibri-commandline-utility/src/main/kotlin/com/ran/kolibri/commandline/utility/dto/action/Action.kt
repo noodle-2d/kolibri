@@ -8,11 +8,14 @@ sealed class Action {
         fun build(config: Config): Action =
             when (val name = config.tryGetString("action")) {
                 "convert-old-sheets" -> ConvertOldSheets
+                "set-webhook" -> SetWebhook
                 else -> Unknown(name)
             }
     }
 }
 
 object ConvertOldSheets : Action()
+
+object SetWebhook : Action()
 
 data class Unknown(val name: String?) : Action()

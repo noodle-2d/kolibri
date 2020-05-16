@@ -2,7 +2,7 @@ package com.ran.kolibri.common.telegram
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
-import com.ran.kolibri.common.dto.config.TelegramClientConfig
+import com.ran.kolibri.common.dto.config.TelegramConfig
 import com.ran.kolibri.common.dto.telegram.SendMessageRequest
 import com.ran.kolibri.common.dto.telegram.SetWebhookRequest
 import com.ran.kolibri.common.dto.telegram.TelegramResponse
@@ -13,7 +13,7 @@ import io.ktor.client.request.url
 class TelegramClient(kodein: Kodein) {
 
     private val httpClient: HttpClient = kodein.instance()
-    private val config: TelegramClientConfig = kodein.instance()
+    private val config: TelegramConfig = kodein.instance()
 
     suspend fun setWebhook(request: SetWebhookRequest): TelegramResponse =
         httpClient.post {
@@ -28,5 +28,5 @@ class TelegramClient(kodein: Kodein) {
         }
 
     private fun buildUrl(route: String): String =
-        "${config.apiUrl}/bot${config.apiToken}$route"
+        "${config.botApiUrl}/bot${config.botToken}$route"
 }

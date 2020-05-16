@@ -6,6 +6,8 @@ import com.ran.kolibri.commandline.utility.kodein.commandLineUtilityConfigModule
 import com.ran.kolibri.commandline.utility.kodein.commandLineUtilityListenerModule
 import com.ran.kolibri.commandline.utility.kodein.commandLineUtilityServiceModule
 import com.ran.kolibri.commandline.utility.listener.ActionListener
+import com.ran.kolibri.common.kodein.httpClientModule
+import com.ran.kolibri.common.kodein.telegramClientModule
 import com.ran.kolibri.common.listener.StartupListener
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.ListenerStarter
@@ -14,6 +16,8 @@ class CommandLineUtilityStarter : BaseStarter(), ListenerStarter {
 
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(
+            httpClientModule,
+            telegramClientModule,
             commandLineUtilityConfigModule,
             commandLineUtilityListenerModule,
             commandLineUtilityServiceModule
