@@ -20,5 +20,5 @@ tokens
 
 # Ignore certificates files
 certificates
-proxy/ssl.crt
-proxy/ssl.key
+proxy/fullchain.pem
+proxy/privkey.pem
