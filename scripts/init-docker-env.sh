@@ -1,10 +1,5 @@
 #!/bin/bash
 
-telegram_bot="telegram-bot"
-commandline_utility="commandline-utility"
-all="all"
-possible_envs=(${telegram_bot} ${commandline_utility} ${all})
-
 env_file_name=".env"
 telegram_bot_env_file="kolibri-telegram-bot/${env_file_name}"
 commandline_utility_env_file="kolibri-commandline-utility/${env_file_name}"
@@ -45,38 +40,5 @@ init_commandline_utility_env() {
   echo "Initialized command line utility environment: ${commandline_utility_env_file}"
 }
 
-print_help() {
-  echo "Usage: ./init-docker-env.sh <env1> <env2>"
-  echo "Possible env arguments: ${possible_envs[*]}"
-  exit
-}
-
-if [[ $# -eq 0 ]]; then
-  print_help
-fi
-
-params=( "$@" )
-params_count=$#
-
-for param in ${params[@]}; do
-  if [[ ! ${possible_envs[@]} =~ ${param} ]]; then
-    print_help
-  fi
-done
-
-envs_to_init=()
-
-for possible_env in ${possible_envs[@]}; do
-  if [[ ${possible_env} != ${all} && ( ${params[@]} =~ ${all} || ${params[@]} =~ ${possible_env} ) ]]; then
-    envs_to_init+=(${possible_env})
-  fi
-done
-
-for env_to_init in ${envs_to_init[@]}; do
-  case ${env_to_init} in
-    ${telegram_bot})
-      init_telegram_bot_env ;;
-    ${commandline_utility})
-      init_commandline_utility_env ;;
-  esac
-done
+init_telegram_bot_env
+init_commandline_utility_env
