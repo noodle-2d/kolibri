@@ -19,8 +19,8 @@ run/proxy:
 run/telegram-bot:
 	docker-compose up -d kolibri-telegram-bot
 
-run/commandline-utility/convert-old-sheets:
-	docker-compose run -e ACTION=convert-old-sheets kolibri-commandline-utility
+run/commandline-utility/import-old-sheets:
+	docker-compose run -e ACTION=import-old-sheets kolibri-commandline-utility
 
 run/commandline-utility/set-webhook:
 	docker-compose run -e ACTION=set-webhook kolibri-commandline-utility

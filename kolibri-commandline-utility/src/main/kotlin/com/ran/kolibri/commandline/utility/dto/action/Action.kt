@@ -7,14 +7,14 @@ sealed class Action {
     companion object {
         fun build(config: Config): Action =
             when (val name = config.tryGetString("action")) {
-                "convert-old-sheets" -> ConvertOldSheets
+                "import-old-sheets" -> ImportOldSheets
                 "set-webhook" -> SetWebhook
                 else -> Unknown(name)
             }
     }
 }
 
-object ConvertOldSheets : Action()
+object ImportOldSheets : Action()
 
 object SetWebhook : Action()
 
