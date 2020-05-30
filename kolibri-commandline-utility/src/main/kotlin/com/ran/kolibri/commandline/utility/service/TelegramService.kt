@@ -5,7 +5,7 @@ import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dto.config.TelegramConfig
 import com.ran.kolibri.common.dto.telegram.SetWebhookRequest
 import com.ran.kolibri.common.telegram.TelegramClient
-import com.ran.kolibri.common.util.logInfo
+import com.ran.kolibri.common.util.log
 
 class TelegramService(kodein: Kodein) {
 
@@ -14,10 +14,10 @@ class TelegramService(kodein: Kodein) {
 
     suspend fun setWebhook() {
         val webhookUrl = "${telegramConfig.botUrl}/api/1.x/updates/${telegramConfig.botToken}"
-        logInfo("Setting webhook. Url: $webhookUrl")
+        log.info("Setting webhook. Url: $webhookUrl")
 
         val setWebhookRequest = SetWebhookRequest(webhookUrl, listOf("message"))
         val telegramResponse = telegramClient.setWebhook(setWebhookRequest)
-        logInfo("Webhook was successfully set. Response: $telegramResponse")
+        log.info("Webhook was successfully set. Response: $telegramResponse")
     }
 }
