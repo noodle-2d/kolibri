@@ -6,7 +6,7 @@ build
 out
 
 # Ignore log files
-.log
+logs
 
 # Ignore IDEA files
 .idea
