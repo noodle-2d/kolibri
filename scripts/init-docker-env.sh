@@ -29,6 +29,9 @@ write_telegram_properties() {
 
 init_telegram_bot_env() {
   recreate_file ${telegram_bot_env_file}
+  echo "LOG_FOLDER=/var/log" >> ${telegram_bot_env_file}
+  echo "MODULE_NAME=kolibri-telegram-bot" >> ${telegram_bot_env_file}
+  echo >> ${telegram_bot_env_file}
   echo "PORT=8080" >> ${telegram_bot_env_file}
   write_telegram_properties ${telegram_bot_env_file}
   echo "Initialized telegram bot environment: ${telegram_bot_env_file}"
@@ -36,6 +39,9 @@ init_telegram_bot_env() {
 
 init_commandline_utility_env() {
   recreate_file ${commandline_utility_env_file}
+  echo "LOG_FOLDER=/var/log" >> ${commandline_utility_env_file}
+  echo "MODULE_NAME=kolibri-commandline-utility" >> ${commandline_utility_env_file}
+  echo >> ${commandline_utility_env_file}
   write_telegram_properties ${commandline_utility_env_file}
   echo "Initialized command line utility environment: ${commandline_utility_env_file}"
 }
