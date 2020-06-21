@@ -6,6 +6,7 @@ import com.ran.kolibri.common.dto.config.TelegramConfig
 import com.ran.kolibri.common.dto.ok.OkResponse
 import com.ran.kolibri.common.rest.RestController
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageBotRequest
+import com.ran.kolibri.telegram.bot.dto.utils.SendMessageToOwnerBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SetWebhookBotRequest
 import com.ran.kolibri.telegram.bot.service.TelegramService
 import io.ktor.application.call
@@ -28,6 +29,11 @@ class UtilsController(kodein: Kodein) : RestController {
         post("/utils/bot/${telegramConfig.botToken}/send-message") {
             val request: SendMessageBotRequest = call.receive()
             telegramService.sendMessage(request)
+            call.respond(OkResponse.VALUE)
+        }
+        post("/utils/bot/${telegramConfig.botToken}/send-message-to-owner") {
+            val request: SendMessageToOwnerBotRequest = call.receive()
+            telegramService.sendMessageToOwner(request)
             call.respond(OkResponse.VALUE)
         }
     }

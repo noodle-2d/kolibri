@@ -9,6 +9,7 @@ import com.ran.kolibri.common.dto.telegram.SetWebhookRequest
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.telegram.bot.dto.updates.UpdatesRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageBotRequest
+import com.ran.kolibri.telegram.bot.dto.utils.SendMessageToOwnerBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SetWebhookBotRequest
 
 class TelegramService(kodein: Kodein) {
@@ -33,6 +34,11 @@ class TelegramService(kodein: Kodein) {
     suspend fun sendMessage(request: SendMessageBotRequest) {
         log.info("Processing send message request: $request")
         callClientToSendMessage(request.chatId!!, request.text!!)
+    }
+
+    suspend fun sendMessageToOwner(request: SendMessageToOwnerBotRequest) {
+        log.info("Processing send message to owner request: $request")
+        callClientToSendMessage(telegramConfig.botOwnerId, request.text!!)
     }
 
     private suspend fun callClientToSendMessage(chatId: Int, text: String) {
