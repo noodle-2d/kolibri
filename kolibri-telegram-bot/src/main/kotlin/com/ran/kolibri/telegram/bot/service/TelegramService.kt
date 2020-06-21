@@ -3,7 +3,7 @@ package com.ran.kolibri.telegram.bot.service
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dto.telegram.SendMessageRequest
-import com.ran.kolibri.common.telegram.TelegramClient
+import com.ran.kolibri.common.client.TelegramClient
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.telegram.bot.dto.updates.UpdatesRequest
 

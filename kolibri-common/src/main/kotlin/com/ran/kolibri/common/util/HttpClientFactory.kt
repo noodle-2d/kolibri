@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.http
+package com.ran.kolibri.common.util
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy

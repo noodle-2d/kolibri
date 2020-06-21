@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.telegram
+package com.ran.kolibri.common.client
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance

@@ -7,8 +7,8 @@ import com.github.salomonbrys.kodein.provider
 import com.ran.kolibri.common.dto.config.Environment
 import com.ran.kolibri.common.dto.config.ServerConfig
 import com.ran.kolibri.common.dto.config.TelegramConfig
-import com.ran.kolibri.common.http.buildHttpClient
-import com.ran.kolibri.common.telegram.TelegramClient
+import com.ran.kolibri.common.util.buildHttpClient
+import com.ran.kolibri.common.client.TelegramClient
 import com.typesafe.config.Config
 import io.ktor.client.HttpClient
 
