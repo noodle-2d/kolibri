@@ -2,9 +2,9 @@ package com.ran.kolibri.commandline.utility.service
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
+import com.ran.kolibri.common.client.TelegramClient
 import com.ran.kolibri.common.dto.config.TelegramConfig
 import com.ran.kolibri.common.dto.telegram.SetWebhookRequest
-import com.ran.kolibri.common.client.TelegramClient
 import com.ran.kolibri.common.util.log
 
 class TelegramService(kodein: Kodein) {

@@ -1,6 +1,9 @@
 docker-env:
 	./scripts/init-docker-env.sh
 
+format:
+	./gradlew ktlintFormat
+
 gradle-build/telegram-bot:
 	./gradlew clean kolibri-telegram-bot:build
 
