@@ -43,6 +43,8 @@ init_commandline_utility_env() {
   echo "MODULE_NAME=kolibri-commandline-utility" >> ${commandline_utility_env_file}
   echo >> ${commandline_utility_env_file}
   write_telegram_properties ${commandline_utility_env_file}
+  echo >> ${commandline_utility_env_file}
+  echo "ACCOUNTS_SPREADSHEET_ID=" >> ${commandline_utility_env_file}
   echo "Initialized command line utility environment: ${commandline_utility_env_file}"
 }
 
