@@ -10,6 +10,7 @@ import com.ran.kolibri.common.starter.RestApiStarter
 import com.ran.kolibri.telegram.bot.kodein.telegramBotRestModule
 import com.ran.kolibri.telegram.bot.kodein.telegramBotServiceModule
 import com.ran.kolibri.telegram.bot.rest.UpdatesController
+import com.ran.kolibri.telegram.bot.rest.UtilsController
 
 class TelegramBotStarter : BaseStarter(), RestApiStarter {
 
@@ -23,6 +24,7 @@ class TelegramBotStarter : BaseStarter(), RestApiStarter {
 
     override fun getRestControllers(kodein: Kodein): List<RestController> =
         listOf(
-            kodein.instance<UpdatesController>()
+            kodein.instance<UpdatesController>(),
+            kodein.instance<UtilsController>()
         )
 }
