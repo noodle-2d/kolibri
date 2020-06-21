@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.dto.telegram
+package com.ran.kolibri.telegram.bot.dto.telegram
 
 data class SetWebhookRequest(
     var url: String? = null,

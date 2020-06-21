@@ -1,11 +1,11 @@
-package com.ran.kolibri.common.client
+package com.ran.kolibri.telegram.bot.client
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
-import com.ran.kolibri.common.dto.config.TelegramConfig
-import com.ran.kolibri.common.dto.telegram.SendMessageRequest
-import com.ran.kolibri.common.dto.telegram.SetWebhookRequest
-import com.ran.kolibri.common.dto.telegram.TelegramResponse
+import com.ran.kolibri.telegram.bot.dto.config.TelegramConfig
+import com.ran.kolibri.telegram.bot.dto.telegram.SendMessageRequest
+import com.ran.kolibri.telegram.bot.dto.telegram.SetWebhookRequest
+import com.ran.kolibri.telegram.bot.dto.telegram.TelegramResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
 import io.ktor.client.request.url

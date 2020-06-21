@@ -2,9 +2,9 @@ package com.ran.kolibri.telegram.bot.rest
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
-import com.ran.kolibri.common.dto.config.TelegramConfig
 import com.ran.kolibri.common.dto.ok.OkResponse
 import com.ran.kolibri.common.rest.RestController
+import com.ran.kolibri.telegram.bot.dto.config.TelegramConfig
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageToOwnerBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SetWebhookBotRequest
@@ -20,7 +20,7 @@ class UtilsController(kodein: Kodein) : RestController {
     private val telegramService: TelegramService = kodein.instance()
     private val telegramConfig: TelegramConfig = kodein.instance()
 
-    override fun configure(route: Route): Route = route.apply  {
+    override fun configure(route: Route): Route = route.apply {
         post("/utils/bot/${telegramConfig.botToken}/set-webhook") {
             val request: SetWebhookBotRequest = call.receive()
             telegramService.setWebhook(request)

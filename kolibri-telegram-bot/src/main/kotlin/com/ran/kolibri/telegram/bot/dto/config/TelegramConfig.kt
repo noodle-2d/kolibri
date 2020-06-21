@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.dto.config
+package com.ran.kolibri.telegram.bot.dto.config
 
 import com.typesafe.config.Config
 
