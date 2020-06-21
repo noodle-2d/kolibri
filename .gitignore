@@ -16,7 +16,7 @@ logs
 .env
 
 # Ignore google api tokens
-tokens
+google
 
 # Ignore certificates files
 proxy/fullchain.pem
