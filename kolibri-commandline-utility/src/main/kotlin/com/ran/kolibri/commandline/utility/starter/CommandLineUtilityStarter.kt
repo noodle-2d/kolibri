@@ -7,6 +7,7 @@ import com.ran.kolibri.commandline.utility.kodein.commandLineUtilityListenerModu
 import com.ran.kolibri.commandline.utility.kodein.commandLineUtilityServiceModule
 import com.ran.kolibri.commandline.utility.listener.ActionListener
 import com.ran.kolibri.common.kodein.httpClientModule
+import com.ran.kolibri.common.kodein.sheetsModule
 import com.ran.kolibri.common.kodein.telegramClientModule
 import com.ran.kolibri.common.listener.StartupListener
 import com.ran.kolibri.common.starter.BaseStarter
@@ -18,6 +19,7 @@ class CommandLineUtilityStarter : BaseStarter(), ListenerStarter {
         listOf(
             httpClientModule,
             telegramClientModule,
+            sheetsModule,
             commandLineUtilityConfigModule,
             commandLineUtilityListenerModule,
             commandLineUtilityServiceModule
