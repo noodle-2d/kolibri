@@ -19,6 +19,5 @@ logs
 tokens
 
 # Ignore certificates files
-certificates
 proxy/fullchain.pem
 proxy/privkey.pem
