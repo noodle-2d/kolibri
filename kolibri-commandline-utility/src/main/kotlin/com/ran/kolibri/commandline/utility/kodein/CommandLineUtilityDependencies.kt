@@ -7,7 +7,6 @@ import com.github.salomonbrys.kodein.provider
 import com.ran.kolibri.commandline.utility.dto.action.Action
 import com.ran.kolibri.commandline.utility.listener.ActionListener
 import com.ran.kolibri.commandline.utility.service.ImportOldSheetsService
-import com.ran.kolibri.commandline.utility.service.TelegramService
 
 val commandLineUtilityConfigModule = Kodein.Module {
     bind<Action>() with provider { Action.build(kodein.instance()) }
@@ -19,5 +18,4 @@ val commandLineUtilityListenerModule = Kodein.Module {
 
 val commandLineUtilityServiceModule = Kodein.Module {
     bind<ImportOldSheetsService>() with provider { ImportOldSheetsService(kodein) }
-    bind<TelegramService>() with provider { TelegramService(kodein) }
 }
