@@ -19,6 +19,9 @@ build/commandline-utility: gradle-build/commandline-utility
 run/proxy:
 	docker-compose up -d proxy
 
+run/database:
+	docker-compose up -d kolibri-database
+
 run/telegram-bot:
 	docker-compose up -d kolibri-telegram-bot
 
@@ -30,6 +33,9 @@ run/commandline-utility/set-webhook:
 
 stop/proxy:
 	docker-compose stop proxy
+
+stop/database:
+	docker-compose stop kolibri-database
 
 stop/telegram-bot:
 	docker-compose stop kolibri-telegram-bot

@@ -26,8 +26,10 @@ init_docker_compose_env() {
   echo "TELEGRAM_BOT_HTTP_PORT=80" >> ${docker_compose_env_file}
   echo "TELEGRAM_BOT_HTTPS_PORT=443" >> ${docker_compose_env_file}
   echo "TELEGRAM_PROXY_PORT=81" >> ${docker_compose_env_file}
-  echo "DATABASE_PORT=5432" >> ${docker_compose_env_file}
-  echo "DATABASE_PASSWORD=" >> ${docker_compose_env_file}
+  echo "POSTGRES_PORT=5432" >> ${docker_compose_env_file}
+  echo "POSTGRES_DB=kolibri" >> ${docker_compose_env_file}
+  echo "POSTGRES_USER=kolibri" >> ${docker_compose_env_file}
+  echo "POSTGRES_PASSWORD=" >> ${docker_compose_env_file}
 }
 
 init_telegram_bot_env() {

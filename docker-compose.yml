@@ -2,6 +2,18 @@ version: '3.6'
 
 services:
 
+  kolibri-database:
+    container_name: kolibri-database
+    image: postgres:13
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - /var/pg/kolibri-db:/var/lib/postgresql/data
+
   kolibri-telegram-bot:
     build:
       context: .
@@ -29,8 +41,8 @@ services:
     command: java -jar app.jar
 
   proxy:
-    image: nginx:1.17.10
     container_name: proxy
+    image: nginx:1.17.10
     ports:
       - ${TELEGRAM_BOT_HTTP_PORT}:${TELEGRAM_BOT_HTTP_PORT}
       - ${TELEGRAM_BOT_HTTPS_PORT}:${TELEGRAM_BOT_HTTPS_PORT}
