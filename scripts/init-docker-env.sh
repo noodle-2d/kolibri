@@ -1,6 +1,7 @@
 #!/bin/bash
 
 env_file_name=".env"
+docker_compose_env_file="${env_file_name}"
 telegram_bot_env_file="kolibri-telegram-bot/${env_file_name}"
 commandline_utility_env_file="kolibri-commandline-utility/${env_file_name}"
 
@@ -17,6 +18,16 @@ recreate_file() {
     fi
   fi
   touch ${filename}
+}
+
+init_docker_compose_env() {
+  recreate_file ${docker_compose_env_file}
+  echo "TELEGRAM_BOT_INTERNAL_PORT=8080" >> ${docker_compose_env_file}
+  echo "TELEGRAM_BOT_HTTP_PORT=80" >> ${docker_compose_env_file}
+  echo "TELEGRAM_BOT_HTTPS_PORT=443" >> ${docker_compose_env_file}
+  echo "TELEGRAM_PROXY_PORT=81" >> ${docker_compose_env_file}
+  echo "DATABASE_PORT=5432" >> ${docker_compose_env_file}
+  echo "DATABASE_PASSWORD=" >> ${docker_compose_env_file}
 }
 
 init_telegram_bot_env() {
@@ -41,5 +52,6 @@ init_commandline_utility_env() {
   echo "Initialized command line utility environment: ${commandline_utility_env_file}"
 }
 
+init_docker_compose_env
 init_telegram_bot_env
 init_commandline_utility_env

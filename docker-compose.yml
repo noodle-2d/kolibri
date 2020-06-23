@@ -9,7 +9,7 @@ services:
     container_name: kolibri-telegram-bot
     image: kolibri-telegram-bot
     ports:
-      - 8080:8080
+      - ${TELEGRAM_BOT_INTERNAL_PORT}:${TELEGRAM_BOT_INTERNAL_PORT}
     volumes:
       - /var/log:/var/log
     env_file:
@@ -32,9 +32,9 @@ services:
     image: nginx:1.17.10
     container_name: proxy
     ports:
-      - 80:80
-      - 81:81
-      - 443:443
+      - ${TELEGRAM_BOT_HTTP_PORT}:${TELEGRAM_BOT_HTTP_PORT}
+      - ${TELEGRAM_BOT_HTTPS_PORT}:${TELEGRAM_BOT_HTTPS_PORT}
+      - ${TELEGRAM_PROXY_PORT}:${TELEGRAM_PROXY_PORT}
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
