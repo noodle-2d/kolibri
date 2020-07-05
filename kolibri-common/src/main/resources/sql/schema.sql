@@ -1,11 +1,11 @@
 create type currency as enum (
-    'USD',
-    'EUR',
-    'RUB',
-    'CNY',
-    'GBP',
-    'CZK',
-    'BTC'
+    'usd',
+    'eur',
+    'rub',
+    'cny',
+    'gbr',
+    'czk',
+    'btc'
 );
 
 create type financial_asset_type as enum (
