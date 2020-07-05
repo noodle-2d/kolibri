@@ -6,22 +6,33 @@ import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.provider
 import com.google.api.services.sheets.v4.Sheets
 import com.ran.kolibri.common.client.SheetsClient
+import com.ran.kolibri.common.dao.AccountDao
+import com.ran.kolibri.common.dao.impl.AccountDaoImpl
+import com.ran.kolibri.common.dto.config.DatabaseConfig
 import com.ran.kolibri.common.dto.config.Environment
 import com.ran.kolibri.common.dto.config.GoogleConfig
 import com.ran.kolibri.common.dto.config.ServerConfig
+import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.ran.kolibri.common.util.buildSheets
 import com.typesafe.config.Config
 import io.ktor.client.HttpClient
+import org.jetbrains.exposed.sql.Database
 
 fun buildConfigModule(config: Config) = Kodein.Module {
     bind<Config>() with provider { config }
     bind<Environment>() with provider { Environment.build(config) }
     bind<ServerConfig>() with provider { ServerConfig(config) }
+    bind<DatabaseConfig>() with provider { DatabaseConfig(config) }
 }
 
 val httpClientModule = Kodein.Module {
     bind<HttpClient>() with provider { buildHttpClient() }
+}
+
+val daoModule = Kodein.Module {
+    bind<Database>() with provider { buildDatabase(kodein) }
+    bind<AccountDao>() with provider { AccountDaoImpl(kodein) }
 }
 
 val sheetsModule = Kodein.Module {
