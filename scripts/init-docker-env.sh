@@ -51,6 +51,10 @@ init_commandline_utility_env() {
   echo "MODULE_NAME=kolibri-commandline-utility" >> ${commandline_utility_env_file}
   echo >> ${commandline_utility_env_file}
   echo "ACCOUNTS_SPREADSHEET_ID=" >> ${commandline_utility_env_file}
+  echo >> ${commandline_utility_env_file}
+  echo "DATABASE_URL=jdbc:postgresql://kolibri-database:5432/kolibri" >> ${commandline_utility_env_file}
+  echo "DATABASE_USER=" >> ${commandline_utility_env_file}
+  echo "DATABASE_PASSWORD=" >> ${commandline_utility_env_file}
   echo "Initialized command line utility environment: ${commandline_utility_env_file}"
 }
 
