@@ -6,7 +6,6 @@ import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
-import com.ran.kolibri.common.util.PgTypeDescriptor
 import com.ran.kolibri.common.util.decimal
 import com.ran.kolibri.common.util.pgEnum
 import com.ran.kolibri.common.util.runTransaction
@@ -25,7 +24,6 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
     override suspend fun insertAccounts(accounts: List<Account>) =
         runTransaction(db) {
             accounts.forEach { account ->
-                val d: PgTypeDescriptor<AccountType>? = null
                 Accounts.insert {
                     it[name] = account.name
                     it[type] = account.type
