@@ -12,6 +12,8 @@ val kotlinVersion = "1.3.61"
 val ktorVersion = "1.3.2"
 val typesafeVersion = "1.4.0"
 val kodeinVersion = "4.1.0"
+val postgresqlJdbcDriverVersion = "42.2.14"
+val exposedVersion = "0.24.1"
 val googleApiVersion = "1.30.4"
 val googleSheetsApiVersion = "v4-rev581-1.25.0"
 val slf4jVersion = "1.7.30"
@@ -56,6 +58,13 @@ subprojects {
 
         "implementation"("com.github.salomonbrys.kodein:kodein:$kodeinVersion")
         "implementation"("com.github.salomonbrys.kodein:kodein-conf:$kodeinVersion")
+
+        "implementation"("org.postgresql:postgresql:$postgresqlJdbcDriverVersion")
+
+        "implementation"("org.jetbrains.exposed:exposed-core:$exposedVersion")
+        "implementation"("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+        "implementation"("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+        "implementation"("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
 
         "implementation"("com.google.api-client:google-api-client:$googleApiVersion")
         "implementation"("com.google.oauth-client:google-oauth-client-jetty:$googleApiVersion")
