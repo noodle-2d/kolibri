@@ -28,9 +28,6 @@ run/telegram-bot:
 run/commandline-utility/import-old-sheets:
 	docker-compose run -e ACTION=import-old-sheets kolibri-commandline-utility
 
-run/commandline-utility/set-webhook:
-	docker-compose run -e ACTION=set-webhook kolibri-commandline-utility
-
 stop/proxy:
 	docker-compose stop proxy
 
