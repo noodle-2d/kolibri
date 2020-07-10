@@ -21,10 +21,10 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
 
     private val db: Database = kodein.instance()
 
-    override suspend fun insertAccounts(accounts: List<Account>) =
+    override suspend fun insertAccounts(accounts: List<Account>): List<Account> =
         runTransaction(db) {
-            accounts.forEach { account ->
-                Accounts.insert {
+            accounts.map { account ->
+                val accountId = Accounts.insert {
                     it[name] = account.name
                     it[type] = account.type
                     it[currency] = account.currency
@@ -32,7 +32,8 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
                     it[initialAmount] = account.initialAmount
                     it[createDate] = account.createDate
                     it[closeDate] = account.closeDate
-                }
+                } get Accounts.id
+                account.copy(id = accountId.value)
             }
         }
 

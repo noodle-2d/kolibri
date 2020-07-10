@@ -19,10 +19,10 @@ class TransactionDaoImpl(kodein: Kodein) : TransactionDao {
 
     private val db: Database = kodein.instance()
 
-    override suspend fun insertTransactions(transactions: List<Transaction>) =
+    override suspend fun insertTransactions(transactions: List<Transaction>): List<Transaction> =
         runTransaction(db) {
-            transactions.forEach { transaction ->
-                Transactions.insert {
+            transactions.map { transaction ->
+                val transactionId = Transactions.insert {
                     it[accountId] = transaction.accountId
                     it[type] = transaction.type
                     it[externalTransactionCategory] = transaction.externalTransactionCategory
@@ -33,7 +33,8 @@ class TransactionDaoImpl(kodein: Kodein) : TransactionDao {
                     it[exactFinancialAssetPrice] = transaction.exactFinancialAssetPrice
                     it[exactSoldCurrencyRatioPart] = transaction.exactSoldCurrencyRatioPart
                     it[exactBoughtCurrencyRatioPart] = transaction.exactBoughtCurrencyRatioPart
-                }
+                } get Transactions.id
+                transaction.copy(id = transactionId.value)
             }
         }
 
