@@ -2,8 +2,8 @@ package com.ran.kolibri.common.entity
 
 import com.ran.kolibri.common.entity.enums.ExternalTransactionCategory
 import com.ran.kolibri.common.entity.enums.TransactionType
-import org.joda.time.DateTime
 import java.math.BigDecimal
+import org.joda.time.DateTime
 
 data class Transaction(
     val id: Long? = null,

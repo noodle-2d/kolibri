@@ -1,10 +1,10 @@
 package com.ran.kolibri.common.util
 
 import java.math.BigDecimal
+import kotlin.reflect.KClass
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import org.postgresql.util.PGobject
-import kotlin.reflect.KClass
 
 interface PgTypeDescriptor<T : Enum<T>> {
     val klass: KClass<T>
