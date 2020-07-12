@@ -1,26 +1,30 @@
 package com.ran.kolibri.commandline.utility.service
 
+import com.ran.kolibri.commandline.utility.dto.import.AccountImportDto
+import com.ran.kolibri.commandline.utility.dto.import.TransactionImportDto
 import com.ran.kolibri.common.dto.sheets.SheetRow
 import com.ran.kolibri.common.entity.Account
+import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
 import java.math.BigDecimal
 import org.joda.time.DateTime
 
-object AccountConverter {
+object AccountConverter : ConverterUtils {
 
-    // todo: add transactions list argument, evaluate initial amount, create and close dates
-    fun convert(row: SheetRow): Account {
-        val name = evaluateName(row.values.first())
-        return Account(
-            name = name,
-            type = evaluateAccountType(name),
-            currency = evaluateCurrency(name),
-            financialAssetId = null,
-            initialAmount = BigDecimal.ZERO,
-            createDate = DateTime.now().withTimeAtStartOfDay(),
-            closeDate = null
-        )
+    fun convertToImportDto(row: SheetRow, financialAssets: List<FinancialAsset>): AccountImportDto {
+        val importName = row.values.first()
+        val finalAmountString = row.values.last()
+            .let { if (it == "---") null else it }
+        val finalAmount = finalAmountString?.let { bigDecimal(it) }
+
+        val name = evaluateName(importName)
+        val type = evaluateAccountType(name)
+        val currency = evaluateCurrency(name)
+        val isClosed = finalAmount == null
+        val financialAsset = financialAssets.find { it.name == name }
+
+        return AccountImportDto(importName, name, type, currency, financialAsset, finalAmount, isClosed)
     }
 
     private fun evaluateName(rowValue: String): String =
@@ -49,8 +53,16 @@ object AccountConverter {
             else -> Currency.RUB
         }
 
-    private fun contains(string: String, substringsSet: Set<String>): Boolean =
-        substringsSet.any { string.toLowerCase().contains(it) }
+    fun convert(importDto: AccountImportDto, transactions: List<TransactionImportDto>): Account =
+        Account(
+            name = importDto.name,
+            type = importDto.type,
+            currency = importDto.currency,
+            financialAssetId = importDto.financialAsset?.id,
+            initialAmount = BigDecimal.ZERO, // todo: evaluate it by transactions list
+            createDate = DateTime.now().withTimeAtStartOfDay(), // todo: evaluate it by transactions list
+            closeDate = null // todo: evaluate it by transactions list
+        )
 
     private val NAME_REGEX = Regex("""^\d*\. (.*)$""")
     private val FINANCIAL_ASSETS_SET = setOf("акции", "облигации", "офз", "вечный портфель")
