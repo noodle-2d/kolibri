@@ -61,8 +61,14 @@ object AccountConverter : ConverterUtils {
             financialAssetId = importDto.financialAsset?.id,
             initialAmount = BigDecimal.ZERO, // todo: evaluate it by transactions list
             createDate = DateTime.now().withTimeAtStartOfDay(), // todo: evaluate it by transactions list
-            closeDate = null // todo: evaluate it by transactions list
+            closeDate = if (importDto.isClosed) findLastTransactionDate(transactions, importDto.importName) else null
         )
+
+    private fun findLastTransactionDate(transactions: List<TransactionImportDto>, accountName: String): DateTime =
+        transactions
+            .filter { it.accountString == accountName }
+            .map { it.date }
+            .max()!!
 
     private val NAME_REGEX = Regex("""^\d*\. (.*)$""")
     private val FINANCIAL_ASSETS_SET = setOf("акции", "облигации", "офз", "вечный портфель")
