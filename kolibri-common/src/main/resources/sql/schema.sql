@@ -72,7 +72,6 @@ create table account (
     type account_type not null,
     currency currency,
     financial_asset_id bigint references financial_asset(id),
-    initial_amount numeric not null,
     create_date date not null,
     close_date date
 );

@@ -6,7 +6,6 @@ import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
-import com.ran.kolibri.common.util.decimal
 import com.ran.kolibri.common.util.pgEnum
 import com.ran.kolibri.common.util.runTransaction
 import org.jetbrains.exposed.dao.id.LongIdTable
@@ -29,7 +28,6 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
                     it[type] = account.type
                     it[currency] = account.currency
                     it[financialAssetId] = account.financialAssetId
-                    it[initialAmount] = account.initialAmount
                     it[createDate] = account.createDate
                     it[closeDate] = account.closeDate
                 } get Accounts.id
@@ -54,7 +52,6 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
             type = row[Accounts.type],
             currency = row[Accounts.currency],
             financialAssetId = row[Accounts.financialAssetId],
-            initialAmount = row[Accounts.initialAmount],
             createDate = row[Accounts.createDate],
             closeDate = row[Accounts.closeDate]
         )
@@ -65,7 +62,6 @@ object Accounts : LongIdTable("account") {
     val type = pgEnum("type", AccountType)
     val currency = pgEnum("currency", Currency).nullable()
     val financialAssetId = long("financial_asset_id").nullable()
-    val initialAmount = decimal("initial_amount")
     val createDate = date("create_date")
     val closeDate = date("close_date").nullable()
 }
