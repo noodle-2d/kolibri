@@ -7,22 +7,18 @@ import com.ran.kolibri.common.entity.Transaction
 import com.ran.kolibri.common.entity.enums.ExternalTransactionCategory
 import com.ran.kolibri.common.entity.enums.TransactionType
 import com.ran.kolibri.common.util.log
+import java.lang.RuntimeException
 import java.math.BigDecimal
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 object TransactionConverter : ConverterUtils {
 
-    fun convertToImportDto(row: SheetRow): TransactionImportDto? {
-        if (row.values[1] == "" && (row.values[3] == "Начальные" || row.values[3].startsWith("Закрытие"))) {
-            log.info("Ignoring empty transaction row $row")
-            return null
-        }
-
+    fun convertToImportDto(row: SheetRow): TransactionImportDto {
         log.info("Converting transaction row $row")
         val accountString = row.values.first()
-        val amount = bigDecimal(row.values[1])
         val resultAmount = bigDecimal(row.values[2])
+        val amount = evaluateAmount(row.values[1], resultAmount)
         val comment = row.values[3]
         val date = DateTime.parse(row.values[4], DATE_FORMATTER)
 
@@ -46,6 +42,9 @@ object TransactionConverter : ConverterUtils {
         )
     }
 
+    private fun evaluateAmount(amountString: String, resultAmount: BigDecimal): BigDecimal =
+        if (amountString == "") resultAmount else bigDecimal(amountString)
+
     // todo: implement it
     private fun evaluateTransactionType(accountString: String, comment: String): TransactionType =
         TransactionType.INCOME
@@ -62,7 +61,17 @@ object TransactionConverter : ConverterUtils {
             Pair(match.groupValues[1], bigDecimal(match.groupValues[2]))
         }
 
-    fun convert(importDto: TransactionImportDto, accounts: List<Account>): Transaction {
+    fun convert(importDto: TransactionImportDto, accounts: List<Account>): Transaction? {
+        if (importDto.amount == BigDecimal.ZERO) {
+            if (importDto.comment == "Начальные" || importDto.comment?.startsWith("Закрытие") == true) {
+                log.info("Ignoring zero transaction $importDto")
+                return null
+            } else {
+                log.info("Strange transaction $importDto")
+                throw RuntimeException("Strange transaction $importDto")
+            }
+        }
+
         val accountId = accounts
             .find { importDto.accountString.contains(it.name) }
             ?.id!!

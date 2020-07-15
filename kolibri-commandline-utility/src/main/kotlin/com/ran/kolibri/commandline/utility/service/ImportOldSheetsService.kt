@@ -94,7 +94,7 @@ class ImportOldSheetsService(kodein: Kodein) {
     private fun convertTransactionsToImportDto(ranges: List<SheetRange>): List<TransactionImportDto> {
         val convertedTransactions = ranges
             .flatMap { it.rows }
-            .mapNotNull { TransactionConverter.convertToImportDto(it) }
+            .map { TransactionConverter.convertToImportDto(it) }
         log.info("Converted transactions: $convertedTransactions")
         return convertedTransactions
     }
@@ -113,7 +113,7 @@ class ImportOldSheetsService(kodein: Kodein) {
         transactionImportDtoList: List<TransactionImportDto>,
         accounts: List<Account>
     ): List<Transaction> {
-        val transactions = transactionImportDtoList.map { TransactionConverter.convert(it, accounts) }
+        val transactions = transactionImportDtoList.mapNotNull { TransactionConverter.convert(it, accounts) }
         val insertedTransactions = transactionDao.insertTransactions(transactions)
         log.info("Inserted transactions: $insertedTransactions")
         return insertedTransactions

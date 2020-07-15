@@ -7,7 +7,6 @@ import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
-import java.math.BigDecimal
 import org.joda.time.DateTime
 
 object AccountConverter : ConverterUtils {
@@ -59,10 +58,15 @@ object AccountConverter : ConverterUtils {
             type = importDto.type,
             currency = importDto.currency,
             financialAssetId = importDto.financialAsset?.id,
-            initialAmount = BigDecimal.ZERO, // todo: evaluate it by transactions list
-            createDate = DateTime.now().withTimeAtStartOfDay(), // todo: evaluate it by transactions list
+            createDate = findFirstTransactionDate(transactions, importDto.importName),
             closeDate = if (importDto.isClosed) findLastTransactionDate(transactions, importDto.importName) else null
         )
+
+    private fun findFirstTransactionDate(transactions: List<TransactionImportDto>, accountName: String): DateTime =
+        transactions
+            .filter { it.accountString == accountName }
+            .map { it.date }
+            .min()!!
 
     private fun findLastTransactionDate(transactions: List<TransactionImportDto>, accountName: String): DateTime =
         transactions
