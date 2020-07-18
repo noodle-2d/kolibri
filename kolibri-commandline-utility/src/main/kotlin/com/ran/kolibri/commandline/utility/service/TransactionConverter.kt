@@ -104,7 +104,7 @@ object TransactionConverter : ConverterUtils {
         }
 
         val accountId = accounts
-            .find { importDto.accountString.contains(it.name) }
+            .find { importDto.accountString.endsWith(it.name) }
             ?.id!!
         return Transaction(
             accountId = accountId,
