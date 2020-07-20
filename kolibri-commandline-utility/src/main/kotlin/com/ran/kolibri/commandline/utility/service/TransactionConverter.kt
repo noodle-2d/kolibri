@@ -21,6 +21,7 @@ object TransactionConverter : ConverterUtils {
         val amount = evaluateAmount(row.values[1], resultAmount)
         val comment = row.values[3]
         val date = DateTime.parse(row.values[4], DATE_FORMATTER)
+        val transactionType = evaluateTransactionType(comment, amount)
 
         val (exactFinancialAssetPrice, exactSoldCurrencyRatioPart, exactBoughtCurrencyRatioPart) =
             (if (row.values.size == 6) row.values[5] else null)
@@ -29,8 +30,8 @@ object TransactionConverter : ConverterUtils {
 
         return TransactionImportDto(
             accountString,
-            evaluateTransactionType(accountString, comment),
-            evaluateExternalTransactionCategory(accountString, comment),
+            transactionType,
+            evaluateExternalTransactionCategory(accountString, comment, transactionType),
             amount,
             resultAmount,
             date,
@@ -44,14 +45,27 @@ object TransactionConverter : ConverterUtils {
     private fun evaluateAmount(amountString: String, resultAmount: BigDecimal): BigDecimal =
         if (amountString == "") resultAmount else bigDecimal(amountString)
 
-    // todo: implement it
-    private fun evaluateTransactionType(accountString: String, comment: String): TransactionType =
-        TransactionType.INCOME
+    private fun evaluateTransactionType(comment: String, amount: BigDecimal): TransactionType =
+        when {
+            contains(comment, FINANCIAL_ASSET_SINGS) && contains(comment, PURCHASE_SIGNS) ->
+                TransactionType.FINANCIAL_ASSET_PURCHASE
+            contains(comment, FINANCIAL_ASSET_SINGS) && contains(comment, SALE_SIGNS) ->
+                TransactionType.FINANCIAL_ASSET_SALE
+            contains(comment, CURRENCY_CONVERSION_SIGNS) && !contains(comment, NOT_CURRENCY_CONVERSION_SIGNS) ->
+                TransactionType.CURRENCY_CONVERSION
+            contains(comment, TRANSFER_SIGNS) ->
+                TransactionType.TRANSFER
+            amount > BigDecimal.ZERO && !contains(comment, INCOME_EXCLUSIONS) ->
+                TransactionType.INCOME
+            else ->
+                TransactionType.EXPENSE
+        }
 
     // todo: implement it
     private fun evaluateExternalTransactionCategory(
         accountString: String,
-        comment: String
+        comment: String,
+        transactionType: TransactionType
     ): ExternalTransactionCategory? =
         null
 
@@ -124,6 +138,9 @@ object TransactionConverter : ConverterUtils {
     private val COURSE_NUMBER_REGEX = Regex("""^\(курс 1(.*) [=~] ([0-9,]*).*\)$""")
     private val FINANCIAL_ASSET_SINGS = setOf("акц", "облигац", "офз")
     private val CURRENCY_CONVERSION_SIGNS = setOf("доллар", "евро", "юаней", "чешских крон", "биткоин")
+    private val NOT_CURRENCY_CONVERSION_SIGNS = setOf("евроторг")
+    private val TRANSFER_SIGNS = setOf("перевод", "снятие", "отдано в долг", "возврат долга", "вывод", "внесение денег")
+    private val INCOME_EXCLUSIONS = setOf("возврат в wildberries")
 
     private val SALE_SIGNS = setOf(
         "продажа",
