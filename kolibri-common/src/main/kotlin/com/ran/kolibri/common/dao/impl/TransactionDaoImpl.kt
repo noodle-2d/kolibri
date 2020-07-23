@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.jodatime.date
+import org.jetbrains.exposed.sql.update
 
 class TransactionDaoImpl(kodein: Kodein) : TransactionDao {
 
@@ -35,6 +36,16 @@ class TransactionDaoImpl(kodein: Kodein) : TransactionDao {
                     it[exactBoughtCurrencyRatioPart] = transaction.exactBoughtCurrencyRatioPart
                 } get Transactions.id
                 transaction.copy(id = transactionId.value)
+            }
+        }
+
+    override suspend fun updateTransaction(transaction: Transaction): Int =
+        runTransaction(db) {
+            Transactions.update({ Transactions.id eq transaction.id }) {
+                it[associatedTransactionId] = transaction.associatedTransactionId
+                it[exactFinancialAssetPrice] = transaction.exactFinancialAssetPrice
+                it[exactSoldCurrencyRatioPart] = transaction.exactSoldCurrencyRatioPart
+                it[exactBoughtCurrencyRatioPart] = transaction.exactBoughtCurrencyRatioPart
             }
         }
 
