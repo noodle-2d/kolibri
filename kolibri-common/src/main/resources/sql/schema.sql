@@ -84,7 +84,7 @@ create table transaction (
     amount numeric not null,
     date date not null,
     comment varchar(200),
-    associated_transaction_id bigint references transaction(id),
+    associated_transaction_id bigint,
     exact_financial_asset_price numeric,
     exact_sold_currency_ratio_part numeric,
     exact_bought_currency_ratio_part numeric

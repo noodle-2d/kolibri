@@ -1,0 +1,1 @@
+alter table transaction drop constraint transaction_associated_transaction_id_fkey;
