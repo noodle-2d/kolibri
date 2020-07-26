@@ -2,8 +2,11 @@ package com.ran.kolibri.commandline.utility.service
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
+import com.ran.kolibri.commandline.utility.dto.action.ActionResult
 import com.ran.kolibri.commandline.utility.dto.import.AccountImportDto
+import com.ran.kolibri.commandline.utility.dto.import.ImportResult
 import com.ran.kolibri.commandline.utility.dto.import.TransactionImportDto
+import com.ran.kolibri.commandline.utility.listener.ActionProcessor
 import com.ran.kolibri.common.client.SheetsClient
 import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
@@ -15,7 +18,7 @@ import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.Transaction
 import com.ran.kolibri.common.util.log
 
-class ImportOldSheetsService(kodein: Kodein) {
+class ImportOldSheetsService(kodein: Kodein) : ActionProcessor {
 
     private val googleConfig: GoogleConfig = kodein.instance()
     private val sheetsClient: SheetsClient = kodein.instance()
@@ -26,7 +29,7 @@ class ImportOldSheetsService(kodein: Kodein) {
 
     private val transactionsEnrichService = TransactionsEnrichService(kodein)
 
-    suspend fun convertOldSheets() {
+    override suspend fun processAction(): ActionResult {
         log.info("Started to import old sheets")
 
         deleteAll()
@@ -46,6 +49,10 @@ class ImportOldSheetsService(kodein: Kodein) {
         val transactions = insertTransactions(transactionImportDtoList, accounts)
 
         transactionsEnrichService.enrichTransactions(transactions)
+
+        val result = ImportResult(transactions.size, accounts.size, financialAssets.size)
+        log.info("Finished importing old sheets with result: ${result.asString()}")
+        return result
     }
 
     private suspend fun deleteAll() {
