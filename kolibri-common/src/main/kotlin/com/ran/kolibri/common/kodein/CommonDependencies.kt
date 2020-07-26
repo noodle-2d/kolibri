@@ -6,6 +6,7 @@ import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.provider
 import com.google.api.services.sheets.v4.Sheets
 import com.ran.kolibri.common.client.SheetsClient
+import com.ran.kolibri.common.client.TelegramBotClient
 import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
 import com.ran.kolibri.common.dao.TransactionDao
@@ -16,6 +17,7 @@ import com.ran.kolibri.common.dto.config.DatabaseConfig
 import com.ran.kolibri.common.dto.config.Environment
 import com.ran.kolibri.common.dto.config.GoogleConfig
 import com.ran.kolibri.common.dto.config.ServerConfig
+import com.ran.kolibri.common.dto.config.TelegramBotClientConfig
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.ran.kolibri.common.util.buildSheets
@@ -45,4 +47,9 @@ val sheetsModule = Kodein.Module {
     bind<GoogleConfig>() with provider { GoogleConfig(kodein.instance()) }
     bind<Sheets>() with provider { buildSheets(kodein) }
     bind<SheetsClient>() with provider { SheetsClient(kodein) }
+}
+
+val telegramBotClientModule = Kodein.Module {
+    bind<TelegramBotClientConfig>() with provider { TelegramBotClientConfig(kodein.instance<Config>()) }
+    bind<TelegramBotClient>() with provider { TelegramBotClient(kodein) }
 }

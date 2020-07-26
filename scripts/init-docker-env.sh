@@ -30,6 +30,7 @@ init_docker_compose_env() {
   echo "POSTGRES_DB=kolibri" >> ${docker_compose_env_file}
   echo "POSTGRES_USER=kolibri" >> ${docker_compose_env_file}
   echo "POSTGRES_PASSWORD=" >> ${docker_compose_env_file}
+  echo "Initialized common environment: ${docker_compose_env_file}"
 }
 
 init_telegram_bot_env() {
@@ -55,6 +56,8 @@ init_commandline_utility_env() {
   echo "DATABASE_URL=jdbc:postgresql://kolibri-database:5432/kolibri" >> ${commandline_utility_env_file}
   echo "DATABASE_USER=" >> ${commandline_utility_env_file}
   echo "DATABASE_PASSWORD=" >> ${commandline_utility_env_file}
+  echo >> ${commandline_utility_env_file}
+  echo "TELEGRAM_BOT_CLIENT_URL=http://kolibri-telegram-bot:8080" >> ${commandline_utility_env_file}
   echo "Initialized command line utility environment: ${commandline_utility_env_file}"
 }
 
