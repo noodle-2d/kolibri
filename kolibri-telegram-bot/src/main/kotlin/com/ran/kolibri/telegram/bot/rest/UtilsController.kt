@@ -4,7 +4,6 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dto.ok.OkResponse
 import com.ran.kolibri.common.rest.RestController
-import com.ran.kolibri.telegram.bot.dto.config.TelegramConfig
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageToOwnerBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SetWebhookBotRequest
@@ -18,20 +17,19 @@ import io.ktor.routing.post
 class UtilsController(kodein: Kodein) : RestController {
 
     private val telegramService: TelegramService = kodein.instance()
-    private val telegramConfig: TelegramConfig = kodein.instance()
 
     override fun configure(route: Route): Route = route.apply {
-        post("/utils/bot/${telegramConfig.botToken}/set-webhook") {
+        post("/utils/set-webhook") {
             val request: SetWebhookBotRequest = call.receive()
             telegramService.setWebhook(request)
             call.respond(OkResponse.VALUE)
         }
-        post("/utils/bot/${telegramConfig.botToken}/send-message") {
+        post("/utils/send-message") {
             val request: SendMessageBotRequest = call.receive()
             telegramService.sendMessage(request)
             call.respond(OkResponse.VALUE)
         }
-        post("/utils/bot/${telegramConfig.botToken}/send-message-to-owner") {
+        post("/utils/send-message-to-owner") {
             val request: SendMessageToOwnerBotRequest = call.receive()
             telegramService.sendMessageToOwner(request)
             call.respond(OkResponse.VALUE)
