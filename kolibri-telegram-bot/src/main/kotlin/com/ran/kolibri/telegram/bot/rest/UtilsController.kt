@@ -3,9 +3,9 @@ package com.ran.kolibri.telegram.bot.rest
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dto.ok.OkResponse
+import com.ran.kolibri.common.dto.telegram.bot.utils.SendMessageToOwnerBotRequest
 import com.ran.kolibri.common.rest.RestController
 import com.ran.kolibri.telegram.bot.dto.utils.SendMessageBotRequest
-import com.ran.kolibri.telegram.bot.dto.utils.SendMessageToOwnerBotRequest
 import com.ran.kolibri.telegram.bot.dto.utils.SetWebhookBotRequest
 import com.ran.kolibri.telegram.bot.service.TelegramService
 import io.ktor.application.call
