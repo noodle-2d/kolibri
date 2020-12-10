@@ -28,6 +28,18 @@ services:
       - ./kolibri-telegram-bot/.env
     command: java -jar app.jar
 
+  kolibri-scheduler:
+    build:
+      context: .
+      dockerfile: kolibri-scheduler/.dockerfile
+    container_name: kolibri-scheduler
+    image: kolibri-scheduler
+    volumes:
+      - /var/log:/var/log
+    env_file:
+      - ./kolibri-telegram-bot/.env
+    command: java -jar app.jar
+
   kolibri-commandline-utility:
     build:
       context: .
