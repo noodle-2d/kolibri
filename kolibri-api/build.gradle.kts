@@ -1,4 +1,4 @@
-extra["main-class-name"] = "com.ran.kolibri.telegram.bot.MainKt"
+extra["main-class-name"] = "com.ran.kolibri.api.MainKt"
 
 dependencies {
     implementation(project(":kolibri-common"))

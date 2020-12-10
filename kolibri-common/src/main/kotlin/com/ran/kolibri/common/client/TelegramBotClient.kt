@@ -16,7 +16,7 @@ class TelegramBotClient(kodein: Kodein) {
 
     suspend fun sendMessageToOwner(request: SendMessageToOwnerBotRequest): OkResponse =
         httpClient.post {
-            url(buildUrl("/utils/send-message-to-owner"))
+            url(buildUrl("/telegram/send-message-to-owner"))
             body = request
         }
 

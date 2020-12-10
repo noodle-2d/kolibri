@@ -14,18 +14,18 @@ services:
     volumes:
       - /var/pg/kolibri-db:/var/lib/postgresql/data
 
-  kolibri-telegram-bot:
+  kolibri-api:
     build:
       context: .
-      dockerfile: kolibri-telegram-bot/.dockerfile
-    container_name: kolibri-telegram-bot
-    image: kolibri-telegram-bot
+      dockerfile: kolibri-api/.dockerfile
+    container_name: kolibri-api
+    image: kolibri-api
     ports:
-      - ${TELEGRAM_BOT_INTERNAL_PORT}:${TELEGRAM_BOT_INTERNAL_PORT}
+      - 1100:1100
     volumes:
       - /var/log:/var/log
     env_file:
-      - ./kolibri-telegram-bot/.env
+      - ./kolibri-api/.env
     command: java -jar app.jar
 
   kolibri-scheduler:
