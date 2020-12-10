@@ -4,6 +4,7 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
+import com.ran.kolibri.common.kodein.sheetsModule
 import com.ran.kolibri.common.kodein.telegramClientModule
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.SchedulerStarter
@@ -18,9 +19,10 @@ class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
 
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(
-            daoModule,
             httpClientModule,
             telegramClientModule,
+            sheetsModule,
+            daoModule,
             managerModule,
             watcherModule
         )
