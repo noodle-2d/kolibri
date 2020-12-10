@@ -13,6 +13,9 @@ gradle-build/commandline-utility:
 gradle-build/scheduler:
 	./gradlew clean kolibri-scheduler:build
 
+list-docker-services:
+	docker-compose ps
+
 build/api: gradle-build/api
 	docker-compose build kolibri-api
 
@@ -21,9 +24,6 @@ build/commandline-utility: gradle-build/commandline-utility
 
 build/scheduler: gradle-build/scheduler
 	docker-compose build kolibri-scheduler
-
-run/proxy:
-	docker-compose up -d proxy
 
 run/database:
 	docker-compose up -d kolibri-database
@@ -36,9 +36,6 @@ run/commandline-utility/import-old-sheets:
 
 run/scheduler:
 	docker-compose up -d kolibri-scheduler
-
-stop/proxy:
-	docker-compose stop proxy
 
 stop/database:
 	docker-compose stop kolibri-database
