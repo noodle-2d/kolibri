@@ -1,8 +1,5 @@
 package com.ran.kolibri.common.starter
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dto.config.ServerConfig
@@ -19,8 +16,6 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.coroutines.coroutineScope
 
-// todo: remove snake case here
-// todo: replace 1.x by v1 here
 interface RestApiStarter {
 
     fun getRestControllers(kodein: Kodein): List<RestController>
@@ -36,15 +31,11 @@ interface RestApiStarter {
             install(CallLogging)
 
             install(ContentNegotiation) {
-                jackson {
-                    propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-                    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    enable(SerializationFeature.INDENT_OUTPUT)
-                }
+                jackson()
             }
 
             install(Routing) {
-                route("/api/1.x") {
+                route("/api/v1") {
                     restControllers.forEach { it.configure(this) }
                 }
             }

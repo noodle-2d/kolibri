@@ -21,5 +21,5 @@ class TelegramBotClient(kodein: Kodein) {
         }
 
     private fun buildUrl(route: String): String =
-        "${config.url}/api/1.x$route"
+        "${config.url}/api/v1$route"
 }
