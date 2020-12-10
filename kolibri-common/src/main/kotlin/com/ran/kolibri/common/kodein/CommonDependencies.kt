@@ -20,6 +20,7 @@ import com.ran.kolibri.common.dto.config.Environment
 import com.ran.kolibri.common.dto.config.GoogleConfig
 import com.ran.kolibri.common.dto.config.ServerConfig
 import com.ran.kolibri.common.dto.config.TelegramBotClientConfig
+import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.ran.kolibri.common.util.buildSheets
@@ -45,9 +46,10 @@ val daoModule = Kodein.Module {
     bind<TransactionDao>() with provider { TransactionDaoImpl(kodein) }
 }
 
-val telegramClientModule = Kodein.Module {
+val telegramModule = Kodein.Module {
     bind<TelegramConfig>() with provider { TelegramConfig(kodein.instance()) }
     bind<TelegramClient>() with provider { TelegramClient(kodein) }
+    bind<TelegramManager>() with provider { TelegramManager(kodein) }
 }
 
 val sheetsModule = Kodein.Module {
