@@ -5,6 +5,7 @@ import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.api.kodein.managerModule
 import com.ran.kolibri.api.kodein.restModule
 import com.ran.kolibri.api.rest.TelegramController
+import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.telegramClientModule
 import com.ran.kolibri.common.rest.RestController
@@ -17,6 +18,7 @@ class KolibriApiStarter : BaseStarter(), RestApiStarter {
         listOf(
             httpClientModule,
             telegramClientModule,
+            daoModule,
             managerModule,
             restModule
         )
