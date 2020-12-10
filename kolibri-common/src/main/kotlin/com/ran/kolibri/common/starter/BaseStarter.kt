@@ -24,7 +24,7 @@ abstract class BaseStarter {
         if (this@BaseStarter is RestApiStarter) {
             startRestApi(kodein)
         }
-        if (this@BaseStarter is WatcherStarter) {
+        if (this@BaseStarter is SchedulerStarter) {
             startWatchers(kodein)
         }
     }

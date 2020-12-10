@@ -11,7 +11,7 @@ import com.ran.kolibri.common.rest.RestController
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.RestApiStarter
 
-class TelegramBotStarter : BaseStarter(), RestApiStarter {
+class KolibriApiStarter : BaseStarter(), RestApiStarter {
 
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(

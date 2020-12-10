@@ -6,7 +6,7 @@ import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.telegramClientModule
 import com.ran.kolibri.common.starter.BaseStarter
-import com.ran.kolibri.common.starter.WatcherStarter
+import com.ran.kolibri.common.starter.SchedulerStarter
 import com.ran.kolibri.common.watcher.Watcher
 import com.ran.kolibri.scheduler.kodein.managerModule
 import com.ran.kolibri.scheduler.kodein.watcherModule
@@ -14,7 +14,7 @@ import com.ran.kolibri.scheduler.watcher.OldSheetsImportWatcher
 import com.ran.kolibri.scheduler.watcher.SheetsExportWatcher
 import com.ran.kolibri.scheduler.watcher.TelegramPullWatcher
 
-class SchedulerStarter : BaseStarter(), WatcherStarter {
+class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
 
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(

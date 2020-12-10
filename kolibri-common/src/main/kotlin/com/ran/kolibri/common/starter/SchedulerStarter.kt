@@ -9,7 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.joda.time.DateTime
 
-interface WatcherStarter {
+interface SchedulerStarter {
 
     fun getWatchers(kodein: Kodein): List<Watcher>
 

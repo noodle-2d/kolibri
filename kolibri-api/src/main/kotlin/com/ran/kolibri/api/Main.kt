@@ -1,5 +1,5 @@
 package com.ran.kolibri.api
 
-import com.ran.kolibri.api.starter.TelegramBotStarter
+import com.ran.kolibri.api.starter.KolibriApiStarter
 
-fun main(args: Array<String>) = TelegramBotStarter().startApplication(args)
+fun main(args: Array<String>) = KolibriApiStarter().startApplication(args)
