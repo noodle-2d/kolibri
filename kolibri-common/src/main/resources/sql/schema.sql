@@ -89,3 +89,7 @@ create table transaction (
     exact_sold_currency_ratio_part numeric,
     exact_bought_currency_ratio_part numeric
 );
+
+create table telegram_integration (
+    last_update_id bigint not null
+);

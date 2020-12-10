@@ -11,16 +11,17 @@ import com.ran.kolibri.common.client.telegram.TelegramClient
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
+import com.ran.kolibri.common.dao.TelegramIntegrationDao
 import com.ran.kolibri.common.dao.TransactionDao
 import com.ran.kolibri.common.dao.impl.AccountDaoImpl
 import com.ran.kolibri.common.dao.impl.FinancialAssetDaoImpl
+import com.ran.kolibri.common.dao.impl.TelegramIntegrationDaoImpl
 import com.ran.kolibri.common.dao.impl.TransactionDaoImpl
 import com.ran.kolibri.common.dto.config.DatabaseConfig
 import com.ran.kolibri.common.dto.config.Environment
 import com.ran.kolibri.common.dto.config.GoogleConfig
 import com.ran.kolibri.common.dto.config.ServerConfig
 import com.ran.kolibri.common.dto.config.TelegramBotClientConfig
-import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.ran.kolibri.common.util.buildSheets
@@ -44,12 +45,12 @@ val daoModule = Kodein.Module {
     bind<FinancialAssetDao>() with provider { FinancialAssetDaoImpl(kodein) }
     bind<AccountDao>() with provider { AccountDaoImpl(kodein) }
     bind<TransactionDao>() with provider { TransactionDaoImpl(kodein) }
+    bind<TelegramIntegrationDao>() with provider { TelegramIntegrationDaoImpl(kodein) }
 }
 
-val telegramModule = Kodein.Module {
+val telegramClientModule = Kodein.Module {
     bind<TelegramConfig>() with provider { TelegramConfig(kodein.instance()) }
     bind<TelegramClient>() with provider { TelegramClient(kodein) }
-    bind<TelegramManager>() with provider { TelegramManager(kodein) }
 }
 
 val sheetsModule = Kodein.Module {

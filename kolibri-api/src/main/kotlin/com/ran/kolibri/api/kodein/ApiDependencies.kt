@@ -4,7 +4,12 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.provider
 import com.ran.kolibri.api.rest.TelegramController
+import com.ran.kolibri.common.manager.TelegramManager
 
-val apiRestModule = Kodein.Module {
+val managerModule = Kodein.Module {
+    bind<TelegramManager>() with provider { TelegramManager(kodein) }
+}
+
+val restModule = Kodein.Module {
     bind<TelegramController>() with provider { TelegramController(kodein) }
 }
