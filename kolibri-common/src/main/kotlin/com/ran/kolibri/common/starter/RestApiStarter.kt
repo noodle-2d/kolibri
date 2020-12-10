@@ -19,6 +19,8 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.coroutines.coroutineScope
 
+// todo: remove snake case here
+// todo: replace 1.x by v1 here
 interface RestApiStarter {
 
     fun getRestControllers(kodein: Kodein): List<RestController>
