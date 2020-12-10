@@ -7,6 +7,8 @@ import com.github.salomonbrys.kodein.provider
 import com.google.api.services.sheets.v4.Sheets
 import com.ran.kolibri.common.client.SheetsClient
 import com.ran.kolibri.common.client.TelegramBotClient
+import com.ran.kolibri.common.client.telegram.TelegramClient
+import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
 import com.ran.kolibri.common.dao.TransactionDao
@@ -41,6 +43,11 @@ val daoModule = Kodein.Module {
     bind<FinancialAssetDao>() with provider { FinancialAssetDaoImpl(kodein) }
     bind<AccountDao>() with provider { AccountDaoImpl(kodein) }
     bind<TransactionDao>() with provider { TransactionDaoImpl(kodein) }
+}
+
+val telegramClientModule = Kodein.Module {
+    bind<TelegramConfig>() with provider { TelegramConfig(kodein.instance()) }
+    bind<TelegramClient>() with provider { TelegramClient(kodein) }
 }
 
 val sheetsModule = Kodein.Module {

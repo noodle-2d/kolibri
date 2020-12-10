@@ -3,11 +3,11 @@ package com.ran.kolibri.common.starter
 import com.github.salomonbrys.kodein.Kodein
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.common.watcher.Watcher
+import kotlin.math.max
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.joda.time.DateTime
-import kotlin.math.max
 
 interface WatcherStarter {
 
@@ -26,7 +26,7 @@ interface WatcherStarter {
         log.info("Watcher ${watcher.name()} will be executed at $firstActionTime")
         delayUntil(firstActionTime)
 
-        while(true) {
+        while (true) {
             val chosenNextActionTime = try {
                 val nextActionTime = watcher.doAction()
                 log.info("Watcher ${watcher.name()} executed successfully, next action time is $nextActionTime")
