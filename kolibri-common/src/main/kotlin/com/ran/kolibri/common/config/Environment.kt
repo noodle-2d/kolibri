@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.dto.config
+package com.ran.kolibri.common.config
 
 import com.ran.kolibri.common.util.tryGetString
 import com.typesafe.config.Config

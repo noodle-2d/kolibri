@@ -2,7 +2,7 @@ package com.ran.kolibri.common.starter
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
-import com.ran.kolibri.common.dto.config.ServerConfig
+import com.ran.kolibri.common.config.ServerConfig
 import com.ran.kolibri.common.rest.PingController
 import com.ran.kolibri.common.rest.RestController
 import io.ktor.application.install
