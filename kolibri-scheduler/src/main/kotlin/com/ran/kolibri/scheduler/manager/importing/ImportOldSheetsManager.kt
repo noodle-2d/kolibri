@@ -3,11 +3,11 @@ package com.ran.kolibri.scheduler.manager.importing
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.sheets.SheetsClient
+import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import com.ran.kolibri.common.client.sheets.model.SheetRange
 import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
 import com.ran.kolibri.common.dao.TransactionDao
-import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.Transaction

@@ -6,6 +6,7 @@ import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.provider
 import com.google.api.services.sheets.v4.Sheets
 import com.ran.kolibri.common.client.sheets.SheetsClient
+import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import com.ran.kolibri.common.client.telegram.TelegramClient
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.dao.AccountDao
@@ -18,7 +19,6 @@ import com.ran.kolibri.common.dao.impl.TelegramIntegrationDaoImpl
 import com.ran.kolibri.common.dao.impl.TransactionDaoImpl
 import com.ran.kolibri.common.dto.config.DatabaseConfig
 import com.ran.kolibri.common.dto.config.Environment
-import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import com.ran.kolibri.common.dto.config.ServerConfig
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient

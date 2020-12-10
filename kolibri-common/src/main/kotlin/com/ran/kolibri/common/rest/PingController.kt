@@ -1,6 +1,6 @@
 package com.ran.kolibri.common.rest
 
-import com.ran.kolibri.common.dto.ok.OkResponse
+import com.ran.kolibri.common.rest.model.OkResponse
 import io.ktor.application.call
 import io.ktor.response.respond
 import io.ktor.routing.Route
