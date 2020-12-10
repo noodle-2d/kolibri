@@ -23,14 +23,12 @@ interface WatcherStarter {
 
     private suspend fun startWatcher(watcher: Watcher) {
         val firstActionTime = watcher.nextActionTime()
-        log.info("Watcher ${watcher.name()} will be executed at $firstActionTime")
+        log.info("Watcher ${watcher.name()} will be executed first time at $firstActionTime")
         delayUntil(firstActionTime)
 
         while (true) {
             val chosenNextActionTime = try {
-                val nextActionTime = watcher.doAction()
-                log.info("Watcher ${watcher.name()} executed successfully, next action time is $nextActionTime")
-                nextActionTime
+                watcher.doAction()
             } catch (e: Throwable) {
                 val nextActionTime = DateTime.now().plusMinutes(1)
                 log.error("Watcher ${watcher.name()} failed with error, next action time is $nextActionTime", e)

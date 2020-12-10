@@ -1,17 +1,21 @@
 package com.ran.kolibri.scheduler.watcher
 
-import com.ran.kolibri.common.util.log
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.instance
+import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.watcher.Watcher
 import com.ran.kolibri.common.watcher.nextTimeForEverySeconds
 import org.joda.time.DateTime
 
-class TelegramPullWatcher : Watcher {
+class TelegramPullWatcher(kodein: Kodein) : Watcher {
+
+    private val telegramManager: TelegramManager = kodein.instance()
 
     override fun nextActionTime(): DateTime =
-        nextTimeForEverySeconds(5)
+        nextTimeForEverySeconds(3)
 
     override suspend fun doAction(): DateTime {
-        log.info("Started telegram pull at ${DateTime.now()}")
+        telegramManager.pullUpdates()
         return nextActionTime()
     }
 }
