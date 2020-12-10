@@ -40,18 +40,6 @@ services:
       - ./kolibri-scheduler/.env
     command: java -jar app.jar
 
-  kolibri-commandline-utility:
-    build:
-      context: .
-      dockerfile: kolibri-commandline-utility/.dockerfile
-    container_name: kolibri-commandline-utility
-    image: kolibri-commandline-utility
-    volumes:
-      - /var/log:/var/log
-    env_file:
-      - ./kolibri-commandline-utility/.env
-    command: java -jar app.jar
-
 networks:
   default:
     name: kolibri-network

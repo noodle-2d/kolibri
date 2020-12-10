@@ -6,7 +6,6 @@ import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.provider
 import com.google.api.services.sheets.v4.Sheets
 import com.ran.kolibri.common.client.SheetsClient
-import com.ran.kolibri.common.client.TelegramBotClient
 import com.ran.kolibri.common.client.telegram.TelegramClient
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.dao.AccountDao
@@ -21,7 +20,6 @@ import com.ran.kolibri.common.dto.config.DatabaseConfig
 import com.ran.kolibri.common.dto.config.Environment
 import com.ran.kolibri.common.dto.config.GoogleConfig
 import com.ran.kolibri.common.dto.config.ServerConfig
-import com.ran.kolibri.common.dto.config.TelegramBotClientConfig
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.ran.kolibri.common.util.buildSheets
@@ -33,7 +31,6 @@ fun buildConfigModule(config: Config) = Kodein.Module {
     bind<Config>() with provider { config }
     bind<Environment>() with provider { Environment.build(config) }
     bind<ServerConfig>() with provider { ServerConfig(config) }
-    bind<DatabaseConfig>() with provider { DatabaseConfig(config) }
 }
 
 val httpClientModule = Kodein.Module {
@@ -41,6 +38,7 @@ val httpClientModule = Kodein.Module {
 }
 
 val daoModule = Kodein.Module {
+    bind<DatabaseConfig>() with provider { DatabaseConfig(kodein.instance()) }
     bind<Database>() with provider { buildDatabase(kodein) }
     bind<FinancialAssetDao>() with provider { FinancialAssetDaoImpl(kodein) }
     bind<AccountDao>() with provider { AccountDaoImpl(kodein) }
@@ -57,9 +55,4 @@ val sheetsModule = Kodein.Module {
     bind<GoogleConfig>() with provider { GoogleConfig(kodein.instance()) }
     bind<Sheets>() with provider { buildSheets(kodein) }
     bind<SheetsClient>() with provider { SheetsClient(kodein) }
-}
-
-val telegramBotClientModule = Kodein.Module {
-    bind<TelegramBotClientConfig>() with provider { TelegramBotClientConfig(kodein.instance<Config>()) }
-    bind<TelegramBotClient>() with provider { TelegramBotClient(kodein) }
 }
