@@ -7,7 +7,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
-import com.ran.kolibri.common.dto.config.GoogleConfig
+import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import java.io.FileInputStream
 
 fun buildSheets(kodein: Kodein): Sheets {

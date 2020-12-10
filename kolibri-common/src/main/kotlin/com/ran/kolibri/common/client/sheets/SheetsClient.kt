@@ -1,10 +1,10 @@
-package com.ran.kolibri.common.client
+package com.ran.kolibri.common.client.sheets
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.google.api.services.sheets.v4.Sheets
-import com.ran.kolibri.common.dto.sheets.SheetRange
-import com.ran.kolibri.common.dto.sheets.SheetRow
+import com.ran.kolibri.common.client.sheets.model.SheetRange
+import com.ran.kolibri.common.client.sheets.model.SheetRow
 import com.ran.kolibri.common.util.runIO
 
 class SheetsClient(kodein: Kodein) {

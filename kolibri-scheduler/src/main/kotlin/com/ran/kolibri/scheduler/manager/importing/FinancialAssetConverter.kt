@@ -1,6 +1,6 @@
 package com.ran.kolibri.scheduler.manager.importing
 
-import com.ran.kolibri.common.dto.sheets.SheetRow
+import com.ran.kolibri.common.client.sheets.model.SheetRow
 import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.entity.enums.FinancialAssetType

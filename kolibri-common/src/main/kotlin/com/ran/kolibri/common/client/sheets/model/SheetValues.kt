@@ -1,4 +1,4 @@
-package com.ran.kolibri.common.dto.sheets
+package com.ran.kolibri.common.client.sheets.model
 
 data class SheetRange(val rows: List<SheetRow>)
 
