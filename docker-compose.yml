@@ -37,7 +37,7 @@ services:
     volumes:
       - /var/log:/var/log
     env_file:
-      - ./kolibri-telegram-bot/.env
+      - ./kolibri-scheduler/.env
     command: java -jar app.jar
 
   kolibri-commandline-utility:
