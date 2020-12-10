@@ -5,6 +5,7 @@ import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.telegram.TelegramClient
 import com.ran.kolibri.common.client.telegram.model.SendMessageRequest
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
+import com.ran.kolibri.common.client.telegram.model.Update
 import com.ran.kolibri.common.dao.TelegramIntegrationDao
 import com.ran.kolibri.common.util.log
 
@@ -23,6 +24,33 @@ class TelegramManager(kodein: Kodein) {
 
     suspend fun pullUpdates() {
         val telegramIntegration = telegramIntegrationDao.get()
-        log.info("Current telegram integration: $telegramIntegration")
+        val updatesResponse = telegramClient.getUpdates(telegramIntegration.lastUpdateId + 1)
+
+        val updates = updatesResponse.result.orEmpty()
+        updates.forEach { processUpdate(it) }
+
+        updates.lastOrNull()?.updateId?.let { newLastUpdateId ->
+            val updatedTelegramIntegration = telegramIntegration.copy(lastUpdateId = newLastUpdateId)
+            telegramIntegrationDao.update(updatedTelegramIntegration)
+            log.info("Processed ${updates.size} updates, last update id = $newLastUpdateId")
+        }
+    }
+
+    private suspend fun processUpdate(update: Update) {
+        log.info("Processing update $update")
+
+        val chatId = update.message?.chat?.id
+        if (chatId != telegramConfig.botOwnerId) {
+            log.info("Ignoring message from chat $chatId")
+            return
+        }
+
+        // todo: implement different functions here
+        when (val text = update.message?.text.orEmpty()) {
+            "/import-old-sheets" -> sendMessageToOwner("Importing old sheets is not supported yet")
+            "/export-sheets" -> sendMessageToOwner("Exporting sheets is not supported yet")
+            "/show-total-stat" -> sendMessageToOwner("Showing statistics is not supported yet")
+            else -> log.info("Ignoring message with unknown text $text")
+        }
     }
 }
