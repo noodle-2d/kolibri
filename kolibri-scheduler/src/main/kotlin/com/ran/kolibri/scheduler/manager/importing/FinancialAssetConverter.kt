@@ -4,6 +4,7 @@ import com.ran.kolibri.common.client.sheets.model.SheetRow
 import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.entity.enums.FinancialAssetType
+import java.lang.IllegalArgumentException
 
 object FinancialAssetConverter : ConverterUtils {
 
@@ -20,7 +21,9 @@ object FinancialAssetConverter : ConverterUtils {
     private fun evaluateCompanyName(name: String): String {
         val extractedName = tryExtractRegex(name, STOCK_NAME_REGEX)
             ?: tryExtractRegex(name, BOND_NAME_REGEX)
+            ?: tryExtractRegex(name, TINKOFF_FUND_NAME_REGEX)
             ?: tryExtractRegex(name, FUND_NAME_REGEX)
+            ?: tryExtractRegex(name, OPTION_NAME_REGEX)
             ?: name
 
         return when (extractedName) {
@@ -40,20 +43,27 @@ object FinancialAssetConverter : ConverterUtils {
         when {
             contains(name, STOCK_SET) -> FinancialAssetType.STOCK
             contains(name, BOND_SET) -> FinancialAssetType.BOND
-            else -> FinancialAssetType.FUND
+            contains(name, FUND_SET) -> FinancialAssetType.FUND
+            contains(name, OPTION_SET) -> FinancialAssetType.OPTION
+            else -> throw IllegalArgumentException("Unknown financial asset type for $name")
         }
 
     private fun evaluateCurrency(currencyString: String): Currency =
         when (currencyString) {
             "$" -> Currency.USD
             "Р" -> Currency.RUB
-            else -> Currency.EUR
+            "E", "Е" -> Currency.EUR
+            else -> throw IllegalArgumentException("Unknown currency $currencyString")
         }
 
     private val STOCK_NAME_REGEX = Regex("^Акции (.*)$")
     private val BOND_NAME_REGEX = Regex("^Облигации (.*)$")
-    private val FUND_NAME_REGEX = Regex("^Вечный портфель (.*) .*$")
+    private val TINKOFF_FUND_NAME_REGEX = Regex("^Вечный портфель (.*) .*$")
+    private val FUND_NAME_REGEX = Regex("^Фонд (.*) .*$")
+    private val OPTION_NAME_REGEX = Regex("^Опционы (.*)$")
 
     private val STOCK_SET = setOf("акции")
     private val BOND_SET = setOf("облигации", "офз")
+    private val FUND_SET = setOf("вечный портфель", "фонд")
+    private val OPTION_SET = setOf("опционы")
 }

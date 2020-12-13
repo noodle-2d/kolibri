@@ -11,10 +11,12 @@ import com.ran.kolibri.common.dao.TransactionDao
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.Transaction
+import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.importing.model.AccountImportDto
 import com.ran.kolibri.scheduler.manager.importing.model.TransactionImportDto
+import java.lang.IllegalArgumentException
 
 class ImportOldSheetsManager(kodein: Kodein) {
 
@@ -97,10 +99,21 @@ class ImportOldSheetsManager(kodein: Kodein) {
     }
 
     private suspend fun convertAndInsertFinancialAssets(range: SheetRange): List<FinancialAsset> {
-        val convertedFinancialAssets = range.rows.map { FinancialAssetConverter.convert(it) }
-        val insertedFinancialAssets = financialAssetDao.insertFinancialAssets(convertedFinancialAssets)
-        log.info("Inserted financial assets: $insertedFinancialAssets")
-        return insertedFinancialAssets
+        val convertedAssets = range.rows.map { FinancialAssetConverter.convert(it) }
+        val (optionAssets, filteredAssets) = convertedAssets.partition { it.type == FinancialAssetType.OPTION }
+        val insertedAssets = financialAssetDao.insertFinancialAssets(filteredAssets)
+
+        val enrichedOptionAssets = optionAssets.map { optionAsset ->
+            val associatedAsset = insertedAssets
+                .find { it.companyName == optionAsset.companyName }
+                ?: throw IllegalArgumentException("Unexpected option asset company name ${optionAsset.companyName}")
+            optionAsset.copy(optionAssetId = associatedAsset.id)
+        }
+        val insertedOptionAssets = financialAssetDao.insertFinancialAssets(enrichedOptionAssets)
+
+        val allInsertedAssets = insertedAssets.plus(insertedOptionAssets)
+        log.info("Inserted financial assets: $allInsertedAssets")
+        return allInsertedAssets
     }
 
     private fun convertAccountsToImportDto(
