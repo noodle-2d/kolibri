@@ -22,6 +22,14 @@ object TransactionsValidator {
             accountAmountsMap[transaction.accountString] = newAmount
         }
 
+        transactions
+            .zipWithNext()
+            .forEach { (previousTransaction, nextTransaction) ->
+                if (previousTransaction.date.isAfter(nextTransaction.date)) {
+                    throw RuntimeException("Dates mismatch for transactions $previousTransaction and $nextTransaction")
+                }
+            }
+
         log.info("Transactions successfully validated")
     }
 
