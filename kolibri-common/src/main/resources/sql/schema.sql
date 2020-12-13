@@ -22,7 +22,8 @@ create type account_type as enum (
     'debit_card',
     'credit_card',
     'financial_asset',
-    'other'
+    'broker',
+    'crypto'
 );
 
 create type transaction_type as enum (

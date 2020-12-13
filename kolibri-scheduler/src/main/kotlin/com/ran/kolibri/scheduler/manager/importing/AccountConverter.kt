@@ -36,8 +36,10 @@ object AccountConverter : ConverterUtils {
             contains(name, DEPT_SET) -> AccountType.DEPT
             contains(name, CREDIT_CARD_SET) -> AccountType.CREDIT_CARD
             contains(name, DEBIT_CARD_SET) -> AccountType.DEBIT_CARD
+            contains(name, BROKER_SET) -> AccountType.BROKER
+            contains(name, BTC_SET) -> AccountType.CRYPTO
             contains(name, FINANCIAL_ASSETS_SET) -> AccountType.FINANCIAL_ASSET
-            else -> AccountType.OTHER
+            else -> throw IllegalArgumentException("Unknown account type for $name")
         }
 
     private fun evaluateCurrency(name: String): Currency? =
@@ -75,16 +77,19 @@ object AccountConverter : ConverterUtils {
             .max()!!
 
     private val NAME_REGEX = Regex("""^\d*\. (.*)$""")
-    private val FINANCIAL_ASSETS_SET = setOf("акции", "облигации", "офз", "вечный портфель")
+
     private val USD_SET = setOf("доллары")
     private val EUR_SET = setOf("евро")
     private val CNY_SET = setOf("юани")
     private val BTC_SET = setOf("биткоины")
     private val GBR_SET = setOf("фунты стерлингов")
     private val CZK_SET = setOf("чешские кроны")
+
     private val CASH_SET = setOf("в кармане", "на сохранении")
     private val DEPOSIT_SET = setOf("вклад")
     private val DEPT_SET = setOf("долг")
     private val CREDIT_CARD_SET = setOf("кредитная карта")
-    private val DEBIT_CARD_SET = setOf("карта")
+    private val DEBIT_CARD_SET = setOf("карта", "яндекс.деньги")
+    private val BROKER_SET = setOf("брокерский")
+    private val FINANCIAL_ASSETS_SET = setOf("акции", "облигации", "офз", "вечный портфель", "фонд", "опционы")
 }
