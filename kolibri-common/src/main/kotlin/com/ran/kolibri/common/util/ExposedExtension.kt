@@ -4,7 +4,14 @@ import java.math.BigDecimal
 import kotlin.reflect.KClass
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.postgresql.util.PGobject
+
+fun executeSqlStatement(sql: String) {
+    val conn = TransactionManager.current().connection
+    val statement = conn.prepareStatement(sql, emptyArray())
+    statement.executeUpdate()
+}
 
 interface PgTypeDescriptor<T : Enum<T>> {
     val klass: KClass<T>

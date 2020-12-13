@@ -48,6 +48,7 @@ class ImportOldSheetsManager(kodein: Kodein) {
         log.info("Started to import old sheets")
 
         deleteAll()
+        restartSequences()
 
         val financialAssetsRange = importFinancialAssetsRange()
         val accountsRange = importAccountsRange()
@@ -80,6 +81,13 @@ class ImportOldSheetsManager(kodein: Kodein) {
 
         val deletedFinancialAssetsCount = financialAssetDao.deleteAllFinancialAssets()
         log.info("Deleted $deletedFinancialAssetsCount financial assets from database before import")
+    }
+
+    private suspend fun restartSequences() {
+        financialAssetDao.restartIdSequence()
+        accountDao.restartIdSequence()
+        transactionDao.restartIdSequence()
+        log.info("Restarted sequences before import")
     }
 
     private suspend fun importTransactionRanges(): List<SheetRange> =

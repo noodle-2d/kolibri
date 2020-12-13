@@ -7,6 +7,7 @@ import com.ran.kolibri.common.entity.Transaction
 import com.ran.kolibri.common.entity.enums.ExternalTransactionCategory
 import com.ran.kolibri.common.entity.enums.TransactionType
 import com.ran.kolibri.common.util.decimal
+import com.ran.kolibri.common.util.executeSqlStatement
 import com.ran.kolibri.common.util.pgEnum
 import com.ran.kolibri.common.util.runTransaction
 import org.jetbrains.exposed.dao.id.LongIdTable
@@ -52,6 +53,11 @@ class TransactionDaoImpl(kodein: Kodein) : TransactionDao {
     override suspend fun deleteAllTransactions(): Int =
         runTransaction(db) {
             Transactions.deleteAll()
+        }
+
+    override suspend fun restartIdSequence() =
+        runTransaction(db) {
+            executeSqlStatement("alter sequence transaction_id_seq restart")
         }
 }
 

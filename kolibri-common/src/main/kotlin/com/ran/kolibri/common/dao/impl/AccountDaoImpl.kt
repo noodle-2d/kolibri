@@ -6,6 +6,7 @@ import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
+import com.ran.kolibri.common.util.executeSqlStatement
 import com.ran.kolibri.common.util.pgEnum
 import com.ran.kolibri.common.util.runTransaction
 import org.jetbrains.exposed.dao.id.LongIdTable
@@ -43,6 +44,11 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
     override suspend fun deleteAllAccounts(): Int =
         runTransaction(db) {
             Accounts.deleteAll()
+        }
+
+    override suspend fun restartIdSequence() =
+        runTransaction(db) {
+            executeSqlStatement("alter sequence account_id_seq restart")
         }
 
     private fun mapRow(row: ResultRow): Account =

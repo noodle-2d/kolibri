@@ -6,6 +6,7 @@ import com.ran.kolibri.common.dao.FinancialAssetDao
 import com.ran.kolibri.common.entity.FinancialAsset
 import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.entity.enums.FinancialAssetType
+import com.ran.kolibri.common.util.executeSqlStatement
 import com.ran.kolibri.common.util.pgEnum
 import com.ran.kolibri.common.util.runTransaction
 import org.jetbrains.exposed.dao.id.LongIdTable
@@ -34,6 +35,11 @@ class FinancialAssetDaoImpl(kodein: Kodein) : FinancialAssetDao {
     override suspend fun deleteAllFinancialAssets(): Int =
         runTransaction(db) {
             FinancialAssets.deleteAll()
+        }
+
+    override suspend fun restartIdSequence() =
+        runTransaction(db) {
+            executeSqlStatement("alter sequence financial_asset_id_seq restart")
         }
 }
 

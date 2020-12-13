@@ -6,4 +6,5 @@ interface AccountDao {
     suspend fun insertAccounts(accounts: List<Account>): List<Account>
     suspend fun selectAll(): List<Account>
     suspend fun deleteAllAccounts(): Int
+    suspend fun restartIdSequence()
 }
