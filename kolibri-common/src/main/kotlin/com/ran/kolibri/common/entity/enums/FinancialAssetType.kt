@@ -6,7 +6,8 @@ import kotlin.reflect.KClass
 enum class FinancialAssetType {
     STOCK,
     BOND,
-    FUND;
+    FUND,
+    OPTION;
 
     companion object : PgTypeDescriptor<FinancialAssetType> {
         override val klass: KClass<FinancialAssetType> = FinancialAssetType::class

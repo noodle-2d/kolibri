@@ -8,5 +8,6 @@ data class FinancialAsset(
     val name: String,
     val companyName: String,
     val type: FinancialAssetType,
-    val currency: Currency
+    val currency: Currency,
+    val optionAssetId: Long? = null
 )

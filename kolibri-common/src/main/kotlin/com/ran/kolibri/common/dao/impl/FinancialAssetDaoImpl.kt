@@ -25,6 +25,7 @@ class FinancialAssetDaoImpl(kodein: Kodein) : FinancialAssetDao {
                     it[companyName] = financialAsset.companyName
                     it[type] = financialAsset.type
                     it[currency] = financialAsset.currency
+                    it[optionAssetId] = financialAsset.optionAssetId
                 } get FinancialAssets.id
                 financialAsset.copy(id = financialAssetId.value)
             }
@@ -41,4 +42,5 @@ object FinancialAssets : LongIdTable("financial_asset") {
     val companyName = varchar("company_name", 100)
     val type = pgEnum("type", FinancialAssetType)
     val currency = pgEnum("currency", Currency)
+    val optionAssetId = long("option_asset_id").nullable()
 }

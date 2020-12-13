@@ -11,7 +11,8 @@ create type currency as enum (
 create type financial_asset_type as enum (
     'stock',
     'bond',
-    'fund'
+    'fund',
+    'option'
 );
 
 create type account_type as enum (
@@ -56,7 +57,8 @@ create table financial_asset (
     name varchar(100) not null,
     company_name varchar(100) not null,
     type financial_asset_type not null,
-    currency currency not null
+    currency currency not null,
+    option_asset_id bigint
 );
 
 create table financial_asset_price (
