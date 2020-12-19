@@ -21,7 +21,6 @@ object FinancialAssetConverter : ConverterUtils {
     private fun evaluateCompanyName(name: String): String {
         val extractedName = tryExtractRegex(name, STOCK_NAME_REGEX)
             ?: tryExtractRegex(name, BOND_NAME_REGEX)
-            ?: tryExtractRegex(name, TINKOFF_FUND_NAME_REGEX)
             ?: tryExtractRegex(name, FUND_NAME_REGEX)
             ?: tryExtractRegex(name, OPTION_NAME_REGEX)
             ?: name
@@ -58,12 +57,11 @@ object FinancialAssetConverter : ConverterUtils {
 
     private val STOCK_NAME_REGEX = Regex("^Акции (.*)$")
     private val BOND_NAME_REGEX = Regex("^Облигации (.*)$")
-    private val TINKOFF_FUND_NAME_REGEX = Regex("^Вечный портфель (.*) .*$")
     private val FUND_NAME_REGEX = Regex("^Фонд (.*) .*$")
     private val OPTION_NAME_REGEX = Regex("^Опционы (.*)$")
 
     private val STOCK_SET = setOf("акции")
     private val BOND_SET = setOf("облигации", "офз")
-    private val FUND_SET = setOf("вечный портфель", "фонд")
+    private val FUND_SET = setOf("фонд")
     private val OPTION_SET = setOf("опционы")
 }
