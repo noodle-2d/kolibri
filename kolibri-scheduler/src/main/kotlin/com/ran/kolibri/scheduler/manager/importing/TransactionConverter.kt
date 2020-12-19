@@ -139,7 +139,15 @@ object TransactionConverter : ConverterUtils {
     private val FINANCIAL_ASSET_SINGS = setOf("акц", "облигац", "офз")
     private val CURRENCY_CONVERSION_SIGNS = setOf("доллар", "евро", "юаней", "чешских крон", "биткоин")
     private val NOT_CURRENCY_CONVERSION_SIGNS = setOf("евроторг")
-    private val TRANSFER_SIGNS = setOf("перевод", "снятие", "отдано в долг", "возврат долга", "вывод", "внесение денег")
+    private val TRANSFER_SIGNS = setOf(
+        "перевод",
+        "снятие",
+        "отдано в долг",
+        "возврат долга",
+        "вывод",
+        "внесение денег",
+        "пополнение брокерского"
+    )
     private val INCOME_EXCLUSIONS = setOf("возврат в wildberries")
 
     private val SALE_SIGNS = setOf(
