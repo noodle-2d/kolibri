@@ -57,7 +57,7 @@ object FinancialAssetConverter : ConverterUtils {
 
     private val STOCK_NAME_REGEX = Regex("^Акции (.*)$")
     private val BOND_NAME_REGEX = Regex("^Облигации (.*)$")
-    private val FUND_NAME_REGEX = Regex("^Фонд (.*) .*$")
+    private val FUND_NAME_REGEX = Regex("^Фонд (\\S*) .*$")
     private val OPTION_NAME_REGEX = Regex("^Опционы (.*)$")
 
     private val STOCK_SET = setOf("акции")
