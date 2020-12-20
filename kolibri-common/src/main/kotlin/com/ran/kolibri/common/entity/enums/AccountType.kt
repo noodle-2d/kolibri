@@ -11,7 +11,8 @@ enum class AccountType {
     CREDIT_CARD,
     FINANCIAL_ASSET,
     BROKER,
-    CRYPTO;
+    CRYPTO,
+    STRANGER;
 
     companion object : PgTypeDescriptor<AccountType> {
         override val klass: KClass<AccountType> get() = AccountType::class

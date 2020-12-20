@@ -31,6 +31,7 @@ object AccountConverter : ConverterUtils {
 
     private fun evaluateAccountType(name: String): AccountType =
         when {
+            contains(name, STRANGER_SET) -> AccountType.STRANGER
             contains(name, CASH_SET) -> AccountType.CASH
             contains(name, DEPOSIT_SET) -> AccountType.DEPOSIT
             contains(name, DEPT_SET) -> AccountType.DEPT
@@ -85,11 +86,12 @@ object AccountConverter : ConverterUtils {
     private val GBR_SET = setOf("фунты стерлингов")
     private val CZK_SET = setOf("чешские кроны")
 
-    private val CASH_SET = setOf("в кармане", "на сохранении")
+    private val STRANGER_SET = setOf("на сохранении", "в кармане (отца)", "в кармане (бабушки и деда)")
+    private val CASH_SET = setOf("в кармане", "яндекс.деньги")
     private val DEPOSIT_SET = setOf("вклад")
     private val DEPT_SET = setOf("долг")
     private val CREDIT_CARD_SET = setOf("кредитная карта")
-    private val DEBIT_CARD_SET = setOf("карта", "яндекс.деньги")
+    private val DEBIT_CARD_SET = setOf("карта")
     private val BROKER_SET = setOf("брокерский")
     private val FINANCIAL_ASSETS_SET = setOf("акции", "облигации", "офз", "вечный портфель", "фонд", "опционы")
 }
