@@ -3,6 +3,7 @@ package com.ran.kolibri.common.dao.impl
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.dao.AccountDao
+import com.ran.kolibri.common.dao.model.AggregatedAccount
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
@@ -12,10 +13,15 @@ import com.ran.kolibri.common.util.runTransaction
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.jodatime.date
+import org.jetbrains.exposed.sql.leftJoin
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.sum
+import java.math.BigDecimal
 
 class AccountDaoImpl(kodein: Kodein) : AccountDao {
 
@@ -39,6 +45,44 @@ class AccountDaoImpl(kodein: Kodein) : AccountDao {
     override suspend fun selectAll(): List<Account> =
         runTransaction(db) {
             Accounts.selectAll().map { mapRow(it) }
+        }
+
+    override suspend fun aggregateActiveAccounts(): List<AggregatedAccount> =
+        runTransaction(db) {
+            val transactionsAccountId = Transactions.accountId.alias("account_id")
+            val transactionsTotalAmount = Transactions.amount.sum().alias("total_amount")
+            val groupedTransactions = Transactions
+                .slice(transactionsAccountId, transactionsTotalAmount)
+                .selectAll()
+                .groupBy(Transactions.accountId)
+                .alias("tt")
+            Accounts
+                .leftJoin(FinancialAssets, { this.financialAssetId }, { this.id })
+                .leftJoin(groupedTransactions, { Accounts.id }, { groupedTransactions[transactionsAccountId] })
+                .slice(
+                    Accounts.id,
+                    Accounts.name,
+                    groupedTransactions[transactionsTotalAmount],
+                    Accounts.type,
+                    Accounts.currency,
+                    Accounts.createDate,
+                    FinancialAssets.type,
+                    FinancialAssets.currency
+                )
+                .select { Accounts.closeDate.isNull() }
+                .orderBy(Accounts.id)
+                .map {
+                    AggregatedAccount(
+                        it[Accounts.id].value,
+                        it[Accounts.name],
+                        it[groupedTransactions[transactionsTotalAmount]] ?: BigDecimal.ZERO,
+                        it[Accounts.type],
+                        it[Accounts.currency],
+                        it[Accounts.createDate],
+                        it[FinancialAssets.type],
+                        it[FinancialAssets.currency]
+                    )
+                }
         }
 
     override suspend fun deleteAllAccounts(): Int =
