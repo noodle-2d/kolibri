@@ -8,9 +8,7 @@ enum class ExternalTransactionCategory {
     PASSIVE_INCOME,
     GIFT_INCOME,
     FINANCIAL_EXPENSE,
-    NON_FINANCIAL_EXPENSE,
-    COMMISSION,
-    FINE;
+    NON_FINANCIAL_EXPENSE;
 
     companion object : PgTypeDescriptor<ExternalTransactionCategory> {
         override val klass: KClass<ExternalTransactionCategory> = ExternalTransactionCategory::class

@@ -40,9 +40,7 @@ create type external_transaction_category as enum (
     'passive_income',
     'gift_income',
     'financial_expense',
-    'non_financial_expense',
-    'commission',
-    'fine'
+    'non_financial_expense'
 );
 
 create table currency_price (
