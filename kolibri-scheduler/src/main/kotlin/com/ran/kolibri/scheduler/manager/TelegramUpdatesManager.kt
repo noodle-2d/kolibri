@@ -9,6 +9,7 @@ import com.ran.kolibri.common.dao.TelegramIntegrationDao
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
+import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
 
 class TelegramUpdatesManager(kodein: Kodein) {
 
@@ -18,6 +19,7 @@ class TelegramUpdatesManager(kodein: Kodein) {
     private val telegramIntegrationDao: TelegramIntegrationDao = kodein.instance()
 
     private val importOldSheetsManager: ImportOldSheetsManager = kodein.instance()
+    private val accountsStatisticsManager: AccountsStatisticsManager = kodein.instance()
 
     suspend fun pullUpdates() {
         val telegramIntegration = telegramIntegrationDao.get()
@@ -42,12 +44,12 @@ class TelegramUpdatesManager(kodein: Kodein) {
             return
         }
 
-        // todo: implement different functions here
         when (val text = update.message?.text.orEmpty()) {
             "/import-old-sheets" -> importOldSheetsManager.importOldSheets()
             "/export-sheets" -> telegramManager.sendMessageToOwner("Exporting sheets is not supported yet")
+            "/show-accounts-stat" -> accountsStatisticsManager.buildAccountsStatistics()
             "/show-total-stat" -> telegramManager.sendMessageToOwner("Showing statistics is not supported yet")
-            else -> log.info("Ignoring message with unknown text $text")
+            else -> telegramManager.sendMessageToOwner("Unknown command $text")
         }
     }
 }
