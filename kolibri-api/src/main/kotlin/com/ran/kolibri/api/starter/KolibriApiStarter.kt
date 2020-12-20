@@ -4,6 +4,7 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.api.kodein.managerModule
 import com.ran.kolibri.api.kodein.restModule
+import com.ran.kolibri.api.rest.AccountController
 import com.ran.kolibri.api.rest.TelegramController
 import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
@@ -25,6 +26,7 @@ class KolibriApiStarter : BaseStarter(), RestApiStarter {
 
     override fun getRestControllers(kodein: Kodein): List<RestController> =
         listOf(
-            kodein.instance<TelegramController>()
+            kodein.instance<TelegramController>(),
+            kodein.instance<AccountController>()
         )
 }
