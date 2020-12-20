@@ -1,5 +1,7 @@
 package com.ran.kolibri.common.starter
 
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.config.ServerConfig
@@ -31,7 +33,10 @@ interface RestApiStarter {
             install(CallLogging)
 
             install(ContentNegotiation) {
-                jackson()
+                jackson {
+                    registerModule(JodaModule())
+                    disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                }
             }
 
             install(Routing) {

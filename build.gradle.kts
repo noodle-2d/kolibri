@@ -10,6 +10,7 @@ plugins {
 
 val kotlinVersion = "1.3.61"
 val ktorVersion = "1.3.2"
+val jacksonJodaVersion = "2.9.7"
 val typesafeVersion = "1.4.0"
 val kodeinVersion = "4.1.0"
 val postgresqlJdbcDriverVersion = "42.2.14"
@@ -53,6 +54,7 @@ subprojects {
         "implementation"("io.ktor:ktor-client-json:$ktorVersion")
         "implementation"("io.ktor:ktor-client-jackson:$ktorVersion")
         "implementation"("io.ktor:ktor-jackson:$ktorVersion")
+        "implementation"("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonJodaVersion")
 
         "implementation"("com.typesafe:config:$typesafeVersion")
 
