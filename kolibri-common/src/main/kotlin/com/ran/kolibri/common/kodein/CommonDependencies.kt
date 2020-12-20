@@ -4,6 +4,7 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.provider
+import com.github.salomonbrys.kodein.singleton
 import com.google.api.services.sheets.v4.Sheets
 import com.ran.kolibri.common.client.sheets.SheetsClient
 import com.ran.kolibri.common.client.sheets.buildSheets
@@ -39,7 +40,7 @@ val httpClientModule = Kodein.Module {
 
 val daoModule = Kodein.Module {
     bind<DatabaseConfig>() with provider { DatabaseConfig(kodein.instance()) }
-    bind<Database>() with provider { buildDatabase(kodein) }
+    bind<Database>() with singleton { buildDatabase(kodein) }
     bind<FinancialAssetDao>() with provider { FinancialAssetDaoImpl(kodein) }
     bind<AccountDao>() with provider { AccountDaoImpl(kodein) }
     bind<TransactionDao>() with provider { TransactionDaoImpl(kodein) }
