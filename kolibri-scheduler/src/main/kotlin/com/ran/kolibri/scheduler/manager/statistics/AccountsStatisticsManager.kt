@@ -6,6 +6,7 @@ import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.model.AggregatedAccount
 import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
+import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
 import java.math.BigDecimal
 
@@ -15,33 +16,46 @@ class AccountsStatisticsManager(kodein: Kodein) {
     private val telegramManager: TelegramManager = kodein.instance()
 
     suspend fun buildAccountsStatistics() {
-        val accounts = accountDao.aggregateActiveAccounts()
+        val accounts = accountDao
+            .aggregateActiveAccounts()
+            .filter { it.currentAmount.compareTo(BigDecimal.ZERO) != 0 }
 
         val statisticsList = listOfNotNull(
-            buildGroupStatistics(accounts, setOf(AccountType.DEBIT_CARD, AccountType.CREDIT_CARD), "Карты"),
-            buildGroupStatistics(accounts, setOf(AccountType.DEPOSIT), "Вклады"),
-            buildGroupStatistics(accounts, setOf(AccountType.BROKER), "Брокерские счета"),
-            buildGroupStatistics(accounts, setOf(AccountType.CASH), "Наличные"),
-            buildGroupStatistics(accounts, setOf(AccountType.CRYPTO), "Криптовалюты"),
-            buildGroupStatistics(accounts, setOf(AccountType.DEPT), "Долги"),
-            buildGroupStatistics(accounts, setOf(AccountType.FINANCIAL_ASSET), "Ценные бумаги")
+            buildStatistics(filterAccounts(accounts, setOf(AccountType.DEBIT_CARD, AccountType.CREDIT_CARD)), "Карты"),
+            buildStatistics(filterAccounts(accounts, setOf(AccountType.DEPOSIT)), "Вклады"),
+            buildStatistics(filterAccounts(accounts, setOf(AccountType.BROKER)), "Брокерские счета"),
+            buildStatistics(filterAccounts(accounts, setOf(AccountType.CASH)), "Наличные"),
+            buildStatistics(filterAccounts(accounts, setOf(AccountType.CRYPTO)), "Криптовалюты"),
+            buildStatistics(filterAccounts(accounts, setOf(AccountType.DEPT)), "Долги"),
+            buildStatistics(filterFinancialAssets(accounts, FinancialAssetType.STOCK), "Акции"),
+            buildStatistics(filterFinancialAssets(accounts, FinancialAssetType.BOND), "Облигации"),
+            buildStatistics(filterFinancialAssets(accounts, FinancialAssetType.FUND), "Фонды"),
+            buildStatistics(filterFinancialAssets(accounts, FinancialAssetType.OPTION), "Опционы")
         )
 
         val statisticsString = statisticsList.joinToString("\n\n")
         telegramManager.sendMessageToOwner(statisticsString)
     }
 
-    private fun buildGroupStatistics(
+    private fun filterAccounts(
         accounts: List<AggregatedAccount>,
-        accountTypes: Set<AccountType>,
-        groupName: String
-    ): String? {
-        val filteredAccounts = accounts
+        accountTypes: Set<AccountType>
+    ): List<AggregatedAccount> =
+        accounts
             .filter { accountTypes.contains(it.accountType) }
             .filter { it.currentAmount.compareTo(BigDecimal.ZERO) != 0 }
-        if (filteredAccounts.isEmpty()) return null
 
-        val accountStrings = filteredAccounts.map { buildAccountString(it) }
+    private fun filterFinancialAssets(
+        accounts: List<AggregatedAccount>,
+        financialAssetType: FinancialAssetType
+    ): List<AggregatedAccount> =
+        accounts
+            .filter { it.financialAssetType == financialAssetType }
+            .filter { it.currentAmount.compareTo(BigDecimal.ZERO) != 0 }
+
+    private fun buildStatistics(accounts: List<AggregatedAccount>, groupName: String): String? {
+        if (accounts.isEmpty()) return null
+        val accountStrings = accounts.map { buildAccountString(it) }
         return "$groupName:\n${accountStrings.joinToString("\n")}"
     }
 
