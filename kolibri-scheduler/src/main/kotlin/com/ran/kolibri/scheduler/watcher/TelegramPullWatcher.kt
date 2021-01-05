@@ -12,7 +12,7 @@ class TelegramPullWatcher(kodein: Kodein) : Watcher {
     private val telegramUpdatesManager: TelegramUpdatesManager = kodein.instance()
 
     override fun nextActionTime(): DateTime =
-        nextTimeForEverySeconds(3)
+        nextTimeForEverySeconds(2)
 
     override suspend fun doAction(): DateTime {
         telegramUpdatesManager.pullUpdates()

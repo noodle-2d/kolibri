@@ -40,9 +40,9 @@ object FinancialAssetConverter : ConverterUtils {
 
     private fun evaluateType(name: String): FinancialAssetType =
         when {
+            contains(name, FUND_SET) -> FinancialAssetType.FUND
             contains(name, STOCK_SET) -> FinancialAssetType.STOCK
             contains(name, BOND_SET) -> FinancialAssetType.BOND
-            contains(name, FUND_SET) -> FinancialAssetType.FUND
             contains(name, OPTION_SET) -> FinancialAssetType.OPTION
             else -> throw IllegalArgumentException("Unknown financial asset type for $name")
         }
