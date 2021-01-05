@@ -45,10 +45,10 @@ class TelegramUpdatesManager(kodein: Kodein) {
         }
 
         when (val text = update.message?.text.orEmpty()) {
-            "/import-old-sheets" -> importOldSheetsManager.importOldSheets()
-            "/export-sheets" -> telegramManager.sendMessageToOwner("Exporting sheets is not supported yet")
-            "/show-accounts-stat" -> accountsStatisticsManager.buildAccountsStatistics()
-            "/show-total-stat" -> telegramManager.sendMessageToOwner("Showing statistics is not supported yet")
+            "/import_old_sheets" -> importOldSheetsManager.importOldSheets()
+            "/export_sheets" -> telegramManager.sendMessageToOwner("Exporting sheets is not supported yet")
+            "/show_accounts_stat" -> accountsStatisticsManager.buildAccountsStatistics()
+            "/show_total_stat" -> telegramManager.sendMessageToOwner("Showing statistics is not supported yet")
             else -> telegramManager.sendMessageToOwner("Unknown command $text")
         }
     }
