@@ -8,9 +8,9 @@ import com.ran.kolibri.scheduler.manager.TelegramUpdatesManager
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
 import com.ran.kolibri.scheduler.manager.importing.TransactionEnrichManager
 import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
-import com.ran.kolibri.scheduler.watcher.OldSheetsImportWatcher
-import com.ran.kolibri.scheduler.watcher.SheetsExportWatcher
-import com.ran.kolibri.scheduler.watcher.TelegramPullWatcher
+import com.ran.kolibri.scheduler.scheduled.task.OldSheetsImportTask
+import com.ran.kolibri.scheduler.scheduled.task.SheetsExportTask
+import com.ran.kolibri.scheduler.scheduled.task.TelegramPullTask
 
 val managerModule = Kodein.Module {
     bind<TelegramManager>() with provider { TelegramManager(kodein) }
@@ -22,8 +22,8 @@ val managerModule = Kodein.Module {
     bind<AccountsStatisticsManager>() with provider { AccountsStatisticsManager(kodein) }
 }
 
-val watcherModule = Kodein.Module {
-    bind<OldSheetsImportWatcher>() with provider { OldSheetsImportWatcher(kodein) }
-    bind<SheetsExportWatcher>() with provider { SheetsExportWatcher() }
-    bind<TelegramPullWatcher>() with provider { TelegramPullWatcher(kodein) }
+val scheduledTaskModule = Kodein.Module {
+    bind<OldSheetsImportTask>() with provider { OldSheetsImportTask(kodein) }
+    bind<SheetsExportTask>() with provider { SheetsExportTask() }
+    bind<TelegramPullTask>() with provider { TelegramPullTask(kodein) }
 }

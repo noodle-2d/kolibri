@@ -1,8 +1,8 @@
 package com.ran.kolibri.common.starter
 
 import com.github.salomonbrys.kodein.Kodein
+import com.ran.kolibri.common.scheduled.task.ScheduledTask
 import com.ran.kolibri.common.util.log
-import com.ran.kolibri.common.watcher.Watcher
 import kotlin.math.max
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -11,30 +11,28 @@ import org.joda.time.DateTime
 
 interface SchedulerStarter {
 
-    fun getWatchers(kodein: Kodein): List<Watcher>
+    fun getScheduledTasks(kodein: Kodein): List<ScheduledTask>
 
-    suspend fun startWatchers(kodein: Kodein) = coroutineScope {
-        getWatchers(kodein).forEach { watcher ->
+    suspend fun startScheduledTasks(kodein: Kodein) = coroutineScope {
+        getScheduledTasks(kodein).forEach { watcher ->
             async {
-                startWatcher(watcher)
+                startScheduledTask(watcher)
             }
         }
     }
 
-    private suspend fun startWatcher(watcher: Watcher) {
-        val firstActionTime = watcher.nextActionTime()
-        log.info("Watcher ${watcher.name()} will be executed first time at $firstActionTime")
+    private suspend fun startScheduledTask(scheduledTask: ScheduledTask) {
+        val firstActionTime = scheduledTask.schedule().nextTime()
+        log.info("Watcher ${scheduledTask.name()} will be executed first time at $firstActionTime")
         delayUntil(firstActionTime)
 
         while (true) {
-            val chosenNextActionTime = try {
-                watcher.doAction()
+            try {
+                scheduledTask.doAction()
             } catch (e: Throwable) {
-                val nextActionTime = DateTime.now().plusMinutes(1)
-                log.error("Watcher ${watcher.name()} failed with error, next action time is $nextActionTime", e)
-                nextActionTime
+                log.error("Watcher ${scheduledTask.name()} failed with error", e)
             }
-            delayUntil(chosenNextActionTime)
+            delayUntil(scheduledTask.schedule().nextTime())
         }
     }
 

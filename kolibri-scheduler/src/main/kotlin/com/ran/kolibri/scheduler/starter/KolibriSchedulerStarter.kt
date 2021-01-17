@@ -6,14 +6,14 @@ import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.sheetsModule
 import com.ran.kolibri.common.kodein.telegramClientModule
+import com.ran.kolibri.common.scheduled.task.ScheduledTask
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.SchedulerStarter
-import com.ran.kolibri.common.watcher.Watcher
 import com.ran.kolibri.scheduler.kodein.managerModule
-import com.ran.kolibri.scheduler.kodein.watcherModule
-import com.ran.kolibri.scheduler.watcher.OldSheetsImportWatcher
-import com.ran.kolibri.scheduler.watcher.SheetsExportWatcher
-import com.ran.kolibri.scheduler.watcher.TelegramPullWatcher
+import com.ran.kolibri.scheduler.kodein.scheduledTaskModule
+import com.ran.kolibri.scheduler.scheduled.task.OldSheetsImportTask
+import com.ran.kolibri.scheduler.scheduled.task.SheetsExportTask
+import com.ran.kolibri.scheduler.scheduled.task.TelegramPullTask
 
 class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
 
@@ -24,13 +24,13 @@ class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
             sheetsModule,
             daoModule,
             managerModule,
-            watcherModule
+            scheduledTaskModule
         )
 
-    override fun getWatchers(kodein: Kodein): List<Watcher> =
+    override fun getScheduledTasks(kodein: Kodein): List<ScheduledTask> =
         listOf(
-            kodein.instance<OldSheetsImportWatcher>(),
-            kodein.instance<SheetsExportWatcher>(),
-            kodein.instance<TelegramPullWatcher>()
+            kodein.instance<OldSheetsImportTask>(),
+            kodein.instance<SheetsExportTask>(),
+            kodein.instance<TelegramPullTask>()
         )
 }
