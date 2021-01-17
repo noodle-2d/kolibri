@@ -10,6 +10,7 @@ import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.util.executeSqlStatement
 import com.ran.kolibri.common.util.pgEnum
 import com.ran.kolibri.common.util.runTransaction
+import java.math.BigDecimal
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
@@ -21,7 +22,6 @@ import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.sum
-import java.math.BigDecimal
 
 class AccountDaoImpl(kodein: Kodein) : AccountDao {
 
