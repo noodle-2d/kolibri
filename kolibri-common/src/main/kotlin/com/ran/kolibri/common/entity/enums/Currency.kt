@@ -8,7 +8,7 @@ enum class Currency {
     EUR,
     RUB,
     CNY,
-    GBR,
+    GBP,
     CZK,
     BTC;
 

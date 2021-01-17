@@ -50,7 +50,7 @@ object AccountConverter : ConverterUtils {
             contains(name, EUR_SET) -> Currency.EUR
             contains(name, CNY_SET) -> Currency.CNY
             contains(name, BTC_SET) -> Currency.BTC
-            contains(name, GBR_SET) -> Currency.GBR
+            contains(name, GBP_SET) -> Currency.GBP
             contains(name, CZK_SET) -> Currency.CZK
             else -> Currency.RUB
         }
@@ -83,7 +83,7 @@ object AccountConverter : ConverterUtils {
     private val EUR_SET = setOf("евро")
     private val CNY_SET = setOf("юани")
     private val BTC_SET = setOf("биткоины")
-    private val GBR_SET = setOf("фунты стерлингов")
+    private val GBP_SET = setOf("фунты стерлингов")
     private val CZK_SET = setOf("чешские кроны")
 
     private val STRANGER_SET = setOf("на сохранении", "в кармане (отца)", "в кармане (бабушки и деда)")

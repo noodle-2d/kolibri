@@ -70,7 +70,7 @@ class AccountsStatisticsManager(kodein: Kodein) {
             Currency.EUR -> "€"
             Currency.RUB -> "₽"
             Currency.CNY -> "Ұ"
-            Currency.GBR -> "£"
+            Currency.GBP -> "£"
             Currency.CZK -> "Kč"
             Currency.BTC -> "₿"
             null -> "шт."

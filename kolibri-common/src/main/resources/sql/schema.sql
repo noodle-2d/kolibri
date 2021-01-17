@@ -3,7 +3,7 @@ create type currency as enum (
     'eur',
     'rub',
     'cny',
-    'gbr',
+    'gbp',
     'czk',
     'btc'
 );
@@ -47,7 +47,7 @@ create type external_transaction_category as enum (
 create table currency_price (
     id bigserial primary key,
     currency currency not null,
-    to_currency currency not null,
+    base_currency currency not null,
     price numeric not null,
     date date not null
 );
