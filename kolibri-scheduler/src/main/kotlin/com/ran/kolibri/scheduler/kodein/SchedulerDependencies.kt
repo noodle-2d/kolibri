@@ -7,6 +7,7 @@ import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.scheduler.manager.TelegramUpdatesManager
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
 import com.ran.kolibri.scheduler.manager.importing.TransactionEnrichManager
+import com.ran.kolibri.scheduler.manager.prices.CurrencyPricesManager
 import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
 import com.ran.kolibri.scheduler.scheduled.task.OldSheetsImportTask
 import com.ran.kolibri.scheduler.scheduled.task.SheetsExportTask
@@ -20,6 +21,8 @@ val managerModule = Kodein.Module {
     bind<TransactionEnrichManager>() with provider { TransactionEnrichManager(kodein) }
 
     bind<AccountsStatisticsManager>() with provider { AccountsStatisticsManager(kodein) }
+
+    bind<CurrencyPricesManager>() with provider { CurrencyPricesManager(kodein) }
 }
 
 val scheduledTaskModule = Kodein.Module {
