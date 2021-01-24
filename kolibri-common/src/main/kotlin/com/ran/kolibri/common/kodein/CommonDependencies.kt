@@ -6,6 +6,8 @@ import com.github.salomonbrys.kodein.instance
 import com.github.salomonbrys.kodein.provider
 import com.github.salomonbrys.kodein.singleton
 import com.google.api.services.sheets.v4.Sheets
+import com.ran.kolibri.common.client.open.exchange.rates.OpenExchangeRatesClient
+import com.ran.kolibri.common.client.open.exchange.rates.model.OpenExchangeRatesConfig
 import com.ran.kolibri.common.client.sheets.SheetsClient
 import com.ran.kolibri.common.client.sheets.buildSheets
 import com.ran.kolibri.common.client.sheets.model.GoogleConfig
@@ -53,6 +55,11 @@ val daoModule = Kodein.Module {
 val telegramClientModule = Kodein.Module {
     bind<TelegramConfig>() with provider { TelegramConfig(kodein.instance()) }
     bind<TelegramClient>() with provider { TelegramClient(kodein) }
+}
+
+val openExchangeRatesClientModule = Kodein.Module {
+    bind<OpenExchangeRatesConfig>() with provider { OpenExchangeRatesConfig(kodein.instance()) }
+    bind<OpenExchangeRatesClient>() with provider { OpenExchangeRatesClient(kodein) }
 }
 
 val sheetsModule = Kodein.Module {
