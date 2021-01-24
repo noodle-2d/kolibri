@@ -15,10 +15,12 @@ import com.ran.kolibri.common.config.DatabaseConfig
 import com.ran.kolibri.common.config.Environment
 import com.ran.kolibri.common.config.ServerConfig
 import com.ran.kolibri.common.dao.AccountDao
+import com.ran.kolibri.common.dao.CurrencyPriceDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
 import com.ran.kolibri.common.dao.TelegramIntegrationDao
 import com.ran.kolibri.common.dao.TransactionDao
 import com.ran.kolibri.common.dao.impl.AccountDaoImpl
+import com.ran.kolibri.common.dao.impl.CurrencyPriceDaoImpl
 import com.ran.kolibri.common.dao.impl.FinancialAssetDaoImpl
 import com.ran.kolibri.common.dao.impl.TelegramIntegrationDaoImpl
 import com.ran.kolibri.common.dao.impl.TransactionDaoImpl
@@ -44,6 +46,7 @@ val daoModule = Kodein.Module {
     bind<FinancialAssetDao>() with provider { FinancialAssetDaoImpl(kodein) }
     bind<AccountDao>() with provider { AccountDaoImpl(kodein) }
     bind<TransactionDao>() with provider { TransactionDaoImpl(kodein) }
+    bind<CurrencyPriceDao>() with provider { CurrencyPriceDaoImpl(kodein) }
     bind<TelegramIntegrationDao>() with provider { TelegramIntegrationDaoImpl(kodein) }
 }
 
