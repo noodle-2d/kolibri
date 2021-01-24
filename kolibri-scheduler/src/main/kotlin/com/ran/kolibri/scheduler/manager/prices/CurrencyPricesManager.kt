@@ -6,28 +6,35 @@ import com.ran.kolibri.common.client.open.exchange.rates.OpenExchangeRatesClient
 import com.ran.kolibri.common.dao.CurrencyPriceDao
 import com.ran.kolibri.common.entity.CurrencyPrice
 import com.ran.kolibri.common.entity.enums.Currency
+import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
+import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
 import java.lang.IllegalStateException
 import org.joda.time.DateTime
 
-class CurrencyPricesManager(kodein: Kodein) {
+class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
     private val currencyPriceDao: CurrencyPriceDao = kodein.instance()
     private val openExchangeRatesClient: OpenExchangeRatesClient = kodein.instance()
 
-    suspend fun updateCurrencyPrices() {
-        val storedCurrencyDates = getStoredCurrencyDates()
-        val datesList = buildDatesList()
+    override val telegramManager: TelegramManager = kodein.instance()
 
-        datesList.forEach { date ->
-            if (isNeededToRequestForDate(date, storedCurrencyDates)) {
-                log.info("Requesting currency prices for date $date")
-                val dateCurrencyPrices = requestCurrencyPricesForDate(date)
-                log.info("Storing currency prices for date $date: $dateCurrencyPrices")
-                storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
+    suspend fun updateCurrencyPrices() =
+        doActionSendingMessageToOwner("updating currency prices") {
+            val storedCurrencyDates = getStoredCurrencyDates()
+            val datesList = buildDatesList()
+
+            datesList.forEach { date ->
+                if (isNeededToRequestForDate(date, storedCurrencyDates)) {
+                    log.info("Requesting currency prices for date $date")
+                    val dateCurrencyPrices = requestCurrencyPricesForDate(date)
+                    log.info("Storing currency prices for date $date: $dateCurrencyPrices")
+                    storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
+                }
             }
+
+            "Updated currency prices"
         }
-    }
 
     private suspend fun getStoredCurrencyDates(): Map<DateTime, List<Currency>> =
         currencyPriceDao.selectAll()

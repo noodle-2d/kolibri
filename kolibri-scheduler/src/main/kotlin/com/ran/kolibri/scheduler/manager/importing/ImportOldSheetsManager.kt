@@ -14,11 +14,12 @@ import com.ran.kolibri.common.entity.Transaction
 import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
+import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
 import com.ran.kolibri.scheduler.manager.importing.model.AccountImportDto
 import com.ran.kolibri.scheduler.manager.importing.model.TransactionImportDto
 import java.lang.IllegalArgumentException
 
-class ImportOldSheetsManager(kodein: Kodein) {
+class ImportOldSheetsManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
     private val googleConfig: GoogleConfig = kodein.instance()
     private val sheetsClient: SheetsClient = kodein.instance()
@@ -28,21 +29,10 @@ class ImportOldSheetsManager(kodein: Kodein) {
     private val transactionDao: TransactionDao = kodein.instance()
 
     private val transactionEnrichManager: TransactionEnrichManager = kodein.instance()
-    private val telegramManager: TelegramManager = kodein.instance()
+    override val telegramManager: TelegramManager = kodein.instance()
 
-    suspend fun importOldSheets() {
-        telegramManager.sendMessageToOwner("Started importing old sheets")
-
-        val resultMessage = try {
-            doImport()
-        } catch (e: Throwable) {
-            val errorMessage = "Error while importing old sheets"
-            log.error(errorMessage, e)
-            "$errorMessage: ${e.message ?: "empty message"}."
-        }
-
-        telegramManager.sendMessageToOwner(resultMessage)
-    }
+    suspend fun importOldSheets() =
+        doActionSendingMessageToOwner("importing old sheets") { doImport() }
 
     private suspend fun doImport(): String {
         log.info("Started to import old sheets")
