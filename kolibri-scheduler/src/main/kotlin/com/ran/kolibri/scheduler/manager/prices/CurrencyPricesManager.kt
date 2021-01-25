@@ -24,8 +24,10 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
         doActionSendingMessageToOwner("updating currency prices") {
             val storedCurrencyDates = getStoredCurrencyDates()
             log.debug("Stored currency dates: ${storedCurrencyDates.keys}")
+            log.debug("Stored currency millis: ${storedCurrencyDates.keys.map { it.millis }}")
             val datesList = buildDatesList()
             log.debug("Dates list: $datesList")
+            log.debug("Dates list millis: ${datesList.map { it.millis }}")
 
             datesList.forEach { date ->
                 if (isNeededToRequestForDate(date, storedCurrencyDates)) {
@@ -54,6 +56,10 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     }
 
     private fun isNeededToRequestForDate(date: DateTime, storedCurrencyDates: Map<DateTime, List<Currency>>): Boolean {
+        log.debug(
+            "Is needed check: $date, ${date.millis}, " +
+                "${storedCurrencyDates.containsKey(date)}, ${storedCurrencyDates[date]}"
+        )
         val dateCurrencies = storedCurrencyDates[date] ?: listOf()
         return !dateCurrencies.containsAll(WATCHED_CURRENCIES)
     }
