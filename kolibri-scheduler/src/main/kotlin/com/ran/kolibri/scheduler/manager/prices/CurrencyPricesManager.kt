@@ -82,7 +82,7 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
         throw IllegalStateException("Field $field is empty")
 
     companion object {
-        private val WATCH_START_DATE = DateTime.parse("2021-01-01T00:00:00Z") // todo: replace by 2018 year
+        private val WATCH_START_DATE = DateTime.parse("2018-01-01T00:00:00Z")
         private const val MILLIS_IN_DAY = 24 * 60 * 60 * 1000
         private val WATCHED_CURRENCIES = listOf(
             Currency.RUB,
