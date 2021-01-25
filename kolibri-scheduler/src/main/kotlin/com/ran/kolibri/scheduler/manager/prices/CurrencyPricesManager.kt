@@ -11,6 +11,7 @@ import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
 import java.lang.IllegalStateException
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
@@ -22,14 +23,20 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     suspend fun updateCurrencyPrices() =
         doActionSendingMessageToOwner("updating currency prices") {
             val storedCurrencyDates = getStoredCurrencyDates()
+            log.debug("Stored currency dates: ${storedCurrencyDates.keys}")
             val datesList = buildDatesList()
+            log.debug("Dates list: $datesList")
 
             datesList.forEach { date ->
                 if (isNeededToRequestForDate(date, storedCurrencyDates)) {
-                    log.info("Requesting currency prices for date $date")
-                    val dateCurrencyPrices = requestCurrencyPricesForDate(date)
-                    log.info("Storing currency prices for date $date: $dateCurrencyPrices")
-                    storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
+                    log.debug(
+                        "Skip requesting currency prices for date $date " +
+                            "[${DateTimeFormat.forPattern("yyyy-MM-dd").print(date)}]"
+                    )
+                    // log.info("Requesting currency prices for date $date")
+                    // val dateCurrencyPrices = requestCurrencyPricesForDate(date)
+                    // log.info("Storing currency prices for date $date: $dateCurrencyPrices")
+                    // storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
                 }
             }
 
@@ -42,13 +49,12 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
             .mapValues { currencyEntry -> currencyEntry.value.map { it.currency } }
 
     private fun buildDatesList(): List<DateTime> {
-        val daysQuantity =
-            (DateTime().withTimeAtStartOfDay().millis - WATCH_START_DATE.withTimeAtStartOfDay().millis) / MILLIS_IN_DAY
+        val daysQuantity = (DateTime().withTimeAtStartOfDay().millis - WATCH_START_DATE.millis) / MILLIS_IN_DAY
         return (0..daysQuantity.toInt()).map { day -> WATCH_START_DATE.plusDays(day) }
     }
 
     private fun isNeededToRequestForDate(date: DateTime, storedCurrencyDates: Map<DateTime, List<Currency>>): Boolean {
-        val dateCurrencies = storedCurrencyDates[date.withTimeAtStartOfDay()] ?: listOf()
+        val dateCurrencies = storedCurrencyDates[date] ?: listOf()
         return !dateCurrencies.containsAll(WATCHED_CURRENCIES)
     }
 
@@ -62,13 +68,13 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
                 currency = currency,
                 baseCurrency = currencyRates.base ?: emptyFieldError("base"),
                 price = ratesMap[currency.name] ?: emptyFieldError("rates.${currency.name}"),
-                date = date.withTimeAtStartOfDay()
+                date = date
             )
         }
     }
 
     private fun isToday(date: DateTime): Boolean =
-        date.withTimeAtStartOfDay().isBeforeNow && date.withTimeAtStartOfDay().plusDays(1).isAfterNow
+        date.isBeforeNow && date.plusDays(1).isAfterNow
 
     private suspend fun storeCurrencyPrices(
         currencyPrices: List<CurrencyPrice>,
@@ -83,7 +89,7 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
         throw IllegalStateException("Field $field is empty")
 
     companion object {
-        private val WATCH_START_DATE = DateTime.parse("2019-01-01T18:00:00Z") // todo: replace by 2018 year
+        private val WATCH_START_DATE = DateTime.parse("2021-01-01T00:00:00Z") // todo: replace by 2018 year
         private const val MILLIS_IN_DAY = 24 * 60 * 60 * 1000
         private val WATCHED_CURRENCIES = listOf(
             Currency.RUB,
