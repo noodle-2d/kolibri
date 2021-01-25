@@ -24,7 +24,6 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
         doActionSendingMessageToOwner("updating currency prices") {
             val storedCurrencyDates = getStoredCurrencyDates()
             log.debug("Stored currency dates: ${storedCurrencyDates.keys}")
-            log.debug("Stored currency millis: ${storedCurrencyDates.keys.map { it.millis }}")
             val datesList = buildDatesList()
             log.debug("Dates list: $datesList")
             log.debug("Dates list millis: ${datesList.map { it.millis }}")
@@ -45,9 +44,9 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
             "Updated currency prices"
         }
 
-    private suspend fun getStoredCurrencyDates(): Map<DateTime, List<Currency>> =
+    private suspend fun getStoredCurrencyDates(): Map<Long, List<Currency>> =
         currencyPriceDao.selectAll()
-            .groupBy { it.date }
+            .groupBy { it.date.millis }
             .mapValues { currencyEntry -> currencyEntry.value.map { it.currency } }
 
     private fun buildDatesList(): List<DateTime> {
@@ -55,12 +54,12 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
         return (0..daysQuantity.toInt()).map { day -> WATCH_START_DATE.plusDays(day) }
     }
 
-    private fun isNeededToRequestForDate(date: DateTime, storedCurrencyDates: Map<DateTime, List<Currency>>): Boolean {
+    private fun isNeededToRequestForDate(date: DateTime, storedCurrencyDates: Map<Long, List<Currency>>): Boolean {
         log.debug(
             "Is needed check: $date, ${date.millis}, " +
-                "${storedCurrencyDates.containsKey(date)}, ${storedCurrencyDates[date]}"
+                "${storedCurrencyDates.containsKey(date.millis)}, ${storedCurrencyDates[date.millis]}"
         )
-        val dateCurrencies = storedCurrencyDates[date] ?: listOf()
+        val dateCurrencies = storedCurrencyDates[date.millis] ?: listOf()
         return !dateCurrencies.containsAll(WATCHED_CURRENCIES)
     }
 
