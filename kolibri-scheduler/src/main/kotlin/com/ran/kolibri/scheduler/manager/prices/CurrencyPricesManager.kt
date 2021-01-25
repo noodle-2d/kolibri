@@ -11,7 +11,6 @@ import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
 import java.lang.IllegalStateException
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
@@ -23,21 +22,14 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     suspend fun updateCurrencyPrices() =
         doActionSendingMessageToOwner("updating currency prices") {
             val storedCurrencyDates = getStoredCurrencyDates()
-            log.debug("Stored currency dates: ${storedCurrencyDates.keys}")
             val datesList = buildDatesList()
-            log.debug("Dates list: $datesList")
-            log.debug("Dates list millis: ${datesList.map { it.millis }}")
 
             datesList.forEach { date ->
                 if (isNeededToRequestForDate(date, storedCurrencyDates)) {
-                    log.debug(
-                        "Skip requesting currency prices for date $date " +
-                            "[${DateTimeFormat.forPattern("yyyy-MM-dd").print(date)}]"
-                    )
-                    // log.info("Requesting currency prices for date $date")
-                    // val dateCurrencyPrices = requestCurrencyPricesForDate(date)
-                    // log.info("Storing currency prices for date $date: $dateCurrencyPrices")
-                    // storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
+                    log.info("Requesting currency prices for date $date")
+                    val dateCurrencyPrices = requestCurrencyPricesForDate(date)
+                    log.info("Storing currency prices for date $date: $dateCurrencyPrices")
+                    storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
                 }
             }
 
@@ -55,10 +47,6 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     }
 
     private fun isNeededToRequestForDate(date: DateTime, storedCurrencyDates: Map<Long, List<Currency>>): Boolean {
-        log.debug(
-            "Is needed check: $date, ${date.millis}, " +
-                "${storedCurrencyDates.containsKey(date.millis)}, ${storedCurrencyDates[date.millis]}"
-        )
         val dateCurrencies = storedCurrencyDates[date.millis] ?: listOf()
         return !dateCurrencies.containsAll(WATCHED_CURRENCIES)
     }
@@ -83,9 +71,9 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
     private suspend fun storeCurrencyPrices(
         currencyPrices: List<CurrencyPrice>,
-        storedCurrencyDates: Map<DateTime, List<Currency>>
+        storedCurrencyDates: Map<Long, List<Currency>>
     ) {
-        val dateCurrencies = storedCurrencyDates[currencyPrices.first().date] ?: listOf()
+        val dateCurrencies = storedCurrencyDates[currencyPrices.first().date.millis] ?: listOf()
         val currencyPricesToStore = currencyPrices.filter { !dateCurrencies.contains(it.currency) }
         currencyPriceDao.insert(currencyPricesToStore)
     }
