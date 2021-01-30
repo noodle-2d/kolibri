@@ -19,22 +19,24 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
     override val telegramManager: TelegramManager = kodein.instance()
 
-    suspend fun updateCurrencyPrices() =
-        doActionSendingMessageToOwner("updating currency prices") {
-            val storedCurrencyDates = getStoredCurrencyDates()
-            val datesList = buildDatesList()
+    suspend fun updateCurrencyPricesWithNotification() =
+        doActionSendingMessageToOwner("updating currency prices") { updateCurrencyPrices() }
 
-            datesList.forEach { date ->
-                if (isNeededToRequestForDate(date, storedCurrencyDates)) {
-                    log.info("Requesting currency prices for date $date")
-                    val dateCurrencyPrices = requestCurrencyPricesForDate(date)
-                    log.info("Storing currency prices for date $date: $dateCurrencyPrices")
-                    storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
-                }
+    suspend fun updateCurrencyPrices(): String {
+        val storedCurrencyDates = getStoredCurrencyDates()
+        val datesList = buildDatesList()
+
+        datesList.forEach { date ->
+            if (isNeededToRequestForDate(date, storedCurrencyDates)) {
+                log.info("Requesting currency prices for date $date")
+                val dateCurrencyPrices = requestCurrencyPricesForDate(date)
+                log.info("Storing currency prices for date $date: $dateCurrencyPrices")
+                storeCurrencyPrices(dateCurrencyPrices, storedCurrencyDates)
             }
-
-            "Updated currency prices"
         }
+
+        return "Updated currency prices"
+    }
 
     private suspend fun getStoredCurrencyDates(): Map<Long, List<Currency>> =
         currencyPriceDao.selectAll()

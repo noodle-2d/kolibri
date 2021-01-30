@@ -31,10 +31,10 @@ class ImportOldSheetsManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     private val transactionEnrichManager: TransactionEnrichManager = kodein.instance()
     override val telegramManager: TelegramManager = kodein.instance()
 
-    suspend fun importOldSheets() =
-        doActionSendingMessageToOwner("importing old sheets") { doImport() }
+    suspend fun importOldSheetsWithNotification() =
+        doActionSendingMessageToOwner("importing old sheets") { importOldSheets() }
 
-    private suspend fun doImport(): String {
+    suspend fun importOldSheets(): String {
         log.info("Started to import old sheets")
 
         deleteAll()

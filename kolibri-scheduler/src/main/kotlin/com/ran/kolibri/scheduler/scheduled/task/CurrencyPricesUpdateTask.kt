@@ -13,5 +13,5 @@ class CurrencyPricesUpdateTask(kodein: Kodein) : ScheduledTask {
     private val currencyPricesManager: CurrencyPricesManager = kodein.instance()
 
     override fun schedule(): Schedule = schedule
-    override suspend fun doAction() = currencyPricesManager.updateCurrencyPrices()
+    override suspend fun doAction() = currencyPricesManager.updateCurrencyPricesWithNotification()
 }

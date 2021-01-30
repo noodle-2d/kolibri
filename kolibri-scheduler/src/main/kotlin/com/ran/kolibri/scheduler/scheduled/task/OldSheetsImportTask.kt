@@ -13,5 +13,5 @@ class OldSheetsImportTask(kodein: Kodein) : ScheduledTask {
     private val importOldSheetsManager: ImportOldSheetsManager = kodein.instance()
 
     override fun schedule(): Schedule = schedule
-    override suspend fun doAction() = importOldSheetsManager.importOldSheets()
+    override suspend fun doAction() = importOldSheetsManager.importOldSheetsWithNotification()
 }
