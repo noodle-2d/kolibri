@@ -6,10 +6,13 @@ import com.ran.kolibri.common.client.telegram.TelegramClient
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.client.telegram.model.Update
 import com.ran.kolibri.common.dao.TelegramIntegrationDao
+import com.ran.kolibri.common.manager.Ignored
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
 import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
+import com.ran.kolibri.scheduler.manager.transaction.AddTransactionContext
+import com.ran.kolibri.scheduler.manager.transaction.AddTransactionManager
 
 class TelegramUpdatesManager(kodein: Kodein) {
 
@@ -20,6 +23,7 @@ class TelegramUpdatesManager(kodein: Kodein) {
 
     private val importOldSheetsManager: ImportOldSheetsManager = kodein.instance()
     private val accountsStatisticsManager: AccountsStatisticsManager = kodein.instance()
+    private val addTransactionManager: AddTransactionManager = kodein.instance()
 
     suspend fun pullUpdates() {
         val telegramIntegration = telegramIntegrationDao.get()
@@ -38,18 +42,40 @@ class TelegramUpdatesManager(kodein: Kodein) {
     private suspend fun processUpdate(update: Update) {
         log.info("Processing update $update")
 
-        val chatId = update.message?.chat?.id
+        val chatId = update.message?.chat?.id ?: update.callbackQuery?.message?.chat?.id
         if (chatId != telegramConfig.botOwnerId) {
             log.info("Ignoring message from chat $chatId")
             return
         }
 
-        when (val text = update.message?.text.orEmpty()) {
+        if (processOperationStart(update)) {
+            return
+        }
+
+        processInContext(update)
+    }
+
+    private suspend fun processOperationStart(update: Update): Boolean {
+        when (update.message?.text.orEmpty()) {
             "/import_old_sheets" -> importOldSheetsManager.importOldSheets()
             "/export_sheets" -> telegramManager.sendMessageToOwner("Exporting sheets is not supported yet")
             "/show_accounts_stat" -> accountsStatisticsManager.buildAccountsStatistics()
             "/show_total_stat" -> telegramManager.sendMessageToOwner("Showing statistics is not supported yet")
-            else -> telegramManager.sendMessageToOwner("Unknown command $text")
+            "/add_transaction" -> addTransactionManager.startAddingTransaction()
+            else -> return false
         }
+        return true
     }
+
+    private suspend fun processInContext(update: Update) =
+        telegramManager.doActionUpdatingChatContext { chatContext ->
+            log.debug("Trying to process in context: $chatContext")
+            when (chatContext) {
+                is AddTransactionContext -> addTransactionManager.processAddingTransactionInContext(chatContext, update)
+                else -> {
+                    log.info("Ignoring unexpected update $update")
+                    Ignored
+                }
+            }
+        }
 }
