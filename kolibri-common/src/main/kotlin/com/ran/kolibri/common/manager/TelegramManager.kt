@@ -43,18 +43,22 @@ class TelegramManager(kodein: Kodein) {
     suspend fun doActionUpdatingChatContext(action: suspend (ChatContext?) -> ProcessingInContextResult) =
         withContext(threadContext) {
             if (lastChatContextUpdateTime.plusHours(1).isBeforeNow) {
-                chatContext = null
+                updateContext(null)
             }
 
             when (val processingResult = action(chatContext)) {
-                is Processed -> chatContext = processingResult.newChatContext
+                is Processed -> updateContext(processingResult.newChatContext)
             }
-            log.debug("Now chat context is $chatContext")
         }
+
+    private fun updateContext(newContext: ChatContext?) {
+        chatContext = newContext
+        lastChatContextUpdateTime = DateTime.now()
+    }
 
     companion object {
         private val threadContext = newSingleThreadContext("ChatContext")
-        private var lastChatContextUpdateTime = DateTime()
+        private var lastChatContextUpdateTime = DateTime.now()
         private var chatContext: ChatContext? = null
     }
 }

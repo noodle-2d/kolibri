@@ -69,7 +69,6 @@ class TelegramUpdatesManager(kodein: Kodein) {
 
     private suspend fun processInContext(update: Update) =
         telegramManager.doActionUpdatingChatContext { chatContext ->
-            log.debug("Trying to process in context: $chatContext")
             when (chatContext) {
                 is AddTransactionContext -> addTransactionManager.processAddingTransactionInContext(chatContext, update)
                 else -> {
