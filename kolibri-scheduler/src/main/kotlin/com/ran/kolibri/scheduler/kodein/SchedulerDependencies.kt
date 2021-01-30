@@ -9,6 +9,7 @@ import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
 import com.ran.kolibri.scheduler.manager.importing.TransactionEnrichManager
 import com.ran.kolibri.scheduler.manager.prices.CurrencyPricesManager
 import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
+import com.ran.kolibri.scheduler.manager.transaction.AddTransactionManager
 import com.ran.kolibri.scheduler.scheduled.task.CurrencyPricesUpdateTask
 import com.ran.kolibri.scheduler.scheduled.task.OldSheetsImportTask
 import com.ran.kolibri.scheduler.scheduled.task.SheetsExportTask
@@ -24,6 +25,8 @@ val managerModule = Kodein.Module {
     bind<AccountsStatisticsManager>() with provider { AccountsStatisticsManager(kodein) }
 
     bind<CurrencyPricesManager>() with provider { CurrencyPricesManager(kodein) }
+
+    bind<AddTransactionManager>() with provider { AddTransactionManager(kodein) }
 }
 
 val scheduledTaskModule = Kodein.Module {
