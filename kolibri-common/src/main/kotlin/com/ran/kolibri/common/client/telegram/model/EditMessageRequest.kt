@@ -1,14 +1,16 @@
 package com.ran.kolibri.common.client.telegram.model
 
-interface SendMessageRequest
+interface EditMessageRequest
 
-data class SendTextMessageRequest(
+data class EditTextMessageRequest(
     var chatId: Int? = null,
+    var messageId: Int? = null,
     var text: String? = null
 ) : SendMessageRequest
 
-data class SendButtonMessageRequest(
+data class EditButtonMessageRequest(
     var chatId: Int? = null,
+    var messageId: Int? = null,
     var text: String? = null,
     var replyMarkup: ReplyMarkup? = null
 ) : SendMessageRequest

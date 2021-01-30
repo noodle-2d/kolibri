@@ -7,20 +7,12 @@ data class UpdatesResponse(
 
 data class Update(
     var updateId: Long? = null,
-    var message: Message? = null
+    var message: Message? = null,
+    val callbackQuery: CallbackQuery? = null
 )
 
-data class Message(
+data class CallbackQuery(
     var from: User? = null,
-    var date: Int? = null,
-    var chat: Chat? = null,
-    var text: String? = null
-)
-
-data class Chat(
-    var id: Int? = null
-)
-
-data class User(
-    var id: Int? = null
+    var message: Message? = null,
+    var data: String? = null
 )

@@ -1,6 +1,6 @@
 package com.ran.kolibri.common.client.telegram.model
 
-data class TelegramResponse(
+data class SendMessageResponse(
     var ok: Boolean? = null,
-    var description: String? = null
+    var result: Message? = null
 )
