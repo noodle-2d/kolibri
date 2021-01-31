@@ -57,7 +57,7 @@ class TelegramUpdatesManager(kodein: Kodein) {
 
     private suspend fun processOperationStart(update: Update): Boolean {
         when (update.message?.text.orEmpty()) {
-            "/import_old_sheets" -> importOldSheetsManager.importOldSheets()
+            "/import_old_sheets" -> importOldSheetsManager.importOldSheetsWithNotification()
             "/export_sheets" -> telegramManager.sendMessageToOwner("Exporting sheets is not supported yet")
             "/show_accounts_stat" -> accountsStatisticsManager.buildAccountsStatistics()
             "/show_total_stat" -> telegramManager.sendMessageToOwner("Showing statistics is not supported yet")
