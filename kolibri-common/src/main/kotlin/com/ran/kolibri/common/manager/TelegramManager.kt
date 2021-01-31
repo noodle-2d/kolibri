@@ -86,6 +86,6 @@ interface ProcessingInContextResult
 
 object Ignored : ProcessingInContextResult
 
-data class Processed(val newChatContext: ChatContext?): ProcessingInContextResult
+data class Processed(val newChatContext: ChatContext?) : ProcessingInContextResult
 
 data class ListOption(val name: String, val id: String)

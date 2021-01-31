@@ -4,8 +4,8 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.telegram.model.EditMessageRequest
 import com.ran.kolibri.common.client.telegram.model.SendMessageRequest
-import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.client.telegram.model.SendMessageResponse
+import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.client.telegram.model.UpdatesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
