@@ -12,7 +12,9 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.jodatime.date
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
+import org.joda.time.DateTime
 
 class CurrencyPriceDaoImpl(kodein: Kodein) : CurrencyPriceDao {
 
@@ -33,7 +35,16 @@ class CurrencyPriceDaoImpl(kodein: Kodein) : CurrencyPriceDao {
 
     override suspend fun selectAll(): List<CurrencyPrice> =
         runTransaction(db) {
-            CurrencyPrices.selectAll().map { mapRow(it) }
+            CurrencyPrices
+                .selectAll()
+                .map { mapRow(it) }
+        }
+
+    override suspend fun selectForDate(date: DateTime): List<CurrencyPrice> =
+        runTransaction(db) {
+            CurrencyPrices
+                .select { CurrencyPrices.date.eq(date) }
+                .map { mapRow(it) }
         }
 
     private fun mapRow(row: ResultRow): CurrencyPrice =
