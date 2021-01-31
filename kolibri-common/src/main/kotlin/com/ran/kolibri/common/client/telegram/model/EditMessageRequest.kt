@@ -3,14 +3,14 @@ package com.ran.kolibri.common.client.telegram.model
 interface EditMessageRequest
 
 data class EditTextMessageRequest(
-    var chatId: Int? = null,
-    var messageId: Int? = null,
-    var text: String? = null
-) : SendMessageRequest
+    var chatId: Int = 0,
+    var messageId: Int = 0,
+    var text: String = ""
+) : EditMessageRequest
 
 data class EditButtonMessageRequest(
-    var chatId: Int? = null,
-    var messageId: Int? = null,
-    var text: String? = null,
+    var chatId: Int = 0,
+    var messageId: Int = 0,
+    var text: String = "",
     var replyMarkup: ReplyMarkup? = null
-) : SendMessageRequest
+) : EditMessageRequest

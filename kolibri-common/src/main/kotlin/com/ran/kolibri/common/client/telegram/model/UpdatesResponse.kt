@@ -6,7 +6,7 @@ data class UpdatesResponse(
 )
 
 data class Update(
-    var updateId: Long? = null,
+    var updateId: Long = 0,
     var message: Message? = null,
     val callbackQuery: CallbackQuery? = null
 )
