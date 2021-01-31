@@ -16,7 +16,7 @@ fun buildSheets(kodein: Kodein): Sheets {
     val tokensStream = FileInputStream(googleConfig.tokensPath)
     val credential = GoogleCredential
         .fromStream(tokensStream)
-        .createScoped(listOf(SheetsScopes.SPREADSHEETS_READONLY))
+        .createScoped(listOf(SheetsScopes.SPREADSHEETS))
 
     val jsonFactory = JacksonFactory.getDefaultInstance()
     val httpTransport = GoogleNetHttpTransport.newTrustedTransport()
