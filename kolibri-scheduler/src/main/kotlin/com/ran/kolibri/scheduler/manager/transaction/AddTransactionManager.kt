@@ -14,6 +14,7 @@ import com.ran.kolibri.common.manager.TelegramManager
 class AddTransactionManager(kodein: Kodein) {
 
     private val telegramManager: TelegramManager = kodein.instance()
+    private val financialAssetTransactionManager: AddFinancialAssetTransactionManager = kodein.instance()
 
     suspend fun startAddingTransaction() =
         telegramManager.doActionSettingChatContext {
@@ -42,8 +43,10 @@ class AddTransactionManager(kodein: Kodein) {
             TransactionType.EXPENSE.name -> startAddingExpenseTransaction(context.messageId)
             TransactionType.TRANSFER.name -> startAddingTransferTransaction(context.messageId)
             TransactionType.CURRENCY_CONVERSION.name -> startAddingCurrencyConversionTransaction(context.messageId)
-            TransactionType.FINANCIAL_ASSET_PURCHASE.name -> startAddingFinancialAssetTransaction(context.messageId)
-            TransactionType.FINANCIAL_ASSET_SALE.name -> startAddingFinancialAssetTransaction(context.messageId)
+            TransactionType.FINANCIAL_ASSET_PURCHASE.name ->
+                financialAssetTransactionManager.startAddingFinancialAssetTransaction(context.messageId)
+            TransactionType.FINANCIAL_ASSET_SALE.name ->
+                financialAssetTransactionManager.startAddingFinancialAssetTransaction(context.messageId)
             else -> Ignored
         }
 
@@ -59,11 +62,6 @@ class AddTransactionManager(kodein: Kodein) {
 
     private suspend fun startAddingTransferTransaction(messageId: Int): ProcessingInContextResult {
         telegramManager.editMessageToOwner(messageId, "Adding transfer transaction. (todo)")
-        return Processed(null)
-    }
-
-    private suspend fun startAddingFinancialAssetTransaction(messageId: Int): ProcessingInContextResult {
-        telegramManager.editMessageToOwner(messageId, "Adding financial asset transaction. (todo)")
         return Processed(null)
     }
 
@@ -102,9 +100,5 @@ data class AddTransferTransactionContext(
 ) : AddTransactionContext
 
 data class AddCurrencyConversionTransactionContext(
-    override val messageId: Int
-) : AddTransactionContext
-
-data class AddFinancialAssetTransactionContext(
     override val messageId: Int
 ) : AddTransactionContext
