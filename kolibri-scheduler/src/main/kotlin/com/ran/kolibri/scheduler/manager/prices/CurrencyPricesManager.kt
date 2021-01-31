@@ -3,6 +3,10 @@ package com.ran.kolibri.scheduler.manager.prices
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.open.exchange.rates.OpenExchangeRatesClient
+import com.ran.kolibri.common.client.sheets.SheetsClient
+import com.ran.kolibri.common.client.sheets.model.GoogleConfig
+import com.ran.kolibri.common.client.sheets.model.SheetRange
+import com.ran.kolibri.common.client.sheets.model.SheetRow
 import com.ran.kolibri.common.dao.CurrencyPriceDao
 import com.ran.kolibri.common.entity.CurrencyPrice
 import com.ran.kolibri.common.entity.enums.Currency
@@ -10,7 +14,10 @@ import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
 import java.lang.IllegalStateException
+import java.math.BigDecimal
+import java.math.RoundingMode
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
@@ -18,6 +25,9 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     private val openExchangeRatesClient: OpenExchangeRatesClient = kodein.instance()
 
     override val telegramManager: TelegramManager = kodein.instance()
+
+    private val googleConfig: GoogleConfig = kodein.instance()
+    private val sheetsClient: SheetsClient = kodein.instance()
 
     suspend fun updateCurrencyPricesWithNotification() =
         doActionSendingMessageToOwner("updating currency prices") { updateCurrencyPrices() }
@@ -35,6 +45,7 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
             }
         }
 
+        updateCurrencyPricesInSheets()
         return "Updated currency prices"
     }
 
@@ -44,7 +55,7 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
             .mapValues { currencyEntry -> currencyEntry.value.map { it.currency } }
 
     private fun buildDatesList(): List<DateTime> {
-        val daysQuantity = (DateTime().withTimeAtStartOfDay().millis - WATCH_START_DATE.millis) / MILLIS_IN_DAY
+        val daysQuantity = (DateTime.now().withTimeAtStartOfDay().millis - WATCH_START_DATE.millis) / MILLIS_IN_DAY
         return (0..daysQuantity.toInt()).map { day -> WATCH_START_DATE.plusDays(day) }
     }
 
@@ -83,6 +94,63 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     private fun emptyFieldError(field: String): Nothing =
         throw IllegalStateException("Field $field is empty")
 
+    private suspend fun updateCurrencyPricesInSheets() {
+        log.info("Updating currency prices in sheets")
+        val today = DateTime.now().withTimeAtStartOfDay()
+        val todayCurrencyPrices = currencyPriceDao.selectForDate(today)
+
+        updateSheetsValue("G18", retrieveUsdPriceString(todayCurrencyPrices))
+        updateSheetsValue("G19", retrieveEurPriceString(todayCurrencyPrices))
+        updateSheetsValue("G20", retrieveCnyPriceString(todayCurrencyPrices))
+        updateSheetsValue("H21", retrieveBtcPriceString(todayCurrencyPrices))
+        updateSheetsValue("N17", today.toString(CURRENCY_PRICE_DATE_FORMAT))
+
+        log.info("Currency prices were successfully updated in sheets")
+    }
+
+    private suspend fun updateSheetsValue(cell: String, value: String) {
+        val sheetRow = SheetRow(listOf(value))
+        val sheetRange = SheetRange(listOf(sheetRow))
+        val range = "Счета!$cell"
+
+        log.info("Updating value at cell $cell to $value")
+        sheetsClient.updateRange(googleConfig.accountsSpreadsheetId, range, sheetRange)
+    }
+
+    private fun retrieveUsdPriceString(currencyPrices: List<CurrencyPrice>): String =
+        buildCurrencyDivisionString(currencyPrices, Currency.RUB, Currency.USD)
+
+    private fun retrieveEurPriceString(currencyPrices: List<CurrencyPrice>): String =
+        buildCurrencyDivisionString(currencyPrices, Currency.RUB, Currency.EUR)
+
+    private fun retrieveCnyPriceString(currencyPrices: List<CurrencyPrice>): String =
+        buildCurrencyDivisionString(currencyPrices, Currency.RUB, Currency.CNY)
+
+    private fun retrieveBtcPriceString(currencyPrices: List<CurrencyPrice>): String =
+        buildCurrencyDivisionString(currencyPrices, Currency.USD, Currency.BTC)
+
+    private fun buildCurrencyDivisionString(
+        currencyPrices: List<CurrencyPrice>,
+        currencyNumerator: Currency,
+        currencyDenominator: Currency
+    ): String =
+        retrieveCurrencyPrice(currencyPrices, currencyNumerator)
+            .divide(retrieveCurrencyPrice(currencyPrices, currencyDenominator), RoundingMode.HALF_UP)
+            .let { toSheetsString(it) }
+
+    private fun retrieveCurrencyPrice(currencyPrices: List<CurrencyPrice>, currency: Currency): BigDecimal =
+        when (currency) {
+            Currency.USD -> BigDecimal.ONE
+            else -> currencyPrices
+                .find { it.currency == currency }!!
+                .price
+        }
+
+    private fun toSheetsString(number: BigDecimal): String =
+        number.setScale(2, RoundingMode.HALF_UP)
+            .toString()
+            .replace(".", ",")
+
     companion object {
         private val WATCH_START_DATE = DateTime.parse("2018-01-01T00:00:00Z")
         private const val MILLIS_IN_DAY = 24 * 60 * 60 * 1000
@@ -94,5 +162,7 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
             Currency.CZK,
             Currency.BTC
         )
+
+        private val CURRENCY_PRICE_DATE_FORMAT = DateTimeFormat.forPattern("dd.MM.yyyy")
     }
 }
