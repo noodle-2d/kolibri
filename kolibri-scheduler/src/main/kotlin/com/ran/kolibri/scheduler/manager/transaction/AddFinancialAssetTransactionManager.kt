@@ -6,9 +6,9 @@ import com.ran.kolibri.common.client.sheets.SheetsClient
 import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import com.ran.kolibri.common.client.sheets.model.SheetRange
 import com.ran.kolibri.common.client.sheets.model.SheetRow
-import com.ran.kolibri.common.manager.Processed
-import com.ran.kolibri.common.manager.ProcessingInContextResult
+import com.ran.kolibri.common.entity.TelegramOperation
 import com.ran.kolibri.common.manager.TelegramManager
+import com.ran.kolibri.scheduler.manager.model.telegram.OperationUpdate
 
 class AddFinancialAssetTransactionManager(kodein: Kodein) {
 
@@ -17,9 +17,12 @@ class AddFinancialAssetTransactionManager(kodein: Kodein) {
     private val googleConfig: GoogleConfig = kodein.instance()
     private val sheetsClient: SheetsClient = kodein.instance()
 
-    suspend fun startAddingFinancialAssetTransaction(messageId: Int): ProcessingInContextResult {
-        telegramManager.editMessageToOwner(messageId, "Adding financial asset transaction. (todo)")
-        return Processed(null)
+    suspend fun startAddingFinancialAssetTransaction(
+        operation: TelegramOperation,
+        update: OperationUpdate
+    ): TelegramOperation {
+        telegramManager.editMessageToOwner(operation.messageId!!, "Adding financial asset transaction. (todo)")
+        return operation
     }
 
     private suspend fun updateSheets() {
@@ -36,7 +39,3 @@ class AddFinancialAssetTransactionManager(kodein: Kodein) {
         telegramManager.sendMessageToOwner("Sheets appended")
     }
 }
-
-data class AddFinancialAssetTransactionContext(
-    override val messageId: Int
-) : AddTransactionContext
