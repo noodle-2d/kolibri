@@ -4,6 +4,7 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.provider
 import com.ran.kolibri.common.manager.TelegramManager
+import com.ran.kolibri.scheduler.manager.TelegramUpdateRecognizer
 import com.ran.kolibri.scheduler.manager.TelegramUpdatesManager
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
 import com.ran.kolibri.scheduler.manager.importing.TransactionEnrichManager
@@ -18,6 +19,7 @@ import com.ran.kolibri.scheduler.scheduled.task.TelegramPullTask
 
 val managerModule = Kodein.Module {
     bind<TelegramManager>() with provider { TelegramManager(kodein) }
+    bind<TelegramUpdateRecognizer>() with provider { TelegramUpdateRecognizer(kodein) }
     bind<TelegramUpdatesManager>() with provider { TelegramUpdatesManager(kodein) }
 
     bind<ImportOldSheetsManager>() with provider { ImportOldSheetsManager(kodein) }
