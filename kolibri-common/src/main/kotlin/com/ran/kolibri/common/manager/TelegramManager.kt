@@ -11,9 +11,6 @@ import com.ran.kolibri.common.client.telegram.model.SendButtonMessageRequest
 import com.ran.kolibri.common.client.telegram.model.SendTextMessageRequest
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.util.log
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.withContext
-import org.joda.time.DateTime
 
 class TelegramManager(kodein: Kodein) {
 
@@ -51,41 +48,6 @@ class TelegramManager(kodein: Kodein) {
             .map { listOf(Button(it.name, it.id)) }
             .let { if (it.isEmpty()) null else it }
             ?.let { ReplyMarkup(it) }
-
-    suspend fun doActionSettingChatContext(action: suspend () -> ChatContext) =
-        doActionUpdatingChatContext { Processed(action()) }
-
-    suspend fun doActionUpdatingChatContext(action: suspend (ChatContext?) -> ProcessingInContextResult) =
-        withContext(threadContext) {
-            if (lastChatContextUpdateTime.plusHours(1).isBeforeNow) {
-                updateContext(null)
-            }
-
-            when (val processingResult = action(chatContext)) {
-                is Processed -> updateContext(processingResult.newChatContext)
-            }
-        }
-
-    private fun updateContext(newContext: ChatContext?) {
-        chatContext = newContext
-        lastChatContextUpdateTime = DateTime.now()
-    }
-
-    companion object {
-        private val threadContext = newSingleThreadContext("ChatContext")
-        private var lastChatContextUpdateTime = DateTime.now()
-        private var chatContext: ChatContext? = null
-    }
 }
-
-interface ChatContext {
-    val messageId: Int
-}
-
-interface ProcessingInContextResult
-
-object Ignored : ProcessingInContextResult
-
-data class Processed(val newChatContext: ChatContext?) : ProcessingInContextResult
 
 data class ListOption(val name: String, val id: String)
