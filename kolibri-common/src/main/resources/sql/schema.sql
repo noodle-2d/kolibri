@@ -95,3 +95,11 @@ create table transaction (
 create table telegram_integration (
     last_update_id bigint not null
 );
+
+create table telegram_operation (
+    id bigserial primary key,
+    operation_name varchar(100) not null,
+    message_id int,
+    context text,
+    create_time timestamp not null
+);
