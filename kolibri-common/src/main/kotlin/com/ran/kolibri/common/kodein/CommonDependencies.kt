@@ -20,11 +20,13 @@ import com.ran.kolibri.common.dao.AccountDao
 import com.ran.kolibri.common.dao.CurrencyPriceDao
 import com.ran.kolibri.common.dao.FinancialAssetDao
 import com.ran.kolibri.common.dao.TelegramIntegrationDao
+import com.ran.kolibri.common.dao.TelegramOperationDao
 import com.ran.kolibri.common.dao.TransactionDao
 import com.ran.kolibri.common.dao.impl.AccountDaoImpl
 import com.ran.kolibri.common.dao.impl.CurrencyPriceDaoImpl
 import com.ran.kolibri.common.dao.impl.FinancialAssetDaoImpl
 import com.ran.kolibri.common.dao.impl.TelegramIntegrationDaoImpl
+import com.ran.kolibri.common.dao.impl.TelegramOperationDaoImpl
 import com.ran.kolibri.common.dao.impl.TransactionDaoImpl
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
@@ -50,6 +52,7 @@ val daoModule = Kodein.Module {
     bind<TransactionDao>() with provider { TransactionDaoImpl(kodein) }
     bind<CurrencyPriceDao>() with provider { CurrencyPriceDaoImpl(kodein) }
     bind<TelegramIntegrationDao>() with provider { TelegramIntegrationDaoImpl(kodein) }
+    bind<TelegramOperationDao>() with provider { TelegramOperationDaoImpl(kodein) }
 }
 
 val telegramClientModule = Kodein.Module {
