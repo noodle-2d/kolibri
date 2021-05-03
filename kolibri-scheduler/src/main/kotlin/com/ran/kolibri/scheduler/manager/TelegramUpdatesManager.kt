@@ -3,34 +3,48 @@ package com.ran.kolibri.scheduler.manager
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.telegram.TelegramClient
-import com.ran.kolibri.common.client.telegram.model.TelegramConfig
-import com.ran.kolibri.common.client.telegram.model.Update
 import com.ran.kolibri.common.dao.TelegramIntegrationDao
-import com.ran.kolibri.common.manager.Ignored
-import com.ran.kolibri.common.manager.TelegramManager
+import com.ran.kolibri.common.dao.TelegramOperationDao
+import com.ran.kolibri.common.entity.TelegramOperation
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
+import com.ran.kolibri.scheduler.manager.model.telegram.CallbackQuery
+import com.ran.kolibri.scheduler.manager.model.telegram.OperationContinuation
+import com.ran.kolibri.scheduler.manager.model.telegram.OperationInitiation
+import com.ran.kolibri.scheduler.manager.model.telegram.OperationUpdate
+import com.ran.kolibri.scheduler.manager.model.telegram.PlainText
+import com.ran.kolibri.scheduler.manager.model.telegram.TelegramUpdate
 import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
-import com.ran.kolibri.scheduler.manager.transaction.AddTransactionContext
 import com.ran.kolibri.scheduler.manager.transaction.AddTransactionManager
+import org.joda.time.DateTime
 
 class TelegramUpdatesManager(kodein: Kodein) {
 
     private val telegramClient: TelegramClient = kodein.instance()
-    private val telegramConfig: TelegramConfig = kodein.instance()
-    private val telegramManager: TelegramManager = kodein.instance()
+    private val telegramUpdateRecognizer: TelegramUpdateRecognizer = kodein.instance()
     private val telegramIntegrationDao: TelegramIntegrationDao = kodein.instance()
+    private val telegramOperationDao: TelegramOperationDao = kodein.instance()
 
     private val importOldSheetsManager: ImportOldSheetsManager = kodein.instance()
     private val accountsStatisticsManager: AccountsStatisticsManager = kodein.instance()
     private val addTransactionManager: AddTransactionManager = kodein.instance()
+
+    private val telegramUpdateProcessors = listOf(
+        importOldSheetsManager,
+        accountsStatisticsManager,
+        addTransactionManager
+    )
 
     suspend fun pullUpdates() {
         val telegramIntegration = telegramIntegrationDao.get()
         val updatesResponse = telegramClient.getUpdates(telegramIntegration.lastUpdateId + 1)
 
         val updates = updatesResponse.result.orEmpty()
-        updates.forEach { processUpdate(it) }
+        updates.forEach {
+            val telegramUpdate = telegramUpdateRecognizer.recognize(it)
+            log.info("Processing update $it, recognized as $telegramUpdate")
+            processUpdate(telegramUpdate)
+        }
 
         updates.lastOrNull()?.updateId?.let { newLastUpdateId ->
             val updatedTelegramIntegration = telegramIntegration.copy(lastUpdateId = newLastUpdateId)
@@ -39,42 +53,49 @@ class TelegramUpdatesManager(kodein: Kodein) {
         }
     }
 
-    private suspend fun processUpdate(update: Update) {
-        log.info("Processing update $update")
-
-        val chatId = update.message?.chat?.id ?: update.callbackQuery?.message?.chat?.id
-        if (chatId != telegramConfig.botOwnerId) {
-            log.info("Ignoring message from chat $chatId")
-            return
+    private suspend fun processUpdate(update: TelegramUpdate) =
+        when (update) {
+            is OperationInitiation -> processOperationInitiation(update)
+            is OperationContinuation -> processOperationContinuation(update)
+            else -> ignoreUnknownUpdate(update)
         }
 
-        if (processOperationStart(update)) {
-            return
-        }
-
-        processInContext(update)
+    private suspend fun processOperationInitiation(update: OperationInitiation) {
+        val telegramOperation = TelegramOperation(
+            operationName = update.type.operationName,
+            messageId = null,
+            context = null,
+            createTime = DateTime.now()
+        )
+        val insertedTelegramOperation = telegramOperationDao.insert(telegramOperation)
+        processOperation(insertedTelegramOperation, update)
     }
 
-    private suspend fun processOperationStart(update: Update): Boolean {
-        when (update.message?.text.orEmpty()) {
-            "/import_old_sheets" -> importOldSheetsManager.importOldSheetsWithNotification()
-            "/export_sheets" -> telegramManager.sendMessageToOwner("Exporting sheets is not supported yet")
-            "/show_accounts_stat" -> accountsStatisticsManager.buildAccountsStatistics()
-            "/show_total_stat" -> telegramManager.sendMessageToOwner("Showing statistics is not supported yet")
-            "/add_transaction" -> addTransactionManager.startAddingTransaction()
-            else -> return false
+    private suspend fun processOperationContinuation(update: OperationContinuation) {
+        val foundTelegramOperation = when (update) {
+            is CallbackQuery -> telegramOperationDao.findByMessageId(update.messageId)
+            is PlainText -> telegramOperationDao.findLast()
+            else -> null
         }
-        return true
+
+        foundTelegramOperation
+            ?.takeIf { isOperationActive(it) }
+            ?.let { processOperation(it, update) }
+            ?: ignoreUnknownUpdate(update)
     }
 
-    private suspend fun processInContext(update: Update) =
-        telegramManager.doActionUpdatingChatContext { chatContext ->
-            when (chatContext) {
-                is AddTransactionContext -> addTransactionManager.processAddingTransactionInContext(chatContext, update)
-                else -> {
-                    log.info("Ignoring unexpected update $update")
-                    Ignored
-                }
-            }
-        }
+    private suspend fun processOperation(operation: TelegramOperation, update: OperationUpdate) {
+        val chosenProcessor = telegramUpdateProcessors
+            .find { it.operationType.operationName == operation.operationName }
+            ?: IgnoreUpdateProcessor
+        log.info("Processor ${chosenProcessor.javaClass.simpleName} was chosen for update $update")
+        val updatedOperation = chosenProcessor.processUpdate(operation, update)
+        telegramOperationDao.update(updatedOperation)
+    }
+
+    private fun isOperationActive(operation: TelegramOperation): Boolean =
+        operation.createTime.plusHours(1).isAfterNow
+
+    private fun ignoreUnknownUpdate(update: TelegramUpdate) =
+        log.info("Ignoring processing unknown update $update")
 }
