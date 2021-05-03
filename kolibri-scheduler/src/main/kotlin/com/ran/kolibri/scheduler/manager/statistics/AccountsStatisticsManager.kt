@@ -8,14 +8,19 @@ import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
+import com.ran.kolibri.scheduler.manager.SingleActionUpdateProcessor
+import com.ran.kolibri.scheduler.manager.model.telegram.TelegramOperationType
 import java.math.BigDecimal
 
-class AccountsStatisticsManager(kodein: Kodein) {
+class AccountsStatisticsManager(kodein: Kodein) : SingleActionUpdateProcessor {
 
     private val accountDao: AccountDao = kodein.instance()
     private val telegramManager: TelegramManager = kodein.instance()
 
-    suspend fun buildAccountsStatistics() {
+    override val operationType: TelegramOperationType
+        get() = TelegramOperationType.SHOW_ACCOUNTS_STAT
+
+    override suspend fun doProcessUpdate() {
         val accounts = accountDao
             .aggregateActiveAccounts()
             .filter { it.currentAmount.compareTo(BigDecimal.ZERO) != 0 }

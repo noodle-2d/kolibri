@@ -14,12 +14,14 @@ import com.ran.kolibri.common.entity.Transaction
 import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
+import com.ran.kolibri.scheduler.manager.SingleActionUpdateProcessor
 import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
 import com.ran.kolibri.scheduler.manager.importing.model.AccountImportDto
 import com.ran.kolibri.scheduler.manager.importing.model.TransactionImportDto
+import com.ran.kolibri.scheduler.manager.model.telegram.TelegramOperationType
 import java.lang.IllegalArgumentException
 
-class ImportOldSheetsManager(kodein: Kodein) : TelegramBotNotifyingUtils {
+class ImportOldSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, TelegramBotNotifyingUtils {
 
     private val googleConfig: GoogleConfig = kodein.instance()
     private val sheetsClient: SheetsClient = kodein.instance()
@@ -31,10 +33,16 @@ class ImportOldSheetsManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     private val transactionEnrichManager: TransactionEnrichManager = kodein.instance()
     override val telegramManager: TelegramManager = kodein.instance()
 
+    override val operationType: TelegramOperationType
+        get() = TelegramOperationType.IMPORT_OLD_SHEETS
+
+    override suspend fun doProcessUpdate() =
+        importOldSheetsWithNotification()
+
     suspend fun importOldSheetsWithNotification() =
         doActionSendingMessageToOwner("importing old sheets") { importOldSheets() }
 
-    suspend fun importOldSheets(): String {
+    private suspend fun importOldSheets(): String {
         log.info("Started to import old sheets")
 
         deleteAll()
