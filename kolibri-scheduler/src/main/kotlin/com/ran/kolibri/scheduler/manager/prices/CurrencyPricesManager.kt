@@ -12,7 +12,7 @@ import com.ran.kolibri.common.entity.CurrencyPrice
 import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
-import com.ran.kolibri.scheduler.manager.TelegramBotNotifyingUtils
+import com.ran.kolibri.scheduler.manager.telegram.TelegramBotNotifyingUtils
 import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.math.RoundingMode

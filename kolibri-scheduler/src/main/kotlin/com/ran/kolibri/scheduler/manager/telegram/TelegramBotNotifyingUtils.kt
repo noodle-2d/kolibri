@@ -1,4 +1,4 @@
-package com.ran.kolibri.scheduler.manager
+package com.ran.kolibri.scheduler.manager.telegram
 
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log

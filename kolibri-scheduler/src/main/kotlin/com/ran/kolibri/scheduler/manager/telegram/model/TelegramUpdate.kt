@@ -1,4 +1,4 @@
-package com.ran.kolibri.scheduler.manager.model.telegram
+package com.ran.kolibri.scheduler.manager.telegram.model
 
 interface TelegramUpdate
 

@@ -10,13 +10,13 @@ import com.ran.kolibri.common.entity.telegram.operation.context.IncomeTransactio
 import com.ran.kolibri.common.entity.telegram.operation.context.TelegramOperationContext
 import com.ran.kolibri.common.manager.ListOption
 import com.ran.kolibri.common.manager.TelegramManager
-import com.ran.kolibri.scheduler.manager.IgnoreUpdateProcessor
-import com.ran.kolibri.scheduler.manager.TelegramUpdateProcessor
-import com.ran.kolibri.scheduler.manager.model.telegram.CallbackQuery
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationContinuation
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationInitiation
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationUpdate
-import com.ran.kolibri.scheduler.manager.model.telegram.TelegramOperationType
+import com.ran.kolibri.scheduler.manager.telegram.IgnoreUpdateProcessor
+import com.ran.kolibri.scheduler.manager.telegram.TelegramUpdateProcessor
+import com.ran.kolibri.scheduler.manager.telegram.model.CallbackQuery
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationContinuation
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationInitiation
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationUpdate
+import com.ran.kolibri.scheduler.manager.telegram.model.TelegramOperationType
 
 class AddTransactionManager(kodein: Kodein) : TelegramUpdateProcessor {
 

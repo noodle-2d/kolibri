@@ -5,7 +5,7 @@ import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.scheduled.task.EveryMilliseconds
 import com.ran.kolibri.common.scheduled.task.Schedule
 import com.ran.kolibri.common.scheduled.task.ScheduledTask
-import com.ran.kolibri.scheduler.manager.TelegramUpdatesManager
+import com.ran.kolibri.scheduler.manager.telegram.TelegramUpdatesManager
 
 class TelegramPullTask(kodein: Kodein) : ScheduledTask {
 

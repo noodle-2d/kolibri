@@ -1,15 +1,15 @@
-package com.ran.kolibri.scheduler.manager
+package com.ran.kolibri.scheduler.manager.telegram
 
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
 import com.ran.kolibri.common.client.telegram.model.Update
-import com.ran.kolibri.scheduler.manager.model.telegram.CallbackQuery
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationInitiation
-import com.ran.kolibri.scheduler.manager.model.telegram.PlainText
-import com.ran.kolibri.scheduler.manager.model.telegram.TelegramOperationType
-import com.ran.kolibri.scheduler.manager.model.telegram.TelegramUpdate
-import com.ran.kolibri.scheduler.manager.model.telegram.UnknownChatUpdate
+import com.ran.kolibri.scheduler.manager.telegram.model.CallbackQuery
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationInitiation
+import com.ran.kolibri.scheduler.manager.telegram.model.PlainText
+import com.ran.kolibri.scheduler.manager.telegram.model.TelegramOperationType
+import com.ran.kolibri.scheduler.manager.telegram.model.TelegramUpdate
+import com.ran.kolibri.scheduler.manager.telegram.model.UnknownChatUpdate
 
 class TelegramUpdateRecognizer(kodein: Kodein) {
 

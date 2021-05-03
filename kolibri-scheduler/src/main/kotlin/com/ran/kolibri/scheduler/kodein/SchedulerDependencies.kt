@@ -4,8 +4,8 @@ import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.provider
 import com.ran.kolibri.common.manager.TelegramManager
-import com.ran.kolibri.scheduler.manager.TelegramUpdateRecognizer
-import com.ran.kolibri.scheduler.manager.TelegramUpdatesManager
+import com.ran.kolibri.scheduler.manager.telegram.TelegramUpdateRecognizer
+import com.ran.kolibri.scheduler.manager.telegram.TelegramUpdatesManager
 import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
 import com.ran.kolibri.scheduler.manager.importing.TransactionEnrichManager
 import com.ran.kolibri.scheduler.manager.prices.CurrencyPricesManager

@@ -8,8 +8,8 @@ import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
-import com.ran.kolibri.scheduler.manager.SingleActionUpdateProcessor
-import com.ran.kolibri.scheduler.manager.model.telegram.TelegramOperationType
+import com.ran.kolibri.scheduler.manager.telegram.SingleActionUpdateProcessor
+import com.ran.kolibri.scheduler.manager.telegram.model.TelegramOperationType
 import java.math.BigDecimal
 
 class AccountsStatisticsManager(kodein: Kodein) : SingleActionUpdateProcessor {

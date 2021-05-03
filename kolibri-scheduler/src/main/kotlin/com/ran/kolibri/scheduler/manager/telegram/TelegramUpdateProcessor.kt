@@ -1,10 +1,10 @@
-package com.ran.kolibri.scheduler.manager
+package com.ran.kolibri.scheduler.manager.telegram
 
 import com.ran.kolibri.common.entity.TelegramOperation
 import com.ran.kolibri.common.util.log
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationInitiation
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationUpdate
-import com.ran.kolibri.scheduler.manager.model.telegram.TelegramOperationType
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationInitiation
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationUpdate
+import com.ran.kolibri.scheduler.manager.telegram.model.TelegramOperationType
 import javax.naming.OperationNotSupportedException
 
 interface TelegramUpdateProcessor {

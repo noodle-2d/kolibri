@@ -1,4 +1,4 @@
-package com.ran.kolibri.scheduler.manager.model.telegram
+package com.ran.kolibri.scheduler.manager.telegram.model
 
 enum class TelegramOperationType(val operationName: String) {
     IMPORT_OLD_SHEETS("/import_old_sheets"),

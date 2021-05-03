@@ -8,7 +8,7 @@ import com.ran.kolibri.common.client.sheets.model.SheetRange
 import com.ran.kolibri.common.client.sheets.model.SheetRow
 import com.ran.kolibri.common.entity.TelegramOperation
 import com.ran.kolibri.common.manager.TelegramManager
-import com.ran.kolibri.scheduler.manager.model.telegram.OperationUpdate
+import com.ran.kolibri.scheduler.manager.telegram.model.OperationUpdate
 
 class AddFinancialAssetTransactionManager(kodein: Kodein) {
 
