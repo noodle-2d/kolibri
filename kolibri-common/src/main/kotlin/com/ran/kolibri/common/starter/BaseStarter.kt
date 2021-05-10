@@ -27,5 +27,8 @@ abstract class BaseStarter {
         if (this@BaseStarter is SchedulerStarter) {
             startScheduledTasks(kodein)
         }
+        if (this@BaseStarter is ConsumerStarter) {
+            startConsumers(kodein)
+        }
     }
 }
