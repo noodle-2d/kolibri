@@ -40,6 +40,18 @@ services:
       - ./kolibri-scheduler/.env
     command: java -jar app.jar
 
+  kolibri-consumer:
+    build:
+      context: .
+      dockerfile: kolibri-consumer/.dockerfile
+    container_name: kolibri-consumer
+    image: kolibri-consumer
+    volumes:
+      - /var/log:/var/log
+    env_file:
+      - ./kolibri-consumer/.env
+    command: java -jar app.jar
+
 networks:
   default:
     name: kolibri-network

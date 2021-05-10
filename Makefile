@@ -10,6 +10,9 @@ gradle-build/api:
 gradle-build/scheduler:
 	./gradlew clean kolibri-scheduler:build
 
+gradle-build/consumer:
+	./gradlew clean kolibri-consumer:build
+
 list-docker-services:
 	docker-compose ps
 
@@ -18,6 +21,9 @@ build/api: gradle-build/api
 
 build/scheduler: gradle-build/scheduler
 	docker-compose build kolibri-scheduler
+
+build/consumer: gradle-build/consumer
+	docker-compose build kolibri-consumer
 
 run/database:
 	docker-compose up -d kolibri-database
@@ -28,6 +34,9 @@ run/api:
 run/scheduler:
 	docker-compose up -d kolibri-scheduler
 
+run/consumer:
+	docker-compose up -d kolibri-consumer
+
 stop/database:
 	docker-compose stop kolibri-database
 
@@ -36,3 +45,6 @@ stop/api:
 
 stop/scheduler:
 	docker-compose stop kolibri-scheduler
+
+stop/consumer:
+	docker-compose stop kolibri-consumer
