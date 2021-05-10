@@ -16,6 +16,7 @@ val kodeinVersion = "4.1.0"
 val postgresqlJdbcDriverVersion = "42.2.14"
 val exposedVersion = "0.24.1"
 val hikariVersion = "3.4.5"
+val kafkaVersion = "2.8.0"
 val googleApiVersion = "1.30.4"
 val googleSheetsApiVersion = "v4-rev581-1.25.0"
 val slf4jVersion = "1.7.30"
@@ -69,6 +70,8 @@ subprojects {
         "implementation"("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
         "implementation"("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
         "implementation"("com.zaxxer:HikariCP:$hikariVersion")
+
+        "implementation"("org.apache.kafka:kafka-clients:$kafkaVersion")
 
         "implementation"("com.google.api-client:google-api-client:$googleApiVersion")
         "implementation"("com.google.oauth-client:google-oauth-client-jetty:$googleApiVersion")
