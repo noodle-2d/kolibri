@@ -1,5 +1,7 @@
 package com.ran.kolibri.common.util
 
+import kotlinx.coroutines.CancellationException
+import java.util.concurrent.Future
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
@@ -11,3 +13,12 @@ suspend fun <T> runIO(ioAction: () -> T): T =
 
 suspend fun <T> runTransaction(db: Database, transactionAction: suspend Transaction.() -> T): T =
     newSuspendedTransaction(Dispatchers.IO, db, statement = transactionAction)
+
+suspend fun <T> runFuture(futureAction: () -> Future<T>): T =
+    runIO {
+        try {
+            futureAction().get()
+        } catch (e: InterruptedException) {
+            throw CancellationException()
+        }
+    }
