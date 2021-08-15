@@ -22,7 +22,7 @@ private fun buildDefaultKafkaProperties(kafkaConfig: KafkaConfig): Map<String, A
         "linger.ms" to 100
     )
 
-fun <T> buildJsonMessageProducer(kodein: Kodein, producerId: String, klass: Class<T>): MessageProducer<T> {
+fun <M> buildJsonMessageProducer(kodein: Kodein, producerId: String, klass: Class<M>): MessageProducer<M> {
     val kafkaConfig = kodein.instance<KafkaConfig>()
     val kafkaProducerConfig = kafkaConfig.producers[producerId]
         ?: throw IllegalArgumentException("Not found producer config for $producerId")
