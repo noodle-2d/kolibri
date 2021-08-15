@@ -8,6 +8,8 @@ import com.ran.kolibri.api.manager.ExperimentManager
 import com.ran.kolibri.api.rest.AccountController
 import com.ran.kolibri.api.rest.ExperimentController
 import com.ran.kolibri.api.rest.TelegramController
+import com.ran.kolibri.common.kafka.COMPLICATED_TEST_EVENT_ID
+import com.ran.kolibri.common.kafka.TEST_EVENT_ID
 import com.ran.kolibri.common.kafka.message.ComplicatedTestEvent
 import com.ran.kolibri.common.kafka.message.TestEvent
 import com.ran.kolibri.common.kafka.producer.MessageProducer
@@ -28,9 +30,9 @@ val restModule = Kodein.Module {
 
 val kafkaModule = Kodein.Module {
     bind<MessageProducer<TestEvent>>() with provider {
-        buildJsonMessageProducer(kodein, "test-event", TestEvent::class.java)
+        buildJsonMessageProducer(kodein, TEST_EVENT_ID, TestEvent::class.java)
     }
     bind<MessageProducer<ComplicatedTestEvent>>() with provider {
-        buildJsonMessageProducer(kodein, "complicated-test-event", ComplicatedTestEvent::class.java)
+        buildJsonMessageProducer(kodein, COMPLICATED_TEST_EVENT_ID, ComplicatedTestEvent::class.java)
     }
 }
