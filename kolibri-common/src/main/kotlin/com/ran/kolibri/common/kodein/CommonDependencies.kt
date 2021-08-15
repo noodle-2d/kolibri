@@ -28,6 +28,9 @@ import com.ran.kolibri.common.dao.impl.FinancialAssetDaoImpl
 import com.ran.kolibri.common.dao.impl.TelegramIntegrationDaoImpl
 import com.ran.kolibri.common.dao.impl.TelegramOperationDaoImpl
 import com.ran.kolibri.common.dao.impl.TransactionDaoImpl
+import com.ran.kolibri.common.kafka.BytesKafkaProducer
+import com.ran.kolibri.common.kafka.KafkaConfig
+import com.ran.kolibri.common.kafka.producer.buildBytesKafkaProducer
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.typesafe.config.Config
@@ -42,6 +45,11 @@ fun buildConfigModule(config: Config) = Kodein.Module {
 
 val httpClientModule = Kodein.Module {
     bind<HttpClient>() with provider { buildHttpClient() }
+}
+
+val kafkaModule = Kodein.Module {
+    bind<KafkaConfig>() with provider { KafkaConfig(kodein.instance()) }
+    bind<BytesKafkaProducer>() with singleton { buildBytesKafkaProducer(kodein) }
 }
 
 val daoModule = Kodein.Module {
