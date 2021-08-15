@@ -25,6 +25,12 @@ build/scheduler: gradle-build/scheduler
 build/consumer: gradle-build/consumer
 	docker-compose build kolibri-consumer
 
+run/zookeeper:
+	docker-compose up -d kolibri-zookeeper
+
+run/kafka:
+	docker-compose up -d kolibri-kafka
+
 run/database:
 	docker-compose up -d kolibri-database
 
@@ -36,6 +42,12 @@ run/scheduler:
 
 run/consumer:
 	docker-compose up -d kolibri-consumer
+
+stop/zookeeper:
+	docker-compose stop kolibri-zookeeper
+
+stop/kafka:
+	docker-compose stop kolibri-kafka
 
 stop/database:
 	docker-compose stop kolibri-database
