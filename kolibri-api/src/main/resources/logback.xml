@@ -26,4 +26,5 @@
     </root>
 
     <logger name="io.netty" level="info"/>
+    <logger name="org.apache.kafka" level="info"/>
 </configuration>
