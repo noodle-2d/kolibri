@@ -14,10 +14,3 @@ logs
 
 # Ignore environment variables files
 .env
-
-# Ignore google api tokens
-google
-
-# Ignore certificates files
-proxy/fullchain.pem
-proxy/privkey.pem
