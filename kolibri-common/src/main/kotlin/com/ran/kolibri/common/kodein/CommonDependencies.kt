@@ -75,6 +75,6 @@ val openExchangeRatesClientModule = Kodein.Module {
 
 val sheetsModule = Kodein.Module {
     bind<GoogleConfig>() with provider { GoogleConfig(kodein.instance()) }
-    bind<Sheets>() with provider { buildSheets(kodein) }
+    bind<Sheets>() with singleton { buildSheets(kodein) }
     bind<SheetsClient>() with provider { SheetsClient(kodein) }
 }
