@@ -13,6 +13,8 @@ import com.ran.kolibri.common.client.sheets.buildSheets
 import com.ran.kolibri.common.client.sheets.model.GoogleConfig
 import com.ran.kolibri.common.client.telegram.TelegramClient
 import com.ran.kolibri.common.client.telegram.model.TelegramConfig
+import com.ran.kolibri.common.client.tinkoff.investing.TinkoffInvestingClient
+import com.ran.kolibri.common.client.tinkoff.investing.model.TinkoffInvestingConfig
 import com.ran.kolibri.common.config.DatabaseConfig
 import com.ran.kolibri.common.config.Environment
 import com.ran.kolibri.common.config.ServerConfig
@@ -71,6 +73,11 @@ val telegramClientModule = Kodein.Module {
 val openExchangeRatesClientModule = Kodein.Module {
     bind<OpenExchangeRatesConfig>() with provider { OpenExchangeRatesConfig(kodein.instance()) }
     bind<OpenExchangeRatesClient>() with provider { OpenExchangeRatesClient(kodein) }
+}
+
+val tinkoffInvestingClientModule = Kodein.Module {
+    bind<TinkoffInvestingConfig>() with provider { TinkoffInvestingConfig(kodein.instance()) }
+    bind<TinkoffInvestingClient>() with provider { TinkoffInvestingClient(kodein) }
 }
 
 val sheetsModule = Kodein.Module {

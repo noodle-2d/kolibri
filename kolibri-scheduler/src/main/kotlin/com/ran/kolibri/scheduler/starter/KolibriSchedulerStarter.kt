@@ -7,6 +7,7 @@ import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.openExchangeRatesClientModule
 import com.ran.kolibri.common.kodein.sheetsModule
 import com.ran.kolibri.common.kodein.telegramClientModule
+import com.ran.kolibri.common.kodein.tinkoffInvestingClientModule
 import com.ran.kolibri.common.scheduled.task.ScheduledTask
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.SchedulerStarter
@@ -23,6 +24,7 @@ class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
         listOf(
             httpClientModule,
             telegramClientModule,
+            tinkoffInvestingClientModule,
             sheetsModule,
             openExchangeRatesClientModule,
             daoModule,
