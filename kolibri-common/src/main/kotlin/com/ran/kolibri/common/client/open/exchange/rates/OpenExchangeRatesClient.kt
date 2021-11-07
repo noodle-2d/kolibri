@@ -5,7 +5,9 @@ import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.client.open.exchange.rates.model.CurrencyRates
 import com.ran.kolibri.common.client.open.exchange.rates.model.OpenExchangeRatesConfig
 import io.ktor.client.HttpClient
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -17,17 +19,19 @@ class OpenExchangeRatesClient(kodein: Kodein) {
 
     suspend fun getLatestRates(): CurrencyRates =
         httpClient.get {
-            url(buildUrl("/latest.json"))
+            buildRequest("/latest.json")
         }
 
     suspend fun getHistoricalRates(date: DateTime): CurrencyRates =
         httpClient.get {
             val dateString = DATE_FORMATTER.print(date)
-            url(buildUrl("/historical/$dateString.json"))
+            buildRequest("/historical/$dateString.json")
         }
 
-    private fun buildUrl(route: String): String =
-        "${config.apiUrl}/api$route?app_id=${config.appId}"
+    private fun HttpRequestBuilder.buildRequest(route: String) {
+        url("${config.apiUrl}/api$route")
+        parameter("app_id", config.appId)
+    }
 
     companion object {
         private val DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd")
