@@ -6,6 +6,7 @@ import com.ran.kolibri.common.dao.TransactionDao
 import com.ran.kolibri.common.entity.Transaction
 import com.ran.kolibri.common.entity.enums.TransactionType
 import com.ran.kolibri.common.util.log
+import java.lang.IllegalStateException
 
 class TransactionEnrichManager(kodein: Kodein) {
 
@@ -18,6 +19,7 @@ class TransactionEnrichManager(kodein: Kodein) {
             .zipWithNext()
             .forEach { (previousTransaction, nextTransaction) ->
                 if (isTransactionToEnrichBy(previousTransaction)) {
+                    // validateComments(previousTransaction, nextTransaction)
                     val updatedPreviousTransaction = previousTransaction
                         .copy(associatedTransactionId = nextTransaction.id)
                     val updatedNextTransaction = nextTransaction.copy(
@@ -34,6 +36,17 @@ class TransactionEnrichManager(kodein: Kodein) {
         log.info("Transactions enriched successfully")
     }
 
+    // todo: use comments validating later
+    private fun validateComments(previousTransaction: Transaction, nextTransaction: Transaction) {
+        if (previousTransaction.comment != nextTransaction.comment) {
+            throw IllegalStateException(
+                "Different comments for associated transactions: " +
+                    "$previousTransaction, $nextTransaction"
+            )
+        }
+    }
+
+    // todo: fix this enrichment! sometimes joins wrong transactions
     private fun isTransactionToEnrichBy(transaction: Transaction): Boolean =
         TRANSACTION_TYPES_TO_ENRICH_BY.contains(transaction.type) &&
             transaction.associatedTransactionId == null &&
@@ -43,6 +56,7 @@ class TransactionEnrichManager(kodein: Kodein) {
 
     companion object {
         private val TRANSACTION_TYPES_TO_ENRICH_BY = setOf(
+            TransactionType.TRANSFER,
             TransactionType.CURRENCY_CONVERSION,
             TransactionType.FINANCIAL_ASSET_SALE,
             TransactionType.FINANCIAL_ASSET_PURCHASE

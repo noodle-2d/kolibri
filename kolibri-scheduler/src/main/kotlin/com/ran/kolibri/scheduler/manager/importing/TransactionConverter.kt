@@ -3,6 +3,7 @@ package com.ran.kolibri.scheduler.manager.importing
 import com.ran.kolibri.common.client.sheets.model.SheetRow
 import com.ran.kolibri.common.entity.Account
 import com.ran.kolibri.common.entity.Transaction
+import com.ran.kolibri.common.entity.enums.AccountType
 import com.ran.kolibri.common.entity.enums.ExternalTransactionCategory
 import com.ran.kolibri.common.entity.enums.TransactionType
 import com.ran.kolibri.common.util.log
@@ -31,7 +32,6 @@ object TransactionConverter : ConverterUtils {
         return TransactionImportDto(
             accountString,
             transactionType,
-            evaluateExternalTransactionCategory(accountString, comment, transactionType),
             amount,
             resultAmount,
             date,
@@ -49,7 +49,8 @@ object TransactionConverter : ConverterUtils {
         when {
             contains(comment, FINANCIAL_ASSET_SINGS) && contains(comment, PURCHASE_SIGNS) ->
                 TransactionType.FINANCIAL_ASSET_PURCHASE
-            contains(comment, FINANCIAL_ASSET_SINGS) && contains(comment, SALE_SIGNS) ->
+            contains(comment, FINANCIAL_ASSET_SINGS) && contains(comment, SALE_SIGNS) &&
+                !contains(comment, setOf("ford")) ->
                 TransactionType.FINANCIAL_ASSET_SALE
             contains(comment, CURRENCY_CONVERSION_SIGNS) && !contains(comment, NOT_CURRENCY_CONVERSION_SIGNS) ->
                 TransactionType.CURRENCY_CONVERSION
@@ -60,14 +61,6 @@ object TransactionConverter : ConverterUtils {
             else ->
                 TransactionType.EXPENSE
         }
-
-    // todo: implement it
-    private fun evaluateExternalTransactionCategory(
-        accountString: String,
-        comment: String,
-        transactionType: TransactionType
-    ): ExternalTransactionCategory? =
-        null
 
     private fun evaluateExactCourseValues(
         courseString: String,
@@ -108,7 +101,7 @@ object TransactionConverter : ConverterUtils {
 
     fun convert(importDto: TransactionImportDto, accounts: List<Account>): Transaction? {
         if (importDto.amount == BigDecimal.ZERO) {
-            if (importDto.comment == "Начальные" || importDto.comment?.startsWith("Закрытие") == true) {
+            if (importDto.comment == "Начальные" || importDto.comment.startsWith("Закрытие")) {
                 log.info("Ignoring zero transaction $importDto")
                 return null
             } else {
@@ -117,13 +110,14 @@ object TransactionConverter : ConverterUtils {
             }
         }
 
-        val accountId = accounts
-            .find { importDto.accountString.endsWith(it.name) }
-            ?.id!!
+        log.info("Converting transaction: $importDto")
+        val account = accounts.find { importDto.accountString.endsWith(it.name) }!!
+        val transactionCategory = evaluateExternalTransactionCategory(importDto.comment, importDto.type, account)
+
         return Transaction(
-            accountId = accountId,
+            accountId = account.id!!,
             type = importDto.type,
-            externalTransactionCategory = importDto.externalTransactionCategory,
+            externalTransactionCategory = transactionCategory,
             amount = importDto.amount,
             date = importDto.date,
             comment = importDto.comment,
@@ -133,6 +127,42 @@ object TransactionConverter : ConverterUtils {
             exactSoldCurrencyRatioPart = importDto.exactSoldCurrencyRatioPart
         )
     }
+
+    private fun evaluateExternalTransactionCategory(
+        comment: String,
+        transactionType: TransactionType,
+        account: Account
+    ): ExternalTransactionCategory? =
+        if (NON_CATEGORIZED_ACCOUNT_TYPES.contains(account.type)) null else
+            when (transactionType) {
+                TransactionType.INCOME -> evaluateIncomeTransactionCategory(comment)
+                TransactionType.EXPENSE -> evaluateExpenseTransactionCategory(comment)
+                else -> null
+            }
+
+    private fun evaluateIncomeTransactionCategory(comment: String): ExternalTransactionCategory? =
+        when {
+            contains(comment, NON_CATEGORIZED_INCOME_SIGNS) -> null
+            contains(comment, ACTIVE_INCOME_SIGNS) -> ExternalTransactionCategory.ACTIVE_INCOME
+            contains(comment, PASSIVE_INCOME_SIGNS) -> ExternalTransactionCategory.PASSIVE_INCOME
+            contains(comment, GIFT_INCOME_SIGNS) -> ExternalTransactionCategory.GIFT_INCOME
+            // else -> throw IllegalArgumentException("Unknown category for transaction $comment")
+            else -> {
+                log.info("Unknown category: $comment")
+                null
+            }
+        }
+
+    private fun evaluateExpenseTransactionCategory(comment: String): ExternalTransactionCategory? =
+        when {
+            contains(comment, FINANCIAL_EXPENSE_SIGNS) -> ExternalTransactionCategory.FINANCIAL_EXPENSE
+            contains(comment, NON_FINANCIAL_EXPENSE_SIGNS) -> ExternalTransactionCategory.NON_FINANCIAL_EXPENSE
+            // else -> throw IllegalArgumentException("Unknown category for transaction $comment")
+            else -> {
+                log.info("Unknown category: $comment")
+                null
+            }
+        }
 
     private val DATE_FORMATTER = DateTimeFormat.forPattern("dd.MM.yy")
     private val COURSE_NUMBER_REGEX = Regex("""^\(курс 1(.*) [=~] ([0-9,]*).*\)$""")
@@ -144,11 +174,12 @@ object TransactionConverter : ConverterUtils {
         "снятие",
         "отдано в долг",
         "возврат долга",
+        "взято у отца в долг",
         "вывод",
         "внесение денег",
         "пополнение брокерского"
     )
-    private val INCOME_EXCLUSIONS = setOf("возврат в wildberries")
+    private val INCOME_EXCLUSIONS = setOf("возврат", "возвращено из", "возвращено с")
 
     private val SALE_SIGNS = setOf(
         "продажа",
@@ -156,11 +187,76 @@ object TransactionConverter : ConverterUtils {
         "перевод евро в рубли",
         "перевод биткоинов в рубли"
     )
-
     private val PURCHASE_SIGNS = setOf(
         "покупка",
         "перевод рублей в доллары",
         "перевод рублей в евро",
         "перевод рублей в биткоины"
+    )
+
+    private val NON_CATEGORIZED_ACCOUNT_TYPES = setOf(AccountType.STRANGER, AccountType.DEPT)
+    private val NON_CATEGORIZED_INCOME_SIGNS = setOf("начальные", "довложение на начальном этапе")
+    private val ACTIVE_INCOME_SIGNS = setOf("зарплата", "аванс", "премия", "стипендия", "грант")
+    private val PASSIVE_INCOME_SIGNS = setOf("процент", "купоны", "дивиденды", "бонус по акции")
+    private val GIFT_INCOME_SIGNS = setOf("подарок")
+
+    private val FINANCIAL_EXPENSE_SIGNS = setOf(
+        "смартфон",
+        "подарок",
+        "подарк",
+        "в долг",
+        "одежд",
+        "обув",
+        "билет",
+        "взято с собой",
+        "возвращено из",
+        "возвращено с",
+        "чистк",
+        "ткани для кресла",
+        "steam",
+        "зарядк",
+        "на операцию",
+        "джинс",
+        "люстр",
+        "пицц",
+        "лечение",
+        "гладильн",
+        "хостел",
+        "мышк",
+        "элице",
+        "зонт",
+        "самокат",
+        "картридж",
+        "книг",
+        "цепочки",
+        "штан",
+        "кофт",
+        "лекарств",
+        "валаам",
+        "очков",
+        "ботин",
+        "чехла",
+        "перевозка вещей",
+        "сковород",
+        "ремонт",
+        "mi band",
+        "продуктов",
+        "газовой плиты",
+        "забег"
+    )
+    private val NON_FINANCIAL_EXPENSE_SIGNS = setOf(
+        "карманные расходы",
+        "штраф",
+        "еда",
+        "еды",
+        "интернет",
+        "деньги на телефон",
+        "ресторан",
+        "пожертвование",
+        "комиссия",
+        "плата за аренду квартиры",
+        "обед",
+        "удержание ндфл",
+        "оплата коммунальных"
     )
 }
