@@ -14,7 +14,7 @@ object FinancialAssetConverter : ConverterUtils {
             name = name,
             companyName = evaluateCompanyName(name),
             type = evaluateType(name),
-            currency = evaluateCurrency(row.values.last())
+            currency = evaluateCurrency(row.values[6])
         )
     }
 

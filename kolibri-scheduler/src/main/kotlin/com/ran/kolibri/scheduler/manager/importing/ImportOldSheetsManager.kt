@@ -15,6 +15,7 @@ import com.ran.kolibri.common.entity.enums.FinancialAssetType
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.importing.model.AccountImportDto
+import com.ran.kolibri.scheduler.manager.importing.model.ImportedData
 import com.ran.kolibri.scheduler.manager.importing.model.TransactionImportDto
 import com.ran.kolibri.scheduler.manager.telegram.SingleActionUpdateProcessor
 import com.ran.kolibri.scheduler.manager.telegram.TelegramBotNotifyingUtils
@@ -44,6 +45,9 @@ class ImportOldSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, Tele
 
     private suspend fun importOldSheets(): String {
         log.info("Started to import old sheets")
+
+        // todo: uncomment it when importing is refactored completely
+        // val importedData = importSheetsData()
 
         deleteAll()
         restartSequences()
@@ -86,6 +90,20 @@ class ImportOldSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, Tele
         accountDao.restartIdSequence()
         transactionDao.restartIdSequence()
         log.info("Restarted sequences before import")
+    }
+
+    private suspend fun importSheetsData(): ImportedData {
+        val financialAssetRows = importRange(FINANCIAL_ASSETS_RANGE_NAME)
+            .rows
+            .map { SheetRowsParser.parseFinancialAsset(it) }
+        val accountRows = importRange(ACCOUNTS_RANGE_NAME)
+            .rows
+            .map { SheetRowsParser.parseAccount(it) }
+        val transactionRows = TRANSACTION_RANGE_NAMES
+            .map { importRange(it) }
+            .flatMap { it.rows }
+            .map { SheetRowsParser.parseTransaction(it) }
+        return ImportedData(financialAssetRows, accountRows, transactionRows)
     }
 
     private suspend fun importTransactionRanges(): List<SheetRange> =
@@ -162,6 +180,6 @@ class ImportOldSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, Tele
     companion object {
         private val TRANSACTION_RANGE_NAMES = (2015..2021).map { "$it!A2:F" }
         private const val ACCOUNTS_RANGE_NAME = "Счета!A2:B"
-        private const val FINANCIAL_ASSETS_RANGE_NAME = "Счета!D22:J"
+        private const val FINANCIAL_ASSETS_RANGE_NAME = "Счета!D22:K"
     }
 }
