@@ -178,7 +178,7 @@ class ImportOldSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, Tele
     }
 
     companion object {
-        private val TRANSACTION_RANGE_NAMES = (2015..2021).map { "$it!A2:F" }
+        private val TRANSACTION_RANGE_NAMES = (2015..2022).map { "$it!A2:F" }
         private const val ACCOUNTS_RANGE_NAME = "Счета!A2:B"
         private const val FINANCIAL_ASSETS_RANGE_NAME = "Счета!D22:K"
     }
