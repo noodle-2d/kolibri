@@ -2,4 +2,4 @@ FROM openjdk:8
 
 WORKDIR /usr/app
 
-COPY kolibri-scheduler/build/libs/kolibri-scheduler-shadow-1.0.jar ./app.jar
+COPY kolibri-scheduler/build/libs/app.jar ./app.jar
