@@ -1,0 +1,6 @@
+rootProject.name = 'kolibri'
+
+include('kolibri-common')
+include('kolibri-api')
+include('kolibri-scheduler')
+include('kolibri-consumer')

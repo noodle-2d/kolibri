@@ -1,0 +1,23 @@
+plugins {
+    id 'com.ran.kolibri.kotlin-common-conventions'
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
+}
+
+ext.setMainClass = { className ->
+    ext.set('mainClass', className)
+}
+
+afterEvaluate {
+    application {
+        mainClass = project.mainClass
+    }
+
+    shadowJar {
+        archiveBaseName.set('app')
+        archiveClassifier.set('')
+        manifest {
+            attributes 'Main-Class': project.mainClass
+        }
+    }
+}

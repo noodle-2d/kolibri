@@ -14,3 +14,10 @@ TBD: write about building, deploying and other stuff.
 TBD: write a script to do this in more automatic way.
 
 Here is useful [link](https://medium.com/big-data-engineering/hello-kafka-world-the-complete-guide-to-kafka-with-docker-and-python-f788e2588cfc) to do more things.
+
+### Technical todos
+
+- Update dependency versions to newest ones in Gradle build script.
+- Update to Java 16 compatibility
+- Fix build scripts to use transitive dependencies
+- Resolve build warnings after updating dependency versions
