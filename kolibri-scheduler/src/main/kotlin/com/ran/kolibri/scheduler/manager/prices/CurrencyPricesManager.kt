@@ -13,11 +13,11 @@ import com.ran.kolibri.common.entity.enums.Currency
 import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.scheduler.manager.telegram.TelegramBotNotifyingUtils
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.math.RoundingMode
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
 class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
 
@@ -141,9 +141,10 @@ class CurrencyPricesManager(kodein: Kodein) : TelegramBotNotifyingUtils {
     private fun retrieveCurrencyPrice(currencyPrices: List<CurrencyPrice>, currency: Currency): BigDecimal =
         when (currency) {
             Currency.USD -> BigDecimal.ONE
-            else -> currencyPrices
-                .find { it.currency == currency }!!
-                .price
+            else ->
+                currencyPrices
+                    .find { it.currency == currency }!!
+                    .price
         }
 
     private fun toSheetsString(number: BigDecimal): String =

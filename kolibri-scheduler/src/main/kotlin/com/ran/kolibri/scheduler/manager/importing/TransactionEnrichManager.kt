@@ -50,9 +50,11 @@ class TransactionEnrichManager(kodein: Kodein) {
     private fun isTransactionToEnrichBy(transaction: Transaction): Boolean =
         TRANSACTION_TYPES_TO_ENRICH_BY.contains(transaction.type) &&
             transaction.associatedTransactionId == null &&
-            (transaction.exactFinancialAssetPrice != null ||
-                transaction.exactBoughtCurrencyRatioPart != null &&
-                transaction.exactSoldCurrencyRatioPart != null)
+            (
+                transaction.exactFinancialAssetPrice != null ||
+                    transaction.exactBoughtCurrencyRatioPart != null &&
+                    transaction.exactSoldCurrencyRatioPart != null
+                )
 
     companion object {
         private val TRANSACTION_TYPES_TO_ENRICH_BY = setOf(

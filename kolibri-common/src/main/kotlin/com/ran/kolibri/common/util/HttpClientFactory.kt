@@ -14,6 +14,7 @@ fun buildHttpClient() = HttpClient {
     }
     install(JsonFeature) {
         serializer = JacksonSerializer {
+            // todo: use something else instead of it!
             propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }

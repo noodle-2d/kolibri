@@ -1,7 +1,7 @@
 package com.ran.kolibri.scheduler.manager.importing.model
 
-import java.math.BigDecimal
 import org.joda.time.DateTime
+import java.math.BigDecimal
 
 data class ImportedData(
     val financialAssetRows: List<FinancialAssetSheetRow>,

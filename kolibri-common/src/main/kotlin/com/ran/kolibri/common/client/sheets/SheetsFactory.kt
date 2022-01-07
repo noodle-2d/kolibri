@@ -17,6 +17,7 @@ fun buildSheets(kodein: Kodein): Sheets {
     val googleConfig = kodein.instance<GoogleConfig>()
 
     val jsonMapper = ObjectMapper().apply {
+        // todo: use something else instead of it!
         propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
     }
     val credentialsString = jsonMapper.writeValueAsString(googleConfig.credentials)

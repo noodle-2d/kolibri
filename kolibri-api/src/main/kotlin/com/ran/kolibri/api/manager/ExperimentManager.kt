@@ -6,8 +6,8 @@ import com.ran.kolibri.common.kafka.message.ComplicatedTestEvent
 import com.ran.kolibri.common.kafka.message.TestEvent
 import com.ran.kolibri.common.kafka.producer.MessageProducer
 import com.ran.kolibri.common.util.log
-import java.security.SecureRandom
 import org.joda.time.DateTime
+import java.security.SecureRandom
 
 class ExperimentManager(kodein: Kodein) {
 

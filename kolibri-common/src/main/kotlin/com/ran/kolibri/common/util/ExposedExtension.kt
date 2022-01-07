@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
-import java.math.BigDecimal
-import kotlin.reflect.KClass
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.TextColumnType
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.postgresql.util.PGobject
+import java.math.BigDecimal
+import kotlin.reflect.KClass
 
 fun executeSqlStatement(sql: String) {
     val conn = TransactionManager.current().connection
@@ -29,8 +29,8 @@ fun <T : Enum<T>> Table.pgEnum(name: String, descriptor: PgTypeDescriptor<T>): C
     customEnumeration(
         name,
         descriptor.sqlTypeName,
-        { dbValue -> descriptor.values.first { it.name.toLowerCase() == dbValue } },
-        { enumValue: T -> PGobject().apply { type = descriptor.sqlTypeName; value = enumValue.name.toLowerCase() } }
+        { dbValue -> descriptor.values.first { it.name.lowercase() == dbValue } },
+        { enumValue: T -> PGobject().apply { type = descriptor.sqlTypeName; value = enumValue.name.lowercase() } }
     )
 
 fun Table.decimal(name: String): Column<BigDecimal> =

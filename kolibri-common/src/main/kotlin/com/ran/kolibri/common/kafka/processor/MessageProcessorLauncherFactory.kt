@@ -8,9 +8,9 @@ import com.ran.kolibri.common.kafka.KafkaProcessorConfig
 import com.ran.kolibri.common.kafka.serializer.JsonSerializer
 import com.ran.kolibri.common.util.log
 import com.ran.kolibri.common.util.runIO
+import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import java.lang.IllegalArgumentException
 import java.time.Duration
-import org.apache.kafka.common.serialization.ByteArrayDeserializer
 
 fun <M> buildJsonMessageProcessorLauncher(
     kodein: Kodein,

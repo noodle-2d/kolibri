@@ -69,13 +69,13 @@ object AccountConverter : ConverterUtils {
         transactions
             .filter { it.accountString == accountName }
             .map { it.date }
-            .min()!!
+            .minOrNull()!!
 
     private fun findLastTransactionDate(transactions: List<TransactionImportDto>, accountName: String): DateTime =
         transactions
             .filter { it.accountString == accountName }
             .map { it.date }
-            .max()!!
+            .maxOrNull()!!
 
     private val NAME_REGEX = Regex("""^\d*\. (.*)$""")
 
