@@ -35,16 +35,16 @@ class ImportSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, Telegra
     override val telegramManager: TelegramManager = kodein.instance()
 
     override val operationType: TelegramOperationType
-        get() = TelegramOperationType.IMPORT_OLD_SHEETS
+        get() = TelegramOperationType.IMPORT_SHEETS
 
     override suspend fun doProcessUpdate() =
-        importOldSheetsWithNotification()
+        importSheetsWithNotification()
 
-    suspend fun importOldSheetsWithNotification() =
-        doActionSendingMessageToOwner("importing old sheets") { importOldSheets() }
+    suspend fun importSheetsWithNotification() =
+        doActionSendingMessageToOwner("importing sheets") { importSheets() }
 
-    private suspend fun importOldSheets(): String {
-        log.info("Started to import old sheets")
+    private suspend fun importSheets(): String {
+        log.info("Started to import sheets")
 
         // todo: uncomment it when importing is refactored completely
         // val importedData = importSheetsData()
@@ -70,7 +70,7 @@ class ImportSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, Telegra
 
         val resultMessage = "${transactions.size} transactions, ${accounts.size} accounts and " +
             "${financialAssets.size} financial assets were successfully imported."
-        log.info("Finished importing old sheets with result: $resultMessage")
+        log.info("Finished importing sheets with result: $resultMessage")
         return resultMessage
     }
 
