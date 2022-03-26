@@ -33,6 +33,7 @@ import com.ran.kolibri.common.dao.impl.TransactionDaoImpl
 import com.ran.kolibri.common.kafka.BytesKafkaProducer
 import com.ran.kolibri.common.kafka.KafkaConfig
 import com.ran.kolibri.common.kafka.producer.buildBytesKafkaProducer
+import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.common.util.buildDatabase
 import com.ran.kolibri.common.util.buildHttpClient
 import com.typesafe.config.Config
@@ -65,9 +66,10 @@ val daoModule = Kodein.Module {
     bind<TelegramOperationDao>() with provider { TelegramOperationDaoImpl(kodein) }
 }
 
-val telegramClientModule = Kodein.Module {
+val telegramModule = Kodein.Module {
     bind<TelegramConfig>() with provider { TelegramConfig(kodein.instance()) }
     bind<TelegramClient>() with provider { TelegramClient(kodein) }
+    bind<TelegramManager>() with provider { TelegramManager(kodein) }
 }
 
 val openExchangeRatesClientModule = Kodein.Module {

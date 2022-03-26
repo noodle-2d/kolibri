@@ -10,7 +10,7 @@ import com.ran.kolibri.api.rest.TelegramController
 import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.kafkaModule
-import com.ran.kolibri.common.kodein.telegramClientModule
+import com.ran.kolibri.common.kodein.telegramModule
 import com.ran.kolibri.common.rest.RestController
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.RestApiStarter
@@ -21,7 +21,7 @@ class KolibriApiStarter : BaseStarter(), RestApiStarter {
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(
             httpClientModule,
-            telegramClientModule,
+            telegramModule,
             daoModule,
             kafkaModule,
             managerModule,

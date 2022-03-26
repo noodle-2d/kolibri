@@ -6,7 +6,7 @@ import com.ran.kolibri.common.kodein.daoModule
 import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.openExchangeRatesClientModule
 import com.ran.kolibri.common.kodein.sheetsModule
-import com.ran.kolibri.common.kodein.telegramClientModule
+import com.ran.kolibri.common.kodein.telegramModule
 import com.ran.kolibri.common.kodein.tinkoffInvestingClientModule
 import com.ran.kolibri.common.scheduled.task.ScheduledTask
 import com.ran.kolibri.common.starter.BaseStarter
@@ -22,7 +22,7 @@ class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(
             httpClientModule,
-            telegramClientModule,
+            telegramModule,
             tinkoffInvestingClientModule,
             sheetsModule,
             openExchangeRatesClientModule,

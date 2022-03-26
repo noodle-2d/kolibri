@@ -14,10 +14,8 @@ import com.ran.kolibri.common.kafka.message.ComplicatedTestEvent
 import com.ran.kolibri.common.kafka.message.TestEvent
 import com.ran.kolibri.common.kafka.producer.MessageProducer
 import com.ran.kolibri.common.kafka.producer.buildJsonMessageProducer
-import com.ran.kolibri.common.manager.TelegramManager
 
 val managerModule = Kodein.Module {
-    bind<TelegramManager>() with provider { TelegramManager(kodein) }
     bind<AccountManager>() with provider { AccountManager(kodein) }
     bind<ExperimentManager>() with provider { ExperimentManager(kodein) }
 }

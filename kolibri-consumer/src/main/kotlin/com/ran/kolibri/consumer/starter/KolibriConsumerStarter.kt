@@ -7,7 +7,7 @@ import com.ran.kolibri.common.kafka.TEST_EVENT_ID
 import com.ran.kolibri.common.kafka.processor.MessageProcessorLauncher
 import com.ran.kolibri.common.kodein.httpClientModule
 import com.ran.kolibri.common.kodein.kafkaModule
-import com.ran.kolibri.common.kodein.telegramClientModule
+import com.ran.kolibri.common.kodein.telegramModule
 import com.ran.kolibri.common.starter.BaseStarter
 import com.ran.kolibri.common.starter.ConsumerStarter
 import com.ran.kolibri.consumer.kodein.managerModule
@@ -19,7 +19,7 @@ class KolibriConsumerStarter : BaseStarter(), ConsumerStarter {
     override fun getKodeinModules(): List<Kodein.Module> =
         listOf(
             httpClientModule,
-            telegramClientModule,
+            telegramModule,
             kafkaModule,
             managerModule,
             processorModule,

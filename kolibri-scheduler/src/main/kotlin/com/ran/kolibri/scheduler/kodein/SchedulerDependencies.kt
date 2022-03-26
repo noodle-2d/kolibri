@@ -3,7 +3,6 @@ package com.ran.kolibri.scheduler.kodein
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.provider
-import com.ran.kolibri.common.manager.TelegramManager
 import com.ran.kolibri.scheduler.manager.importing.ImportSheetsManager
 import com.ran.kolibri.scheduler.manager.importing.TransactionEnrichManager
 import com.ran.kolibri.scheduler.manager.prices.CurrencyPricesManager
@@ -17,7 +16,6 @@ import com.ran.kolibri.scheduler.scheduled.task.SheetsImportTask
 import com.ran.kolibri.scheduler.scheduled.task.TelegramPullTask
 
 val managerModule = Kodein.Module {
-    bind<TelegramManager>() with provider { TelegramManager(kodein) }
     bind<TelegramUpdateRecognizer>() with provider { TelegramUpdateRecognizer(kodein) }
     bind<TelegramUpdatesManager>() with provider { TelegramUpdatesManager(kodein) }
 
