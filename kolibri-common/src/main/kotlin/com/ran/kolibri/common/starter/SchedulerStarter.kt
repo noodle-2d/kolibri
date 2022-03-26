@@ -3,8 +3,8 @@ package com.ran.kolibri.common.starter
 import com.github.salomonbrys.kodein.Kodein
 import com.ran.kolibri.common.scheduled.task.ScheduledTask
 import com.ran.kolibri.common.util.log
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import org.joda.time.DateTime
 import kotlin.math.max
@@ -13,13 +13,12 @@ interface SchedulerStarter {
 
     fun getScheduledTasks(kodein: Kodein): List<ScheduledTask>
 
-    suspend fun startScheduledTasks(kodein: Kodein) = coroutineScope {
+    fun CoroutineScope.startScheduledTasks(kodein: Kodein) =
         getScheduledTasks(kodein).forEach { watcher ->
             async {
                 startScheduledTask(watcher)
             }
         }
-    }
 
     private suspend fun startScheduledTask(scheduledTask: ScheduledTask) {
         val firstActionTime = scheduledTask.schedule().nextTime()

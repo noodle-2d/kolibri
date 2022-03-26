@@ -16,19 +16,20 @@ import io.ktor.routing.Routing
 import io.ktor.routing.route
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 
 interface RestApiStarter {
 
     fun getRestControllers(kodein: Kodein): List<RestController>
 
-    suspend fun startRestApi(kodein: Kodein) = coroutineScope {
+    fun CoroutineScope.startRestApi(kodein: Kodein) {
         val serverConfig: ServerConfig = kodein.instance()
 
         val pingController = PingController()
         val restControllers = listOf(pingController, *getRestControllers(kodein).toTypedArray())
 
-        embeddedServer(Netty, serverConfig.port) {
+        val server = embeddedServer(Netty, serverConfig.port) {
             install(DefaultHeaders)
             install(CallLogging)
 
@@ -44,6 +45,10 @@ interface RestApiStarter {
                     restControllers.forEach { it.configure(this) }
                 }
             }
-        }.start()
+        }
+
+        async {
+            server.start()
+        }
     }
 }
