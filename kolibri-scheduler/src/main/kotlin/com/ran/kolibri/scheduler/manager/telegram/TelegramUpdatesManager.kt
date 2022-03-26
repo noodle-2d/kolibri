@@ -7,7 +7,7 @@ import com.ran.kolibri.common.dao.TelegramIntegrationDao
 import com.ran.kolibri.common.dao.TelegramOperationDao
 import com.ran.kolibri.common.entity.TelegramOperation
 import com.ran.kolibri.common.util.log
-import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
+import com.ran.kolibri.scheduler.manager.importing.ImportSheetsManager
 import com.ran.kolibri.scheduler.manager.statistics.AccountsStatisticsManager
 import com.ran.kolibri.scheduler.manager.telegram.model.CallbackQuery
 import com.ran.kolibri.scheduler.manager.telegram.model.OperationContinuation
@@ -25,12 +25,12 @@ class TelegramUpdatesManager(kodein: Kodein) {
     private val telegramIntegrationDao: TelegramIntegrationDao = kodein.instance()
     private val telegramOperationDao: TelegramOperationDao = kodein.instance()
 
-    private val importOldSheetsManager: ImportOldSheetsManager = kodein.instance()
+    private val importSheetsManager: ImportSheetsManager = kodein.instance()
     private val accountsStatisticsManager: AccountsStatisticsManager = kodein.instance()
     private val addTransactionManager: AddTransactionManager = kodein.instance()
 
     private val telegramUpdateProcessors = listOf(
-        importOldSheetsManager,
+        importSheetsManager,
         accountsStatisticsManager,
         addTransactionManager
     )

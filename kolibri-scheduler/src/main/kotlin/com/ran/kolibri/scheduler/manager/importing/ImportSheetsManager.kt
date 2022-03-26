@@ -22,7 +22,7 @@ import com.ran.kolibri.scheduler.manager.telegram.TelegramBotNotifyingUtils
 import com.ran.kolibri.scheduler.manager.telegram.model.TelegramOperationType
 import java.lang.IllegalArgumentException
 
-class ImportOldSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, TelegramBotNotifyingUtils {
+class ImportSheetsManager(kodein: Kodein) : SingleActionUpdateProcessor, TelegramBotNotifyingUtils {
 
     private val googleConfig: GoogleConfig = kodein.instance()
     private val sheetsClient: SheetsClient = kodein.instance()

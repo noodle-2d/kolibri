@@ -5,13 +5,13 @@ import com.github.salomonbrys.kodein.instance
 import com.ran.kolibri.common.scheduled.task.AtFixedHour
 import com.ran.kolibri.common.scheduled.task.Schedule
 import com.ran.kolibri.common.scheduled.task.ScheduledTask
-import com.ran.kolibri.scheduler.manager.importing.ImportOldSheetsManager
+import com.ran.kolibri.scheduler.manager.importing.ImportSheetsManager
 
-class OldSheetsImportTask(kodein: Kodein) : ScheduledTask {
+class SheetsImportTask(kodein: Kodein) : ScheduledTask {
 
     private val schedule = AtFixedHour(23) // 02:00 at Moscow time
-    private val importOldSheetsManager: ImportOldSheetsManager = kodein.instance()
+    private val importSheetsManager: ImportSheetsManager = kodein.instance()
 
     override fun schedule(): Schedule = schedule
-    override suspend fun doAction() = importOldSheetsManager.importOldSheetsWithNotification()
+    override suspend fun doAction() = importSheetsManager.importOldSheetsWithNotification()
 }

@@ -14,7 +14,7 @@ import com.ran.kolibri.common.starter.SchedulerStarter
 import com.ran.kolibri.scheduler.kodein.managerModule
 import com.ran.kolibri.scheduler.kodein.scheduledTaskModule
 import com.ran.kolibri.scheduler.scheduled.task.CurrencyPricesUpdateTask
-import com.ran.kolibri.scheduler.scheduled.task.OldSheetsImportTask
+import com.ran.kolibri.scheduler.scheduled.task.SheetsImportTask
 import com.ran.kolibri.scheduler.scheduled.task.TelegramPullTask
 
 class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
@@ -33,7 +33,7 @@ class KolibriSchedulerStarter : BaseStarter(), SchedulerStarter {
 
     override fun getScheduledTasks(kodein: Kodein): List<ScheduledTask> =
         listOf(
-            kodein.instance<OldSheetsImportTask>(),
+            kodein.instance<SheetsImportTask>(),
             kodein.instance<TelegramPullTask>(),
             kodein.instance<CurrencyPricesUpdateTask>()
         )
