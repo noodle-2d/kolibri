@@ -14,7 +14,6 @@ import com.ran.kolibri.scheduler.manager.transaction.AddFinancialAssetTransactio
 import com.ran.kolibri.scheduler.manager.transaction.AddTransactionManager
 import com.ran.kolibri.scheduler.scheduled.task.CurrencyPricesUpdateTask
 import com.ran.kolibri.scheduler.scheduled.task.OldSheetsImportTask
-import com.ran.kolibri.scheduler.scheduled.task.SheetsExportTask
 import com.ran.kolibri.scheduler.scheduled.task.TelegramPullTask
 
 val managerModule = Kodein.Module {
@@ -35,7 +34,6 @@ val managerModule = Kodein.Module {
 
 val scheduledTaskModule = Kodein.Module {
     bind<OldSheetsImportTask>() with provider { OldSheetsImportTask(kodein) }
-    bind<SheetsExportTask>() with provider { SheetsExportTask() }
     bind<TelegramPullTask>() with provider { TelegramPullTask(kodein) }
     bind<CurrencyPricesUpdateTask>() with provider { CurrencyPricesUpdateTask(kodein) }
 }
