@@ -70,6 +70,20 @@ services:
       - ./kolibri-consumer/.env
     command: java -jar app.jar
 
+  kolibri-monolite:
+    build:
+      context: .
+      dockerfile: kolibri-monolite/.dockerfile
+    container_name: kolibri-monolite
+    image: kolibri-monolite
+    ports:
+      - 1101:1101
+    volumes:
+      - /var/log:/var/log
+    env_file:
+      - ./kolibri-monolite/.env
+    command: java -jar app.jar
+
 networks:
   default:
     name: kolibri-network

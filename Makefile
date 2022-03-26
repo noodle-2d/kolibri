@@ -1,17 +1,17 @@
-docker-env:
-	./scripts/init-docker-env.sh
-
 format:
 	./gradlew ktlintFormat
 
 gradle-build/api:
-	./gradlew clean kolibri-api:build
+	./gradlew kolibri-api:build
 
 gradle-build/scheduler:
-	./gradlew clean kolibri-scheduler:build
+	./gradlew kolibri-scheduler:build
 
 gradle-build/consumer:
-	./gradlew clean kolibri-consumer:build
+	./gradlew kolibri-consumer:build
+
+gradle-build/monolite:
+	./gradlew kolibri-monolite:build
 
 list-docker-services:
 	docker-compose ps
@@ -24,6 +24,9 @@ build/scheduler: gradle-build/scheduler
 
 build/consumer: gradle-build/consumer
 	docker-compose build kolibri-consumer
+
+build/monolite: gradle-build/monolite
+	docker-compose build kolibri-monolite
 
 run/zookeeper:
 	docker-compose up -d kolibri-zookeeper
@@ -43,6 +46,9 @@ run/scheduler:
 run/consumer:
 	docker-compose up -d kolibri-consumer
 
+run/monolite:
+	docker-compose up -d kolibri-monolite
+
 stop/zookeeper:
 	docker-compose stop kolibri-zookeeper
 
@@ -60,3 +66,6 @@ stop/scheduler:
 
 stop/consumer:
 	docker-compose stop kolibri-consumer
+
+stop/monolite:
+	docker-compose stop kolibri-monolite
